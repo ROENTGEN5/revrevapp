@@ -4,14 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import {
   Sparkles, Plus, BookOpen, Trophy, TrendingUp,
   MoreVertical, Trash2, ChevronRight, BarChart3, Layers,
-  Loader2, PenLine, Search
+  Loader2, PenLine, Search, Brain, Zap
 } from 'lucide-react';
-import { getModules, getAllAttempts, deleteModule } from '../services/firebaseService';
+import { getModules, getAllAttempts, deleteModule, getAllDueQuestions } from '../services/firebaseService';
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [modules, setModules] = useState([]);
   const [attempts, setAttempts] = useState([]);
+  const [dueQuestions, setDueQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [deleteConfirm, setDeleteConfirm] = useState(null);
   const [menuOpen, setMenuOpen] = useState(null);
@@ -20,9 +21,14 @@ export default function Dashboard() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [mods, atts] = await Promise.all([getModules(), getAllAttempts()]);
+      const [mods, atts, dues] = await Promise.all([
+        getModules(),
+        getAllAttempts(),
+        getAllDueQuestions(),
+      ]);
       setModules(mods);
       setAttempts(atts);
+      setDueQuestions(dues);
     } catch (err) {
       console.error('Error fetching dashboard data:', err);
     } finally {
@@ -171,6 +177,51 @@ export default function Dashboard() {
             color="emerald"
           />
         </motion.div>
+
+        {/* Spaced Repetition Queue Banner */}
+        {dueQuestions.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: 15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 25 }}
+            className="glass-apple-card p-6 mb-10 border-emerald-500/40 bg-gradient-to-r from-emerald-500/15 via-purple-500/10 to-blue-500/15 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-2xl"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20">
+                <Brain className="w-7 h-7" />
+              </div>
+              <div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-[10px] font-extrabold uppercase tracking-wider">
+                    Spaced Repetition Active
+                  </span>
+                  <span className="text-white/40 text-xs font-mono">SM-2 Algorithm</span>
+                </div>
+                <h3 className="text-lg font-extrabold text-white tracking-tight">
+                  🧠 {dueQuestions.length} {dueQuestions.length === 1 ? 'Card' : 'Cards'} Due For Review Today
+                </h3>
+                <p className="text-white/60 text-xs mt-0.5">
+                  Reviewing these target cards today builds maximum long-term memory retention.
+                </p>
+              </div>
+            </div>
+
+            <motion.button
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => {
+                if (dueQuestions.length > 0) {
+                  const firstDue = dueQuestions[0];
+                  navigate(`/module/${firstDue.moduleId}/review`);
+                }
+              }}
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl font-bold text-xs bg-gradient-to-r from-emerald-500 to-teal-600 text-white shadow-xl shadow-emerald-500/30 hover:shadow-emerald-500/50 transition-all cursor-pointer border border-white/20 shrink-0"
+            >
+              <Zap className="w-4 h-4 fill-current" />
+              <span>Start Smart Review ({dueQuestions.length})</span>
+            </motion.button>
+          </motion.div>
+        )}
 
         {/* Modules Section Header & Search */}
         <motion.div

@@ -92,12 +92,16 @@ function AnswerDisplay({ question }) {
   return null;
 }
 
-function Flashcard({ question, index, total }) {
+import { saveQuestionMastery } from '../services/firebaseService';
+
+function Flashcard({ question, index, total, onRate }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
   useEffect(() => {
     setIsFlipped(false);
   }, [question.id]);
+
+  const boxLevel = question.srs?.boxLevel || 1;
 
   return (
     <div className="flashcard-perspective w-full max-w-2xl mx-auto">
@@ -118,7 +122,12 @@ function Flashcard({ question, index, total }) {
                 Question {index + 1} of {total}
               </span>
             </div>
-            <TypeBadge type={question.type} />
+            <div className="flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full bg-white/10 text-white/70 border border-white/10 text-[10px] font-extrabold uppercase">
+                ⚡ Box {boxLevel}
+              </span>
+              <TypeBadge type={question.type} />
+            </div>
           </div>
 
           <div className="flex-1 flex items-center justify-center my-4">
@@ -135,7 +144,7 @@ function Flashcard({ question, index, total }) {
 
         {/* Back */}
         <div className="flashcard-face flashcard-back glass-apple-card p-8 flex flex-col justify-between">
-          <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-emerald-400" />
               <span className="text-emerald-300 text-sm font-extrabold tracking-wide uppercase">Answer Key</span>
@@ -143,7 +152,7 @@ function Flashcard({ question, index, total }) {
             <TypeBadge type={question.type} />
           </div>
 
-          <h3 className="text-sm font-semibold text-white/60 mb-2 leading-relaxed">
+          <h3 className="text-xs font-semibold text-white/60 mb-1 leading-relaxed">
             {question.question}
           </h3>
 
@@ -151,9 +160,60 @@ function Flashcard({ question, index, total }) {
             <AnswerDisplay question={question} />
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-4 text-white/50 text-xs font-semibold bg-white/5 py-2 px-4 rounded-full border border-white/10 mx-auto">
-            <EyeOff className="w-4 h-4" />
-            <span>Click or tap to hide answer</span>
+          {/* Spaced Repetition Rating Buttons */}
+          <div className="mt-4 pt-4 border-t border-white/10">
+            <p className="text-xs font-semibold text-white/50 uppercase tracking-wider text-center mb-2.5">
+              Rate Recall Difficulty:
+            </p>
+            <div className="grid grid-cols-4 gap-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRate(1);
+                }}
+                className="flex flex-col items-center justify-center py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/35 border border-rose-500/40 text-rose-300 transition cursor-pointer active:scale-95"
+                title="Review tomorrow"
+              >
+                <span className="text-xs font-bold">Again</span>
+                <span className="text-[10px] text-white/50 font-mono">+1d</span>
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRate(2);
+                }}
+                className="flex flex-col items-center justify-center py-2.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/35 border border-amber-500/40 text-amber-300 transition cursor-pointer active:scale-95"
+                title="Review in 2 days"
+              >
+                <span className="text-xs font-bold">Hard</span>
+                <span className="text-[10px] text-white/50 font-mono">+2d</span>
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRate(3);
+                }}
+                className="flex flex-col items-center justify-center py-2.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/35 border border-emerald-500/40 text-emerald-300 transition cursor-pointer active:scale-95"
+                title="Review in 6 days"
+              >
+                <span className="text-xs font-bold">Good</span>
+                <span className="text-[10px] text-white/50 font-mono">+6d</span>
+              </button>
+
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRate(4);
+                }}
+                className="flex flex-col items-center justify-center py-2.5 rounded-xl bg-blue-500/20 hover:bg-blue-500/35 border border-blue-500/40 text-blue-300 transition cursor-pointer active:scale-95"
+                title="Review in 14+ days"
+              >
+                <span className="text-xs font-bold">Easy</span>
+                <span className="text-[10px] text-white/50 font-mono">+14d</span>
+              </button>
+            </div>
           </div>
         </div>
       </motion.div>
@@ -217,6 +277,19 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
 
   const isFirst = currentIndex === 0;
   const isLast = currentIndex === totalQuestions - 1;
+
+  const handleRateCard = async (rating) => {
+    if (!currentQ) return;
+    try {
+      const qId = currentQ.firestoreId || currentQ.id;
+      const modId = moduleId || currentQ.moduleId;
+      const updatedSrs = await saveQuestionMastery(modId, qId, rating, currentQ.srs || {});
+      currentQ.srs = updatedSrs;
+    } catch (err) {
+      console.error('Error saving question mastery:', err);
+    }
+    if (!isLast) goNext();
+  };
 
   return (
     <div className="min-h-screen flex flex-col px-4 py-6 sm:py-10 pb-28">
@@ -295,6 +368,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                     question={currentQ}
                     index={currentIndex}
                     total={totalQuestions}
+                    onRate={handleRateCard}
                   />
                 </motion.div>
               </AnimatePresence>

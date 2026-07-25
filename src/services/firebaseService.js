@@ -536,3 +536,136 @@ export async function getAllAttempts() {
   const attempts = await getAll(tx.objectStore('attempts'));
   return attempts.sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
 }
+
+// ─── Spaced Repetition (SM-2 / Leitner System) ─────────────────────
+
+/**
+ * Calculates next review interval & ease factor using the SM-2 Spaced Repetition algorithm.
+ * rating: 1 (Again), 2 (Hard), 3 (Good), 4 (Easy)
+ */
+export function calculateSM2(rating, prevInterval = 0, prevRepetition = 0, prevEaseFactor = 2.5) {
+  let interval = 1;
+  let repetition = prevRepetition;
+  let easeFactor = prevEaseFactor;
+  let boxLevel = 1;
+
+  if (rating === 1) {
+    // Again (Reset)
+    repetition = 0;
+    interval = 1;
+    boxLevel = 1;
+  } else if (rating === 2) {
+    // Hard
+    repetition = Math.max(1, repetition + 1);
+    interval = Math.max(2, Math.round((prevInterval || 1) * 1.2));
+    easeFactor = Math.max(1.3, easeFactor - 0.15);
+    boxLevel = 2;
+  } else if (rating === 3) {
+    // Good
+    if (repetition === 0) interval = 1;
+    else if (repetition === 1) interval = 6;
+    else interval = Math.round((prevInterval || 6) * easeFactor);
+    repetition += 1;
+    boxLevel = Math.min(5, Math.max(2, repetition + 1));
+  } else if (rating === 4) {
+    // Easy
+    if (repetition === 0) interval = 4;
+    else if (repetition === 1) interval = 10;
+    else interval = Math.round((prevInterval || 10) * easeFactor * 1.3);
+    repetition += 1;
+    easeFactor += 0.15;
+    boxLevel = Math.min(5, Math.max(3, repetition + 2));
+  }
+
+  const nextReviewDate = new Date();
+  nextReviewDate.setDate(nextReviewDate.getDate() + interval);
+
+  return {
+    interval,
+    repetition,
+    easeFactor,
+    nextReviewDate,
+    boxLevel,
+  };
+}
+
+/**
+ * Saves a user's difficulty rating for a question and updates its review schedule.
+ */
+export async function saveQuestionMastery(moduleId, questionDocId, rating, currentSrs = {}) {
+  const srsData = calculateSM2(
+    rating,
+    currentSrs.interval,
+    currentSrs.repetition,
+    currentSrs.easeFactor
+  );
+
+  if (isFirebaseConfigured() && questionDocId) {
+    try {
+      const qRef = doc(db, 'modules', moduleId, 'questions', questionDocId);
+      await updateDoc(qRef, {
+        srs: {
+          interval: srsData.interval,
+          repetition: srsData.repetition,
+          easeFactor: srsData.easeFactor,
+          nextReviewDate: srsData.nextReviewDate,
+          boxLevel: srsData.boxLevel,
+          lastReviewedAt: serverTimestamp(),
+        },
+      });
+      return srsData;
+    } catch (err) {
+      console.warn('Firebase saveQuestionMastery error, fallback to local:', err);
+    }
+  }
+
+  // IndexedDB Fallback
+  const database = await openDB();
+  const tx = database.transaction('questions', 'readwrite');
+  const store = tx.objectStore('questions');
+  const q = await getOne(store, questionDocId);
+  if (q) {
+    q.srs = {
+      interval: srsData.interval,
+      repetition: srsData.repetition,
+      easeFactor: srsData.easeFactor,
+      nextReviewDate: srsData.nextReviewDate,
+      boxLevel: srsData.boxLevel,
+      lastReviewedAt: new Date(),
+    };
+    store.put(q);
+  }
+
+  return srsData;
+}
+
+/**
+ * Get all questions due for review today across all modules.
+ */
+export async function getAllDueQuestions() {
+  const modules = await getModules();
+  const now = new Date();
+  const dueItems = [];
+
+  for (const mod of modules) {
+    if (mod.status === 'draft') continue;
+    const questions = await getModuleQuestions(mod.id);
+    for (const q of questions) {
+      const nextReview = q.srs?.nextReviewDate
+        ? (q.srs.nextReviewDate?.toDate ? q.srs.nextReviewDate.toDate() : new Date(q.srs.nextReviewDate))
+        : null;
+
+      // Question is due if unrated or nextReviewDate is today/past
+      if (!nextReview || nextReview <= now) {
+        dueItems.push({
+          ...q,
+          moduleTitle: mod.title,
+          moduleId: mod.id,
+        });
+      }
+    }
+  }
+
+  return dueItems;
+}
+
