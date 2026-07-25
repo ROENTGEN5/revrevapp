@@ -1,0 +1,76 @@
+[
+  {
+    "type": "multiple_choice",
+    "question": "What is the capital city of Japan?",
+    "optionA": "Osaka",
+    "optionB": "Kyoto",
+    "optionC": "Tokyo",
+    "optionD": "Hiroshima",
+    "correctAnswer": "C"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "Which planet is known as the 'Red Planet'?",
+    "optionA": "Venus",
+    "optionB": "Mars",
+    "optionC": "Jupiter",
+    "optionD": "Saturn",
+    "correctAnswer": "B"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "What is the chemical symbol for gold?",
+    "optionA": "Go",
+    "optionB": "Gd",
+    "optionC": "Ag",
+    "optionD": "Au",
+    "correctAnswer": "D"
+  },
+  {
+    "type": "identification",
+    "question": "What organelle is known as the 'powerhouse of the cell'?",
+    "correctAnswer": "Mitochondria"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "Which data structure operates on a Last-In, First-Out (LIFO) principle?",
+    "optionA": "Queue",
+    "optionB": "Stack",
+    "optionC": "Linked List",
+    "optionD": "Tree",
+    "correctAnswer": "B"
+  },
+  {
+    "type": "identification",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci"
+  },
+  {
+    "type": "enumeration",
+    "question": "List the three states of matter.",
+    "correctAnswer": "Solid|Liquid|Gas"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "What does HTML stand for?",
+    "optionA": "Hyper Trainer Marking Language",
+    "optionB": "HyperText Markup Language",
+    "optionC": "HyperText Marketing Language",
+    "optionD": "Hyper Tool Multi Language",
+    "correctAnswer": "B"
+  },
+  {
+    "type": "enumeration",
+    "question": "Name the four cardinal directions.",
+    "correctAnswer": "North|South|East|West"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "Which ocean is the largest on Earth?",
+    "optionA": "Atlantic Ocean",
+    "optionB": "Indian Ocean",
+    "optionC": "Pacific Ocean",
+    "optionD": "Arctic Ocean",
+    "correctAnswer": "C"
+  }
+]

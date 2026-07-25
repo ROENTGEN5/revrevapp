@@ -1,0 +1,11 @@
+type,question,optionA,optionB,optionC,optionD,correctAnswer
+"multiple_choice","What is the capital of France?","Berlin","Madrid","Paris","Rome","C"
+"multiple_choice","Which planet is closest to the Sun?","Venus","Mercury","Earth","Mars","B"
+"multiple_choice","What is the chemical symbol for water?","CO2","H2O","NaCl","O2","B"
+"multiple_choice","Who wrote 'Romeo and Juliet'?","Charles Dickens","Jane Austen","William Shakespeare","Mark Twain","C"
+"identification","What is the largest mammal on Earth?","","","","","Blue Whale"
+"identification","What is the powerhouse of the cell?","","","","","Mitochondria"
+"identification","What programming language is known as the 'language of the web'?","","","","","JavaScript"
+"enumeration","List the 3 primary colors of light (RGB)","","","","","Red|Green|Blue"
+"enumeration","Name the 4 cardinal directions","","","","","North|South|East|West"
+"enumeration","List the first 3 planets from the Sun","","","","","Mercury|Venus|Earth"

@@ -1,0 +1,68 @@
+[
+  {
+    "type": "multiple_choice",
+    "question": "What is the capital of France?",
+    "optionA": "Berlin",
+    "optionB": "Madrid",
+    "optionC": "Paris",
+    "optionD": "Rome",
+    "correctAnswer": "C"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "Which planet is closest to the Sun?",
+    "optionA": "Venus",
+    "optionB": "Mercury",
+    "optionC": "Earth",
+    "optionD": "Mars",
+    "correctAnswer": "B"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "What is the chemical symbol for water?",
+    "optionA": "CO2",
+    "optionB": "H2O",
+    "optionC": "NaCl",
+    "optionD": "O2",
+    "correctAnswer": "B"
+  },
+  {
+    "type": "multiple_choice",
+    "question": "Who wrote 'Romeo and Juliet'?",
+    "optionA": "Charles Dickens",
+    "optionB": "Jane Austen",
+    "optionC": "William Shakespeare",
+    "optionD": "Mark Twain",
+    "correctAnswer": "C"
+  },
+  {
+    "type": "identification",
+    "question": "What is the largest mammal on Earth?",
+    "correctAnswer": "Blue Whale"
+  },
+  {
+    "type": "identification",
+    "question": "What is the powerhouse of the cell?",
+    "correctAnswer": "Mitochondria"
+  },
+  {
+    "type": "identification",
+    "question": "What programming language is known as the 'language of the web'?",
+    "correctAnswer": "JavaScript"
+  },
+  {
+    "type": "enumeration",
+    "question": "List the 3 primary colors of light (RGB)",
+    "correctAnswer": "Red|Green|Blue"
+  },
+  {
+    "type": "enumeration",
+    "question": "Name the 4 cardinal directions",
+    "correctAnswer": "North|South|East|West"
+  },
+  {
+    "type": "enumeration",
+    "question": "List the first 3 planets from the Sun",
+    "correctAnswer": "Mercury|Venus|Earth"
+  }
+]
