@@ -238,14 +238,15 @@ export async function getModule(moduleId) {
 export async function getModuleQuestions(moduleId) {
   if (isFirebaseConfigured()) {
     try {
-      const q = query(collection(db, 'modules', moduleId, 'questions'), orderBy('order', 'asc'));
-      const snap = await getDocs(q);
+      const qCol = collection(db, 'modules', moduleId, 'questions');
+      const snap = await getDocs(qCol);
       if (!snap.empty) {
-        return snap.docs.map((d, index) => ({
+        const docs = snap.docs.map((d, index) => ({
           ...d.data(),
           id: index,
           firestoreId: d.id,
         }));
+        return docs.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
       }
     } catch (err) {
       console.warn('Firebase error in getModuleQuestions, trying local fallback:', err);
@@ -253,16 +254,24 @@ export async function getModuleQuestions(moduleId) {
   }
 
   // IndexedDB Fallback
-  const database = await openDB();
-  const tx = database.transaction('questions', 'readonly');
-  const questions = await getAllByIndex(tx.objectStore('questions'), 'moduleId', moduleId);
-  return questions
-    .sort((a, b) => a.order - b.order)
-    .map((q, index) => ({
-      ...q,
-      id: index,
-      firestoreId: q.id,
-    }));
+  try {
+    const database = await openDB();
+    const tx = database.transaction('questions', 'readonly');
+    const questions = await getAllByIndex(tx.objectStore('questions'), 'moduleId', moduleId);
+    if (questions && questions.length > 0) {
+      return questions
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
+        .map((q, index) => ({
+          ...q,
+          id: index,
+          firestoreId: q.id,
+        }));
+    }
+  } catch (err) {
+    console.warn('IndexedDB error in getModuleQuestions:', err);
+  }
+
+  return [];
 }
 
 // ─── Drafts ──────────────────────────────────────────────────────────

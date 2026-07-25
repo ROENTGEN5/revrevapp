@@ -525,6 +525,32 @@ export default function CreateModule() {
                 )}
               </div>
 
+              {/* Format Guide & Download Templates */}
+              <div className="mt-6 glass-apple-card p-5">
+                <div className="flex items-center justify-between">
+                  <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-purple-400" />
+                    Supported File Formats (CSV & JSON)
+                  </span>
+                  <div className="flex items-center gap-2">
+                    <a
+                      href="/sample-quiz.csv"
+                      download="sample-quiz.csv"
+                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[11px] font-bold transition flex items-center gap-1.5"
+                    >
+                      <span>Sample CSV</span>
+                    </a>
+                    <a
+                      href="/sample-quiz.json"
+                      download="sample-quiz.json"
+                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[11px] font-bold transition flex items-center gap-1.5"
+                    >
+                      <span>Sample JSON</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
+
               {/* Publish Button */}
               {parsedQuestions && (
                 <motion.div
