@@ -1,4 +1,4 @@
-import { useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Send, BookOpen, Type, List, CheckSquare } from 'lucide-react';
 import { useQuiz } from '../hooks/useQuiz';
