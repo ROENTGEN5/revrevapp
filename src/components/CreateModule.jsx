@@ -3,8 +3,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowLeft, Upload, PenLine, Sparkles, FileText,
-  AlertCircle, Loader2, BookOpen, Cloud, CloudOff, CheckCircle2
+  AlertCircle, Loader2, BookOpen, Cloud, CloudOff, CheckCircle2,
+  Image as ImageIcon, X
 } from 'lucide-react';
+import { compressImage } from '../utils/imageCompressor';
 import { parseFile } from '../utils/parseFile';
 import {
   createModule,
@@ -24,6 +26,10 @@ export default function CreateModule() {
   const [mode, setMode] = useState('upload'); // 'upload' | 'manual'
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [coverImage, setCoverImage] = useState(null);
+  const [isCompressingCover, setIsCompressingCover] = useState(false);
+  const coverInputRef = useRef(null);
+
   const [isDragOver, setIsDragOver] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -342,6 +348,69 @@ export default function CreateModule() {
                 placeholder="e.g. Data structures, algorithms, and logic gates"
                 className="w-full px-4 py-3 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
               />
+            </div>
+
+            {/* Module Cover Image Attachment */}
+            <div>
+              <label className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                Module Cover Image <span className="text-white/40 font-normal lowercase">(optional)</span>
+              </label>
+              <input
+                ref={coverInputRef}
+                type="file"
+                accept="image/*"
+                className="hidden"
+                onChange={async (e) => {
+                  const file = e.target.files[0];
+                  if (!file) return;
+                  try {
+                    setIsCompressingCover(true);
+                    const compressed = await compressImage(file, 900, 500, 0.75);
+                    setCoverImage(compressed);
+                  } catch (err) {
+                    setError('Cover image compression failed: ' + err.message);
+                  } finally {
+                    setIsCompressingCover(false);
+                  }
+                }}
+              />
+
+              {!coverImage ? (
+                <button
+                  type="button"
+                  onClick={() => coverInputRef.current?.click()}
+                  disabled={isCompressingCover}
+                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl glass-apple-input text-xs font-bold text-purple-300 hover:text-white transition cursor-pointer"
+                >
+                  {isCompressingCover ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+                      <span>Compressing cover image...</span>
+                    </>
+                  ) : (
+                    <>
+                      <ImageIcon className="w-4 h-4 text-purple-400" />
+                      <span>Upload Module Cover Image (Auto-Compressed)</span>
+                    </>
+                  )}
+                </button>
+              ) : (
+                <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-lg mt-1 group">
+                  <img
+                    src={coverImage}
+                    alt="Module Cover Preview"
+                    className="w-full h-32 object-cover"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setCoverImage(null)}
+                    className="absolute top-2 right-2 p-1.5 rounded-full bg-rose-600/80 hover:bg-rose-600 text-white backdrop-blur-md transition cursor-pointer shadow-lg"
+                    title="Remove Cover Image"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         </motion.div>

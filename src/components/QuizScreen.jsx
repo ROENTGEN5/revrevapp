@@ -120,6 +120,7 @@ function EnumerationInput({ question, currentValues, onChange }) {
 
 export default function QuizScreen({ questions, onSubmit, onReset }) {
   const quiz = useQuiz(questions);
+  const [selectedZoomImage, setSelectedZoomImage] = useState(null);
 
   const handleKeyDown = useCallback((e) => {
     if (quiz.isSubmitted) return;
@@ -219,9 +220,21 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 </div>
 
                 {/* Question Prompt */}
-                <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed mb-8 tracking-tight">
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed mb-4 tracking-tight">
                   {currentQ?.question}
                 </h2>
+
+                {/* Question Diagram Image */}
+                {currentQ?.image && (
+                  <div className="my-4 overflow-hidden rounded-2xl border border-white/15 bg-black/40 p-2 flex justify-center">
+                    <img
+                      src={currentQ.image}
+                      alt="Question Diagram"
+                      className="max-h-56 object-contain rounded-xl cursor-pointer hover:scale-105 transition-transform"
+                      onClick={() => setSelectedZoomImage(currentQ.image)}
+                    />
+                  </div>
+                )}
 
                 {/* Question Inputs */}
                 {currentQ?.type === 'multiple_choice' && (
@@ -319,6 +332,39 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           </div>
         </motion.div>
       </div>
+
+      {/* Image Lightbox Modal */}
+      <AnimatePresence>
+        {selectedZoomImage && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-md cursor-pointer"
+            onClick={() => setSelectedZoomImage(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.8 }}
+              className="relative max-w-4xl max-h-[85vh] p-2 glass-apple-card border border-white/20"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={selectedZoomImage}
+                alt="Enlarged Diagram"
+                className="max-w-full max-h-[80vh] object-contain rounded-xl"
+              />
+              <button
+                onClick={() => setSelectedZoomImage(null)}
+                className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-bold shadow-2xl hover:bg-rose-500 transition cursor-pointer"
+              >
+                ✕
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

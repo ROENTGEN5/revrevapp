@@ -483,6 +483,14 @@ function ModuleCard({
       </div>
 
       <div>
+        {/* Module Cover Image Banner */}
+        {module.coverImage && (
+          <div className="h-28 -mx-6 -mt-6 mb-4 overflow-hidden rounded-t-2xl relative">
+            <img src={module.coverImage} alt={module.title} className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#141420] via-transparent to-transparent" />
+          </div>
+        )}
+
         {/* Module Icon & Badge */}
         <div className="flex items-center justify-between mb-4">
           <div

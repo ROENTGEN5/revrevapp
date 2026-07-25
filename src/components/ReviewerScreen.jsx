@@ -130,10 +130,20 @@ function Flashcard({ question, index, total, onRate }) {
             </div>
           </div>
 
-          <div className="flex-1 flex items-center justify-center my-4">
+          <div className="flex-1 flex flex-col items-center justify-center my-2">
             <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-relaxed text-center tracking-tight">
               {question.question}
             </h2>
+
+            {question.image && (
+              <div className="mt-3 overflow-hidden rounded-xl border border-white/15 bg-black/40 p-1.5 flex justify-center max-h-44 w-full">
+                <img
+                  src={question.image}
+                  alt="Diagram"
+                  className="max-h-40 object-contain rounded-lg"
+                />
+              </div>
+            )}
           </div>
 
           <div className="flex items-center justify-center gap-2 mt-6 text-purple-300/80 font-semibold text-xs bg-white/5 py-2 px-4 rounded-full border border-white/10 mx-auto">

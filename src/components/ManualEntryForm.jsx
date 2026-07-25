@@ -2,8 +2,10 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Trash2, CheckSquare, Type, ListOrdered, ArrowRight,
-  AlertCircle, GripVertical, ChevronDown, PenLine
+  AlertCircle, GripVertical, ChevronDown, PenLine, Image as ImageIcon,
+  X, Loader2
 } from 'lucide-react';
+import { compressImage } from '../utils/imageCompressor';
 
 const QUESTION_TYPES = [
   { value: 'multiple_choice', label: 'Multiple Choice', icon: CheckSquare, color: 'accent' },
@@ -12,14 +14,15 @@ const QUESTION_TYPES = [
 ];
 
 const TYPE_STYLES = {
-  multiple_choice: 'bg-accent-500/15 text-accent-400 border-accent-500/30',
-  identification: 'bg-[oklch(0.72_0.18_200/0.15)] text-[oklch(0.72_0.18_200)] border-[oklch(0.72_0.18_200/0.3)]',
-  enumeration: 'bg-[oklch(0.78_0.16_80/0.15)] text-[oklch(0.78_0.16_80)] border-[oklch(0.78_0.16_80/0.3)]',
+  multiple_choice: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
+  identification: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
+  enumeration: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
 };
 
 const EMPTY_MC = {
   type: 'multiple_choice',
   question: '',
+  image: null,
   optionA: '',
   optionB: '',
   optionC: '',
@@ -30,12 +33,14 @@ const EMPTY_MC = {
 const EMPTY_ID = {
   type: 'identification',
   question: '',
+  image: null,
   correctAnswer: '',
 };
 
 const EMPTY_ENUM = {
   type: 'enumeration',
   question: '',
+  image: null,
   enumItems: ['', ''],
 };
 
@@ -97,6 +102,72 @@ function FormInput({ label, value, onChange, placeholder, required, multiline })
           placeholder={placeholder}
           className={baseClass}
         />
+      )}
+    </div>
+  );
+}
+
+function QuestionImageUploader({ image, onImageChange }) {
+  const [compressing, setCompressing] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const handleFile = async (file) => {
+    if (!file) return;
+    try {
+      setCompressing(true);
+      const compressedDataUrl = await compressImage(file, 800, 800, 0.75);
+      onImageChange(compressedDataUrl);
+    } catch (err) {
+      alert(err.message || 'Image compression failed');
+    } finally {
+      setCompressing(false);
+    }
+  };
+
+  return (
+    <div className="mt-3">
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        className="hidden"
+        onChange={(e) => handleFile(e.target.files[0])}
+      />
+      {!image ? (
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={compressing}
+          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 text-xs font-semibold transition cursor-pointer"
+        >
+          {compressing ? (
+            <>
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-400" />
+              <span>Compressing image...</span>
+            </>
+          ) : (
+            <>
+              <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+              <span>Attach Diagram / Image (Auto-Compressed)</span>
+            </>
+          )}
+        </button>
+      ) : (
+        <div className="relative inline-block mt-1 group">
+          <img
+            src={image}
+            alt="Question Diagram"
+            className="w-32 h-24 object-cover rounded-xl border border-white/20 shadow-md"
+          />
+          <button
+            type="button"
+            onClick={() => onImageChange(null)}
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-bold shadow-lg hover:bg-rose-500 transition cursor-pointer"
+            title="Remove Diagram"
+          >
+            <X className="w-3.5 h-3.5" />
+          </button>
+        </div>
       )}
     </div>
   );
@@ -337,6 +408,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         _tempId: Date.now() + Math.random(),
         type: 'multiple_choice',
         question: form.question.trim(),
+        image: form.image || null,
         options,
         correctAnswer: form.correctAnswer,
       };
@@ -349,6 +421,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         _tempId: Date.now() + Math.random(),
         type: 'identification',
         question: form.question.trim(),
+        image: form.image || null,
         correctAnswer: form.correctAnswer.trim(),
       };
     } else if (form.type === 'enumeration') {
@@ -361,6 +434,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         _tempId: Date.now() + Math.random(),
         type: 'enumeration',
         question: form.question.trim(),
+        image: form.image || null,
         correctAnswer: items,
         itemCount: items.length,
       };
@@ -399,14 +473,21 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
       </div>
 
       {/* Question Text */}
-      <FormInput
-        label="Question"
-        value={form.question}
-        onChange={(v) => setForm({ ...form, question: v })}
-        placeholder="Enter your question here..."
-        required
-        multiline
-      />
+      <div>
+        <FormInput
+          label="Question"
+          value={form.question}
+          onChange={(v) => setForm({ ...form, question: v })}
+          placeholder="Enter your question here..."
+          required
+          multiline
+        />
+        {/* Question Diagram Attachment Uploader */}
+        <QuestionImageUploader
+          image={form.image}
+          onImageChange={(img) => setForm({ ...form, image: img })}
+        />
+      </div>
 
       {/* Type-specific fields */}
       <AnimatePresence mode="wait">
