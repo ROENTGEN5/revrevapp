@@ -9,14 +9,15 @@ import ModuleExam from './components/ModuleExam';
 import PomodoroTimer from './components/PomodoroTimer';
 
 const pageVariants = {
-  initial: { opacity: 0, scale: 0.98 },
-  animate: { opacity: 1, scale: 1 },
-  exit: { opacity: 0, scale: 0.98 },
+  initial: { opacity: 0, scale: 0.97, y: 8 },
+  animate: { opacity: 1, scale: 1, y: 0 },
+  exit: { opacity: 0, scale: 0.98, y: -8 },
 };
 
 const pageTransition = {
-  duration: 0.4,
-  ease: [0.22, 1, 0.36, 1],
+  type: 'spring',
+  stiffness: 260,
+  damping: 24,
 };
 
 function AnimatedRoutes() {
@@ -48,8 +49,10 @@ function AnimatedRoutes() {
 export default function App() {
   return (
     <>
-      {/* Ambient background glow */}
-      <div className="ambient-glow" />
+      {/* Ambient background glow mesh */}
+      <div className="ambient-glow">
+        <div className="ambient-glow-orb-3" />
+      </div>
 
       <BrowserRouter>
         <AnimatedRoutes />

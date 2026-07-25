@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, RotateCcw, Upload, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, List, CheckSquare } from 'lucide-react';
+import { Trophy, RotateCcw, ArrowLeft, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, List, CheckSquare } from 'lucide-react';
 
 function ScoreRing({ score, total }) {
-  const radius = 58;
+  const radius = 64;
   const circumference = 2 * Math.PI * radius;
   const percentage = total > 0 ? score / total : 0;
   const offset = circumference * (1 - percentage);
@@ -24,68 +24,67 @@ function ScoreRing({ score, total }) {
     requestAnimationFrame(animate);
   }, [score]);
 
-  let ringColor = 'oklch(0.65 0.25 280)';
-  if (percentage >= 0.8) ringColor = 'oklch(0.72 0.22 155)';
-  else if (percentage >= 0.5) ringColor = 'oklch(0.78 0.16 80)';
-  else ringColor = 'oklch(0.68 0.22 25)';
+  let ringColor = '#a855f7'; // Purple default
+  if (percentage >= 0.8) ringColor = '#10b981'; // Emerald
+  else if (percentage >= 0.5) ringColor = '#f59e0b'; // Amber
+  else ringColor = '#f43f5e'; // Rose
 
   return (
-    <div className="relative inline-flex items-center justify-center">
-      <svg width="140" height="140" className="score-ring">
-        <circle className="score-ring-track" cx="70" cy="70" r={radius} fill="none" strokeWidth="8" />
+    <div className="relative inline-flex items-center justify-center my-4">
+      <svg width="160" height="160" className="score-ring">
+        <circle cx="80" cy="80" r={radius} fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="10" />
         <motion.circle
-          cx="70" cy="70" r={radius} fill="none" stroke={ringColor} strokeWidth="8" strokeLinecap="round"
+          cx="80" cy="80" r={radius} fill="none" stroke={ringColor} strokeWidth="10" strokeLinecap="round"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1], delay: 0.3 }}
+          transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+          style={{ filter: `drop-shadow(0 0 10px ${ringColor}80)` }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-3xl font-extrabold text-surface-100 tabular-nums">{animatedScore}/{total}</span>
-        <span className="text-xs text-surface-400 font-medium mt-0.5">{Math.round(percentage * 100)}%</span>
+        <span className="text-4xl font-extrabold text-white tracking-tight font-mono">{animatedScore}/{total}</span>
+        <span className="text-xs font-bold text-white/50 uppercase tracking-widest mt-0.5">{Math.round(percentage * 100)}%</span>
       </div>
     </div>
   );
 }
 
-/** Type badge for review items */
 function TypeTag({ type }) {
   const config = {
-    multiple_choice: { label: 'MC', icon: CheckSquare, color: 'bg-accent-500/20 text-accent-400' },
-    identification: { label: 'ID', icon: Type, color: 'bg-[oklch(0.72_0.18_200/0.2)] text-[oklch(0.72_0.18_200)]' },
-    enumeration: { label: 'ENUM', icon: List, color: 'bg-[oklch(0.78_0.16_80/0.2)] text-[oklch(0.78_0.16_80)]' },
+    multiple_choice: { label: 'MC', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+    identification: { label: 'ID', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+    enumeration: { label: 'ENUM', icon: List, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
-    <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold ${color}`}>
+    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-extrabold border ${color}`}>
       <Icon className="w-3 h-3" />
       {label}
     </span>
   );
 }
 
-/** Review for Multiple Choice */
 function MCReview({ result }) {
   const { options, correctAnswer, userAnswer, isCorrect } = result;
   return (
-    <div className="space-y-2">
+    <div className="space-y-2 mt-3">
       {options.map((opt) => {
         const isUserPick = opt.label === userAnswer;
         const isCorrectOption = opt.label === correctAnswer;
 
-        let optionClass = 'border-surface-700/30 bg-surface-800/20';
-        let labelClass = 'bg-surface-700 text-surface-400';
+        let optionClass = 'border-white/10 bg-white/5';
+        let labelClass = 'bg-white/10 text-white/50';
         let suffix = '';
 
         if (isCorrectOption) {
-          optionClass = 'border-success-border bg-success-bg';
-          labelClass = 'bg-success-500 text-white';
+          optionClass = 'border-emerald-500/50 bg-emerald-500/15';
+          labelClass = 'bg-emerald-500 text-white';
           suffix = ' ✓ Correct Answer';
         }
         if (isUserPick && !isCorrect) {
-          optionClass = 'border-danger-border bg-danger-bg';
-          labelClass = 'bg-danger-500 text-white';
+          optionClass = 'border-rose-500/50 bg-rose-500/15';
+          labelClass = 'bg-rose-500 text-white';
           suffix = ' ✗ Your Answer';
         }
         if (isUserPick && isCorrect) {
@@ -93,13 +92,13 @@ function MCReview({ result }) {
         }
 
         return (
-          <div key={opt.label} className={`flex items-center gap-3 p-3 rounded-lg border ${optionClass}`}>
-            <span className={`inline-flex items-center justify-center w-7 h-7 rounded-md text-xs font-bold shrink-0 ${labelClass}`}>
+          <div key={opt.label} className={`flex items-center gap-3 p-3 rounded-xl border ${optionClass}`}>
+            <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold font-mono shrink-0 ${labelClass}`}>
               {opt.label}
             </span>
-            <span className="text-surface-200 text-sm flex-1">{opt.text}</span>
+            <span className="text-white/80 text-xs font-medium flex-1">{opt.text}</span>
             {suffix && (
-              <span className={`text-xs font-semibold shrink-0 ${isCorrectOption ? 'text-success-400' : 'text-danger-400'}`}>
+              <span className={`text-xs font-bold shrink-0 ${isCorrectOption ? 'text-emerald-300' : 'text-rose-300'}`}>
                 {suffix}
               </span>
             )}
@@ -110,39 +109,35 @@ function MCReview({ result }) {
   );
 }
 
-/** Review for Identification */
 function IdentificationReview({ result }) {
   const { correctAnswer, userAnswer, isCorrect, isSkipped } = result;
   return (
-    <div className="space-y-2">
-      {/* User's answer */}
-      <div className={`flex items-center gap-3 p-3 rounded-lg border ${
-        isSkipped ? 'border-warning-border/40 bg-warning-bg/30' :
-        isCorrect ? 'border-success-border bg-success-bg' :
-        'border-danger-border bg-danger-bg'
+    <div className="space-y-2 mt-3">
+      <div className={`flex items-center gap-3 p-3.5 rounded-xl border ${
+        isSkipped ? 'border-amber-500/40 bg-amber-500/15' :
+        isCorrect ? 'border-emerald-500/40 bg-emerald-500/15' :
+        'border-rose-500/40 bg-rose-500/15'
       }`}>
-        <span className="text-surface-400 text-xs font-semibold shrink-0 w-20">Your answer:</span>
-        <span className={`text-sm font-medium flex-1 ${isSkipped ? 'text-warning-400 italic' : 'text-surface-100'}`}>
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider shrink-0 w-24">Your answer:</span>
+        <span className={`text-xs font-bold font-mono flex-1 ${isSkipped ? 'text-amber-300 italic' : 'text-white'}`}>
           {isSkipped ? '(No answer)' : userAnswer}
         </span>
         {!isSkipped && (
-          <span className={`text-xs font-semibold ${isCorrect ? 'text-success-400' : 'text-danger-400'}`}>
+          <span className={`text-xs font-extrabold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}>
             {isCorrect ? '✓ Correct' : '✗ Incorrect'}
           </span>
         )}
       </div>
-      {/* Correct answer (show if wrong or skipped) */}
       {!isCorrect && (
-        <div className="flex items-center gap-3 p-3 rounded-lg border border-success-border bg-success-bg">
-          <span className="text-surface-400 text-xs font-semibold shrink-0 w-20">Correct:</span>
-          <span className="text-success-400 text-sm font-semibold flex-1">{correctAnswer}</span>
+        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15">
+          <span className="text-white/50 text-xs font-bold uppercase tracking-wider shrink-0 w-24">Correct:</span>
+          <span className="text-emerald-300 text-xs font-bold font-mono flex-1">{correctAnswer}</span>
         </div>
       )}
     </div>
   );
 }
 
-/** Review for Enumeration */
 function EnumerationReview({ result }) {
   const { correctAnswer, userAnswer, isCorrect, isSkipped } = result;
   const normalizeItem = (s) => s.toString().trim().toLowerCase().replace(/\s+/g, ' ');
@@ -150,14 +145,13 @@ function EnumerationReview({ result }) {
   const userItems = Array.isArray(userAnswer) ? userAnswer : [];
 
   return (
-    <div className="space-y-3">
-      {/* User's answers */}
+    <div className="space-y-3 mt-3">
       <div>
-        <span className="text-surface-400 text-xs font-semibold block mb-2">Your answers:</span>
-        <div className="space-y-1.5">
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider block mb-2">Your answers:</span>
+        <div className="space-y-2">
           {isSkipped || userItems.every(s => !s.trim()) ? (
-            <div className="p-3 rounded-lg border border-warning-border/40 bg-warning-bg/30">
-              <span className="text-warning-400 text-sm italic">(No answer)</span>
+            <div className="p-3 rounded-xl border border-amber-500/40 bg-amber-500/15">
+              <span className="text-amber-300 text-xs italic font-medium">(No answer)</span>
             </div>
           ) : (
             userItems.map((item, i) => {
@@ -165,14 +159,14 @@ function EnumerationReview({ result }) {
               if (!trimmed) return null;
               const isItemCorrect = correctSet.has(normalizeItem(trimmed));
               return (
-                <div key={i} className={`flex items-center gap-3 p-3 rounded-lg border ${
-                  isItemCorrect ? 'border-success-border bg-success-bg' : 'border-danger-border bg-danger-bg'
+                <div key={i} className={`flex items-center gap-3 p-3 rounded-xl border ${
+                  isItemCorrect ? 'border-emerald-500/40 bg-emerald-500/15' : 'border-rose-500/40 bg-rose-500/15'
                 }`}>
-                  <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold shrink-0 ${
-                    isItemCorrect ? 'bg-success-500 text-white' : 'bg-danger-500 text-white'
+                  <span className={`inline-flex items-center justify-center w-6 h-6 rounded-md text-xs font-bold font-mono shrink-0 ${
+                    isItemCorrect ? 'bg-emerald-500 text-white' : 'bg-rose-500 text-white'
                   }`}>{i + 1}</span>
-                  <span className="text-surface-200 text-sm flex-1">{trimmed}</span>
-                  <span className={`text-xs font-semibold ${isItemCorrect ? 'text-success-400' : 'text-danger-400'}`}>
+                  <span className="text-white/90 text-xs font-semibold flex-1">{trimmed}</span>
+                  <span className={`text-xs font-extrabold ${isItemCorrect ? 'text-emerald-300' : 'text-rose-300'}`}>
                     {isItemCorrect ? '✓' : '✗'}
                   </span>
                 </div>
@@ -181,13 +175,12 @@ function EnumerationReview({ result }) {
           )}
         </div>
       </div>
-      {/* Correct answers (always show for reference) */}
       {!isCorrect && (
         <div>
-          <span className="text-surface-400 text-xs font-semibold block mb-2">Correct answers:</span>
+          <span className="text-white/50 text-xs font-bold uppercase tracking-wider block mb-2">Correct answers:</span>
           <div className="flex flex-wrap gap-2">
             {correctAnswer.map((item, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-lg border border-success-border bg-success-bg text-success-400 text-sm font-medium">
+              <span key={i} className="px-3 py-1.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 text-xs font-bold font-mono">
                 {item}
               </span>
             ))}
@@ -204,16 +197,16 @@ function ReviewItem({ result, index }) {
 
   let statusIcon, statusBg, statusText;
   if (isSkipped) {
-    statusIcon = <MinusCircle className="w-5 h-5 text-warning-400" />;
-    statusBg = 'border-warning-border/40 bg-warning-bg/30';
+    statusIcon = <MinusCircle className="w-5 h-5 text-amber-400" />;
+    statusBg = 'border-amber-500/30 bg-amber-500/10';
     statusText = 'Skipped';
   } else if (isCorrect) {
-    statusIcon = <CheckCircle2 className="w-5 h-5 text-success-400" />;
-    statusBg = 'border-success-border/40 bg-success-bg/30';
+    statusIcon = <CheckCircle2 className="w-5 h-5 text-emerald-400" />;
+    statusBg = 'border-emerald-500/30 bg-emerald-500/10';
     statusText = 'Correct';
   } else {
-    statusIcon = <XCircle className="w-5 h-5 text-danger-400" />;
-    statusBg = 'border-danger-border/40 bg-danger-bg/30';
+    statusIcon = <XCircle className="w-5 h-5 text-rose-400" />;
+    statusBg = 'border-rose-500/30 bg-rose-500/10';
     statusText = 'Incorrect';
   }
 
@@ -221,31 +214,31 @@ function ReviewItem({ result, index }) {
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05, duration: 0.4 }}
-      className={`rounded-xl border overflow-hidden ${statusBg}`}
+      transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 25 }}
+      className={`rounded-2xl border overflow-hidden backdrop-blur-xl ${statusBg}`}
     >
       <button
         id={`review-item-${index + 1}`}
-        className="w-full flex items-center gap-3 p-4 text-left cursor-pointer"
+        className="w-full flex items-center gap-3.5 p-4 sm:p-5 text-left cursor-pointer hover:bg-white/5 transition"
         onClick={() => setExpanded(!expanded)}
       >
         {statusIcon}
         <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="text-surface-500 text-xs font-semibold">Q{index + 1}</span>
+          <div className="flex items-center gap-2 flex-wrap mb-1">
+            <span className="text-white/40 text-xs font-extrabold font-mono">Q{index + 1}</span>
             <TypeTag type={type} />
           </div>
-          <span className="text-surface-200 text-sm font-medium block mt-0.5">{question}</span>
+          <span className="text-white text-sm font-bold block truncate">{question}</span>
         </div>
-        <span className={`text-xs font-semibold px-2 py-1 rounded-lg shrink-0 ${
-          isCorrect ? 'bg-success-500/20 text-success-400' :
-          isSkipped ? 'bg-warning-500/20 text-warning-400' :
-          'bg-danger-500/20 text-danger-400'
+        <span className={`text-xs font-extrabold px-3 py-1 rounded-full shrink-0 ${
+          isCorrect ? 'bg-emerald-500/20 text-emerald-300' :
+          isSkipped ? 'bg-amber-500/20 text-amber-300' :
+          'bg-rose-500/20 text-rose-300'
         }`}>
           {statusText}
         </span>
         <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
-          <ChevronDown className="w-4 h-4 text-surface-500 shrink-0" />
+          <ChevronDown className="w-4 h-4 text-white/40 shrink-0" />
         </motion.div>
       </button>
 
@@ -255,7 +248,7 @@ function ReviewItem({ result, index }) {
         transition={{ duration: 0.25 }}
         className="overflow-hidden"
       >
-        <div className="px-4 pb-4">
+        <div className="px-5 pb-5 pt-1 border-t border-white/5">
           {type === 'multiple_choice' && <MCReview result={result} />}
           {type === 'identification' && <IdentificationReview result={result} />}
           {type === 'enumeration' && <EnumerationReview result={result} />}
@@ -265,132 +258,109 @@ function ReviewItem({ result, index }) {
   );
 }
 
-export default function ResultsScreen({ results, score, totalQuestions, onReviewAgain, onReset, onRetake, moduleId }) {
+export default function ResultsScreen({ results, score, totalQuestions, onReviewAgain, onReset, onRetake }) {
   const percentage = totalQuestions > 0 ? score / totalQuestions : 0;
   const skipped = results.filter(r => r.isSkipped).length;
   const incorrect = totalQuestions - score - skipped;
 
   let verdict, verdictColor;
-  if (percentage >= 0.9) { verdict = 'Outstanding! 🎉'; verdictColor = 'text-success-400'; }
-  else if (percentage >= 0.7) { verdict = 'Great job! 👏'; verdictColor = 'text-success-400'; }
-  else if (percentage >= 0.5) { verdict = 'Keep practicing! 💪'; verdictColor = 'text-warning-400'; }
-  else { verdict = 'Needs improvement 📚'; verdictColor = 'text-danger-400'; }
-
-  // Count by type
-  const mcCount = results.filter(r => r.type === 'multiple_choice').length;
-  const idCount = results.filter(r => r.type === 'identification').length;
-  const enumCount = results.filter(r => r.type === 'enumeration').length;
+  if (percentage >= 0.9) { verdict = 'Outstanding Mastery! 🎉'; verdictColor = 'text-emerald-300'; }
+  else if (percentage >= 0.7) { verdict = 'Great Performance! 👏'; verdictColor = 'text-emerald-300'; }
+  else if (percentage >= 0.5) { verdict = 'Solid Practice! 💪'; verdictColor = 'text-amber-300'; }
+  else { verdict = 'Needs Additional Study 📚'; verdictColor = 'text-rose-300'; }
 
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 sm:py-14">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
+        transition={{ type: 'spring', stiffness: 280, damping: 25 }}
         className="w-full max-w-3xl"
       >
-        {/* Score Header */}
-        <div className="glass-strong rounded-2xl p-8 sm:p-10 text-center mb-8">
+        {/* Score Header Card */}
+        <div className="glass-apple-card p-8 sm:p-10 text-center mb-8">
           <motion.div
             initial={{ scale: 0.5, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 15 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 220, damping: 15 }}
+            className="w-16 h-16 rounded-3xl bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-purple-500/10"
           >
-            <Trophy className="w-10 h-10 text-accent-400 mx-auto mb-4" />
+            <Trophy className="w-8 h-8 text-amber-400" />
           </motion.div>
 
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-surface-100 mb-2">Exam Complete</h1>
-          <p className={`text-lg font-semibold ${verdictColor} mb-6`}>{verdict}</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight mb-2">Exam Completed</h1>
+          <p className={`text-base font-extrabold ${verdictColor} mb-6`}>{verdict}</p>
 
           <ScoreRing score={score} total={totalQuestions} />
 
-          {/* Stats Row */}
+          {/* Stats Bar */}
           <div className="flex items-center justify-center gap-6 mt-6">
             <div className="text-center">
-              <p className="text-2xl font-bold text-success-400">{score}</p>
-              <p className="text-xs text-surface-400 font-medium">Correct</p>
+              <p className="text-2xl font-extrabold text-emerald-300 font-mono">{score}</p>
+              <p className="text-xs text-white/50 font-bold uppercase tracking-wider">Correct</p>
             </div>
-            <div className="w-px h-8 bg-surface-700" />
+            <div className="w-px h-8 bg-white/10" />
             <div className="text-center">
-              <p className="text-2xl font-bold text-danger-400">{incorrect}</p>
-              <p className="text-xs text-surface-400 font-medium">Incorrect</p>
+              <p className="text-2xl font-extrabold text-rose-300 font-mono">{incorrect}</p>
+              <p className="text-xs text-white/50 font-bold uppercase tracking-wider">Incorrect</p>
             </div>
             {skipped > 0 && (
               <>
-                <div className="w-px h-8 bg-surface-700" />
+                <div className="w-px h-8 bg-white/10" />
                 <div className="text-center">
-                  <p className="text-2xl font-bold text-warning-400">{skipped}</p>
-                  <p className="text-xs text-surface-400 font-medium">Skipped</p>
+                  <p className="text-2xl font-extrabold text-amber-300 font-mono">{skipped}</p>
+                  <p className="text-xs text-white/50 font-bold uppercase tracking-wider">Skipped</p>
                 </div>
               </>
             )}
           </div>
-
-          {/* Question type breakdown */}
-          <div className="flex items-center justify-center gap-3 mt-5 flex-wrap">
-            {mcCount > 0 && (
-              <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-3 py-1 rounded-lg">
-                {mcCount} Multiple Choice
-              </span>
-            )}
-            {idCount > 0 && (
-              <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-3 py-1 rounded-lg">
-                {idCount} Identification
-              </span>
-            )}
-            {enumCount > 0 && (
-              <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-3 py-1 rounded-lg">
-                {enumCount} Enumeration
-              </span>
-            )}
-          </div>
         </div>
 
-        {/* Review Section */}
-        <div className="mb-6">
-          <h2 className="text-lg font-bold text-surface-200 mb-4">Review Answers</h2>
-          <div className="space-y-3">
+        {/* Question Review Breakdown */}
+        <div className="mb-8">
+          <h2 className="text-xl font-extrabold text-white mb-4 tracking-tight">Question Breakdown</h2>
+          <div className="space-y-3.5">
             {results.map((result, idx) => (
               <ReviewItem key={result.id} result={result} index={idx} />
             ))}
           </div>
         </div>
 
-        {/* Dual Action Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pb-10">
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pb-12">
           <motion.button
             id="review-again-button"
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={onReviewAgain}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base bg-surface-800/80 border border-surface-600/50 text-surface-200 hover:bg-surface-700/80 hover:border-surface-500/50 transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl glass-apple-btn font-bold text-xs hover:text-white"
           >
-            <RotateCcw className="w-5 h-5" />
-            Review Again
+            <RotateCcw className="w-4 h-4" />
+            <span>Review Flashcards</span>
           </motion.button>
 
           {onRetake && (
             <motion.button
               id="retake-exam-button"
-              whileHover={{ scale: 1.03 }}
+              whileHover={{ scale: 1.03, y: -2 }}
               whileTap={{ scale: 0.97 }}
               onClick={onRetake}
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base bg-gradient-to-r from-accent-500 to-[oklch(0.62_0.24_310)] text-white shadow-lg shadow-accent-500/20 hover:shadow-accent-500/30 transition-shadow cursor-pointer"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-2xl font-bold text-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20"
             >
-              <RotateCcw className="w-5 h-5" />
-              Try Again
+              <RotateCcw className="w-4 h-4" />
+              <span>Retake Exam</span>
             </motion.button>
           )}
 
           <motion.button
             id="back-to-module-button"
-            whileHover={{ scale: 1.03 }}
+            whileHover={{ scale: 1.03, y: -2 }}
             whileTap={{ scale: 0.97 }}
             onClick={onReset}
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-xl font-bold text-base bg-surface-800/80 border border-surface-600/50 text-surface-200 hover:bg-surface-700/80 hover:border-surface-500/50 transition-all cursor-pointer"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-2xl glass-apple-btn font-bold text-xs hover:text-white"
           >
-            <Upload className="w-5 h-5" />
-            Back to Module
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to Module</span>
           </motion.button>
         </div>
       </motion.div>

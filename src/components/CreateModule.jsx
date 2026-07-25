@@ -2,8 +2,8 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  ArrowLeft, Upload, PenLine, Sparkles, FileText, FileJson,
-  AlertCircle, Loader2, BookOpen, Save, Cloud, CloudOff
+  ArrowLeft, Upload, PenLine, Sparkles, FileText,
+  AlertCircle, Loader2, BookOpen, Cloud, CloudOff, CheckCircle2
 } from 'lucide-react';
 import { parseFile } from '../utils/parseFile';
 import {
@@ -17,10 +17,6 @@ import {
 } from '../services/firebaseService';
 import ManualEntryForm from './ManualEntryForm';
 
-/**
- * CreateModule page — supports both fresh creation and resuming a draft.
- * Route: /create (new) or /create/:moduleId (resume draft)
- */
 export default function CreateModule() {
   const navigate = useNavigate();
   const { moduleId: existingDraftId } = useParams();
@@ -37,9 +33,9 @@ export default function CreateModule() {
   const [loadingDraft, setLoadingDraft] = useState(!!existingDraftId);
   const fileInputRef = useRef(null);
 
-  // ─── Draft state ─────────────────────────────────────────
+  // Draft state
   const [draftId, setDraftId] = useState(existingDraftId || null);
-  const [autoSaveStatus, setAutoSaveStatus] = useState('idle'); // 'idle' | 'saving' | 'saved' | 'error'
+  const [autoSaveStatus, setAutoSaveStatus] = useState('idle');
   const saveTimerRef = useRef(null);
   const titleSaveTimerRef = useRef(null);
   const [draftQuestions, setDraftQuestions] = useState([]);
@@ -55,7 +51,6 @@ export default function CreateModule() {
         setDescription(mod.description || '');
 
         const qs = await getModuleQuestions(existingDraftId);
-        // Convert Firestore questions back to ManualEntryForm format
         const formattedQs = qs.map((q) => {
           const formatted = {
             _tempId: Date.now() + Math.random(),
@@ -63,20 +58,13 @@ export default function CreateModule() {
             question: q.question,
             correctAnswer: q.correctAnswer,
           };
-          if (q.type === 'multiple_choice') {
-            formatted.options = q.options;
-          }
-          if (q.type === 'enumeration') {
-            formatted.itemCount = q.itemCount;
-          }
+          if (q.type === 'multiple_choice') formatted.options = q.options;
+          if (q.type === 'enumeration') formatted.itemCount = q.itemCount;
           return formatted;
         });
         setDraftQuestions(formattedQs);
 
-        // If module has questions, switch to manual mode to show them
-        if (formattedQs.length > 0) {
-          setMode('manual');
-        }
+        if (formattedQs.length > 0) setMode('manual');
       } catch (err) {
         console.error('Error loading draft:', err);
       } finally {
@@ -86,7 +74,7 @@ export default function CreateModule() {
     loadDraft();
   }, [existingDraftId]);
 
-  // ─── Auto-save title/description (debounced) ─────────────
+  // Debounced auto-save for title & description
   useEffect(() => {
     if (!draftId || !title.trim()) return;
 
@@ -109,10 +97,9 @@ export default function CreateModule() {
     return () => clearTimeout(titleSaveTimerRef.current);
   }, [draftId, title, description]);
 
-  // ─── Create draft on first title input ────────────────────
+  // Ensure draft exists
   const ensureDraft = useCallback(async () => {
     if (draftId) return draftId;
-
     try {
       setAutoSaveStatus('saving');
       const newId = await createDraftModule({
@@ -130,13 +117,12 @@ export default function CreateModule() {
     }
   }, [draftId, title, description]);
 
-  // ─── Auto-save questions (debounced) ──────────────────────
+  // Debounced auto-save questions
   const handleQuestionsChange = useCallback(async (questions) => {
     clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(async () => {
       let currentDraftId = draftId;
 
-      // Create draft if it doesn't exist yet
       if (!currentDraftId) {
         try {
           setAutoSaveStatus('saving');
@@ -164,7 +150,6 @@ export default function CreateModule() {
     }, 1500);
   }, [draftId, title, description]);
 
-  // Cleanup timers
   useEffect(() => {
     return () => {
       clearTimeout(saveTimerRef.current);
@@ -172,7 +157,7 @@ export default function CreateModule() {
     };
   }, []);
 
-  // ─── File handling ────────────────────────────────────────
+  // File parsing & handling
   const handleFile = async (file) => {
     setError(null);
     setFileName(file.name);
@@ -183,13 +168,11 @@ export default function CreateModule() {
       await new Promise((r) => setTimeout(r, 400));
       setParsedQuestions(questions);
 
-      // Auto-fill title from filename if empty
       if (!title) {
         const nameWithoutExt = file.name.replace(/\.(csv|json)$/i, '');
         setTitle(nameWithoutExt.replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()));
       }
 
-      // Auto-save uploaded questions as draft
       let currentDraftId = draftId;
       if (!currentDraftId) {
         const autoTitle = title.trim() || file.name.replace(/\.(csv|json)$/i, '').replace(/[-_]/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
@@ -229,7 +212,7 @@ export default function CreateModule() {
     if (file) handleFile(file);
   };
 
-  // ─── Publish (finalize) ───────────────────────────────────
+  // Publish module
   const handlePublish = async (questions) => {
     if (!title.trim()) {
       setError('Please enter a module title.');
@@ -241,7 +224,6 @@ export default function CreateModule() {
 
     try {
       if (draftId) {
-        // Publish existing draft
         await updateDraftModule(draftId, {
           title: title.trim(),
           description: description.trim(),
@@ -250,7 +232,6 @@ export default function CreateModule() {
         await publishModule(draftId);
         navigate(`/module/${draftId}`);
       } else {
-        // Create and publish in one go
         const moduleId = await createModule({
           title: title.trim(),
           description: description.trim(),
@@ -264,24 +245,19 @@ export default function CreateModule() {
     }
   };
 
-  const handleManualSubmit = (questions) => {
-    handlePublish(questions);
-  };
-
-  const handleUploadSave = () => {
-    if (!parsedQuestions) return;
-    handlePublish(parsedQuestions);
-  };
-
   if (loadingDraft) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+          className="p-4 rounded-2xl glass-apple-pill text-purple-400"
         >
-          <Loader2 className="w-8 h-8 text-accent-400" />
+          <Loader2 className="w-8 h-8" />
         </motion.div>
+        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+          Loading Draft...
+        </span>
       </div>
     );
   }
@@ -289,133 +265,134 @@ export default function CreateModule() {
   return (
     <div className="min-h-screen flex flex-col items-center px-4 py-8 sm:py-12">
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="w-full max-w-2xl"
+        transition={{ type: 'spring', stiffness: 280, damping: 25 }}
+        className="w-full max-w-3xl"
       >
-        {/* Back Button */}
-        <div className="flex items-center justify-between mb-6">
+        {/* Navigation & Auto-Save Indicator */}
+        <div className="flex items-center justify-between mb-8">
           <button
             id="back-to-dashboard-create"
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-1.5 text-surface-400 hover:text-surface-200 text-sm font-medium transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-apple-btn text-xs font-semibold hover:text-white cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
-            Dashboard
+            <span>Dashboard</span>
           </button>
 
-          {/* Auto-save indicator */}
           <AutoSaveIndicator status={autoSaveStatus} />
         </div>
 
-        {/* Title */}
+        {/* Hero Header */}
         <div className="text-center mb-8">
           <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.15, duration: 0.5 }}
-            className="inline-flex items-center gap-2 mb-4"
+            transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+            className="inline-flex items-center gap-2 mb-3"
           >
-            <Sparkles className="w-7 h-7 text-accent-400" />
+            <Sparkles className="w-7 h-7 text-purple-400" />
             <h1 className="text-3xl sm:text-4xl font-extrabold gradient-text tracking-tight">
               {existingDraftId ? 'Edit Module' : 'Create Module'}
             </h1>
           </motion.div>
-          <p className="text-surface-400 text-base max-w-md mx-auto">
+          <p className="text-white/60 text-sm sm:text-base max-w-md mx-auto">
             {existingDraftId
-              ? 'Continue building your module. Questions are auto-saved.'
-              : 'Upload a questions file or create your own. Your progress is auto-saved.'}
+              ? 'Continue crafting your module. Questions save automatically.'
+              : 'Upload a CSV/JSON file or write questions manually. Auto-saved live.'}
           </p>
         </div>
 
-        {/* Module Info Fields */}
+        {/* Module Title & Description Inset Form */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass rounded-2xl p-5 sm:p-6 mb-6"
+          className="glass-apple-card p-6 sm:p-8 mb-6"
         >
-          <div className="flex items-center gap-2 mb-4">
-            <BookOpen className="w-4 h-4 text-accent-400" />
-            <span className="text-surface-200 text-sm font-semibold">Module Details</span>
+          <div className="flex items-center gap-2 mb-5">
+            <BookOpen className="w-4 h-4 text-purple-400" />
+            <span className="text-white text-sm font-bold tracking-tight">Module Information</span>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="module-title" className="block text-surface-400 text-xs font-semibold mb-1.5">
-                Title <span className="text-danger-400">*</span>
+              <label htmlFor="module-title" className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                Title <span className="text-rose-400">*</span>
               </label>
               <input
                 id="module-title"
                 type="text"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                placeholder="e.g. Biology 101"
-                className="w-full px-4 py-3 rounded-xl border border-surface-700/50 bg-surface-900/40 text-surface-100 text-sm font-medium placeholder:text-surface-600 focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/20 transition-all"
+                placeholder="e.g. Computer Science Fundamentals"
+                className="w-full px-4 py-3 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
             <div>
-              <label htmlFor="module-description" className="block text-surface-400 text-xs font-semibold mb-1.5">
-                Description <span className="text-surface-600">(optional)</span>
+              <label htmlFor="module-description" className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                Description <span className="text-white/40 font-normal lowercase">(optional)</span>
               </label>
               <input
                 id="module-description"
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                placeholder="e.g. Cell biology, genetics, and evolution"
-                className="w-full px-4 py-3 rounded-xl border border-surface-700/50 bg-surface-900/40 text-surface-100 text-sm font-medium placeholder:text-surface-600 focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/20 transition-all"
+                placeholder="e.g. Data structures, algorithms, and logic gates"
+                className="w-full px-4 py-3 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
               />
             </div>
           </div>
         </motion.div>
 
-        {/* Mode Toggle */}
+        {/* Apple Segmented Mode Switcher */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.4 }}
-          className="flex items-center justify-center mb-6"
+          transition={{ delay: 0.15 }}
+          className="flex items-center justify-center mb-8"
         >
-          <div className="view-toggle-pill inline-flex rounded-xl p-1 gap-1">
+          <div className="glass-apple-pill inline-flex rounded-2xl p-1.5 gap-2 border border-white/10">
             <button
               id="toggle-upload-mode"
               onClick={() => { setMode('upload'); setError(null); }}
-              className={`view-toggle-option inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${
-                mode === 'upload' ? 'active' : 'text-surface-400 hover:text-surface-200'
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer relative ${
+                mode === 'upload' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
               }`}
             >
               <Upload className="w-4 h-4" />
-              Upload File
+              <span>Upload File</span>
             </button>
             <button
               id="toggle-manual-mode"
               onClick={() => { setMode('manual'); setError(null); }}
-              className={`view-toggle-option inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${
-                mode === 'manual' ? 'active' : 'text-surface-400 hover:text-surface-200'
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer relative ${
+                mode === 'manual' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
               }`}
             >
               <PenLine className="w-4 h-4" />
-              Create Manually
+              <span>Create Manually</span>
             </button>
           </div>
         </motion.div>
 
-        {/* Content Area */}
+        {/* Content Mode Container */}
         <AnimatePresence mode="wait">
           {mode === 'upload' ? (
             <motion.div
               key="upload-mode"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 25 }}
             >
-              {/* Upload Zone */}
+              {/* Drop Zone */}
               <div
                 id="upload-drop-zone"
-                className={`drop-zone glass rounded-2xl p-10 sm:p-14 text-center cursor-pointer ${isDragOver ? 'drag-over' : ''}`}
+                className={`drop-zone rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all ${
+                  isDragOver ? 'drag-over' : ''
+                }`}
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
                 onDragLeave={handleDragLeave}
@@ -434,28 +411,27 @@ export default function CreateModule() {
                   <div className="flex flex-col items-center gap-4">
                     <motion.div
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+                      transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+                      className="p-4 rounded-2xl bg-purple-500/20 text-purple-300"
                     >
-                      <FileText className="w-12 h-12 text-accent-400" />
+                      <FileText className="w-10 h-10" />
                     </motion.div>
-                    <p className="text-surface-300 font-medium">
-                      Parsing <span className="text-accent-400">{fileName}</span>...
+                    <p className="text-white/80 font-semibold text-sm">
+                      Parsing <span className="text-purple-400">{fileName}</span>...
                     </p>
                   </div>
                 ) : parsedQuestions ? (
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-14 h-14 rounded-xl bg-success-bg flex items-center justify-center">
-                      <FileText className="w-7 h-7 text-success-400" />
+                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                      <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <div>
-                      <p className="text-surface-200 font-semibold text-lg mb-1">
-                        {fileName}
+                      <p className="text-white font-bold text-lg mb-1">{fileName}</p>
+                      <p className="text-emerald-300 text-sm font-extrabold font-mono">
+                        {parsedQuestions.length} Questions Loaded ✓
                       </p>
-                      <p className="text-success-400 text-sm font-medium">
-                        {parsedQuestions.length} questions loaded ✓
-                      </p>
-                      <p className="text-surface-500 text-xs mt-1">
-                        Click to choose a different file
+                      <p className="text-white/40 text-xs mt-2">
+                        Click to select a different file
                       </p>
                     </div>
                   </div>
@@ -464,45 +440,46 @@ export default function CreateModule() {
                     <motion.div
                       animate={isDragOver ? { scale: 1.15, y: -4 } : { scale: 1, y: 0 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+                      className="p-4 rounded-2xl bg-white/5 text-purple-300 border border-white/10 shadow-xl"
                     >
-                      <Upload className="w-12 h-12 text-surface-400" />
+                      <Upload className="w-10 h-10" />
                     </motion.div>
                     <div>
-                      <p className="text-surface-200 font-semibold text-lg mb-1">
-                        Drop your file here, or <span className="text-accent-400 underline underline-offset-4">browse</span>
+                      <p className="text-white font-bold text-lg mb-1">
+                        Drop your quiz file here, or <span className="text-purple-400 underline underline-offset-4">browse</span>
                       </p>
-                      <p className="text-surface-500 text-sm">
-                        Supports <span className="font-mono text-surface-300">.csv</span> and <span className="font-mono text-surface-300">.json</span> formats
+                      <p className="text-white/50 text-xs">
+                        Supports <span className="font-mono text-white/80 font-bold">.csv</span> and <span className="font-mono text-white/80 font-bold">.json</span> files
                       </p>
                     </div>
                   </div>
                 )}
               </div>
 
-              {/* Save Button (when questions are loaded) */}
+              {/* Publish Button */}
               {parsedQuestions && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-6 flex justify-center"
+                  className="mt-8 flex justify-center"
                 >
                   <motion.button
                     id="save-module-button"
-                    whileHover={{ scale: 1.03 }}
+                    whileHover={{ scale: 1.03, y: -2 }}
                     whileTap={{ scale: 0.97 }}
-                    onClick={handleUploadSave}
+                    onClick={() => handlePublish(parsedQuestions)}
                     disabled={isSaving}
-                    className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-500 to-[oklch(0.62_0.24_310)] text-white shadow-lg shadow-accent-500/25 hover:shadow-accent-500/40 transition-shadow cursor-pointer disabled:opacity-50"
+                    className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20 disabled:opacity-50"
                   >
                     {isSaving ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin" />
-                        Publishing...
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        <span>Publishing Module...</span>
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-4 h-4" />
-                        Publish Module
+                        <Sparkles className="w-5 h-5" />
+                        <span>Publish Module</span>
                       </>
                     )}
                   </motion.button>
@@ -512,27 +489,27 @@ export default function CreateModule() {
           ) : (
             <motion.div
               key="manual-mode"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 25 }}
             >
-              <div className="glass rounded-2xl p-6 sm:p-8">
+              <div className="glass-apple-card p-6 sm:p-8">
                 <div className="flex items-center gap-3 mb-6">
-                  <PenLine className="w-5 h-5 text-accent-400" />
-                  <h2 className="text-lg font-semibold text-surface-100">
-                    Create Your Questions
+                  <PenLine className="w-5 h-5 text-purple-400" />
+                  <h2 className="text-lg font-extrabold text-white tracking-tight">
+                    Add Questions Manually
                   </h2>
                 </div>
                 <ManualEntryForm
-                  onQuizReady={handleManualSubmit}
+                  onQuizReady={(qs) => handlePublish(qs)}
                   submitLabel={isSaving ? 'Publishing...' : 'Publish Module'}
                   disabled={isSaving || !title.trim()}
                   onQuestionsChange={handleQuestionsChange}
                   initialQuestions={draftQuestions}
                 />
                 {!title.trim() && (
-                  <p className="text-warning-400 text-xs mt-3">
+                  <p className="text-amber-300 text-xs font-semibold mt-4">
                     ↑ Please fill in the module title above before publishing.
                   </p>
                 )}
@@ -541,17 +518,17 @@ export default function CreateModule() {
           )}
         </AnimatePresence>
 
-        {/* Error Message */}
+        {/* Error Banner */}
         <AnimatePresence>
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-4 flex items-start gap-3 p-4 rounded-xl bg-danger-bg border border-danger-border"
+              className="mt-6 flex items-start gap-3 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-300 shadow-xl"
             >
-              <AlertCircle className="w-5 h-5 text-danger-400 shrink-0 mt-0.5" />
-              <p className="text-danger-400 text-sm">{error}</p>
+              <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
+              <p className="text-sm font-semibold">{error}</p>
             </motion.div>
           )}
         </AnimatePresence>
@@ -560,8 +537,7 @@ export default function CreateModule() {
   );
 }
 
-
-// ─── Auto-save status indicator ──────────────────────────────────
+// Auto-save Indicator Badge
 function AutoSaveIndicator({ status }) {
   if (status === 'idle') return null;
 
@@ -571,24 +547,24 @@ function AutoSaveIndicator({ status }) {
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 10 }}
-        className="inline-flex items-center gap-1.5"
+        className="glass-apple-pill px-3 py-1.5 rounded-full inline-flex items-center gap-2 border border-white/10"
       >
         {status === 'saving' && (
           <>
-            <Loader2 className="w-3.5 h-3.5 text-surface-500 animate-spin" />
-            <span className="text-surface-500 text-xs font-medium">Saving...</span>
+            <Loader2 className="w-3.5 h-3.5 text-purple-400 animate-spin" />
+            <span className="text-white/70 text-xs font-semibold">Auto-saving...</span>
           </>
         )}
         {status === 'saved' && (
           <>
-            <Cloud className="w-3.5 h-3.5 text-success-400" />
-            <span className="text-success-400 text-xs font-medium">Saved</span>
+            <Cloud className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-emerald-300 text-xs font-semibold">Auto-saved</span>
           </>
         )}
         {status === 'error' && (
           <>
-            <CloudOff className="w-3.5 h-3.5 text-danger-400" />
-            <span className="text-danger-400 text-xs font-medium">Save failed</span>
+            <CloudOff className="w-3.5 h-3.5 text-rose-400" />
+            <span className="text-rose-300 text-xs font-semibold">Save error</span>
           </>
         )}
       </motion.div>

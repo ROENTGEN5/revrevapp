@@ -1,55 +1,53 @@
 import { useState, useCallback, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  BookOpen, Layers, List, RotateCcw, ChevronLeft, ChevronRight,
+  BookOpen, Layers, List, ChevronLeft, ChevronRight,
   Rocket, Eye, EyeOff, CheckSquare, Type, ListOrdered, Sparkles,
   ArrowLeft
 } from 'lucide-react';
 
-// ─── Type Badge ──────────────────────────────────────────────────
 function TypeBadge({ type }) {
   const config = {
-    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-accent-500/15 text-accent-400' },
-    identification: { label: 'Identification', icon: Type, color: 'bg-[oklch(0.72_0.18_200/0.15)] text-[oklch(0.72_0.18_200)]' },
-    enumeration: { label: 'Enumeration', icon: ListOrdered, color: 'bg-[oklch(0.78_0.16_80/0.15)] text-[oklch(0.78_0.16_80)]' },
+    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+    identification: { label: 'Identification', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+    enumeration: { label: 'Enumeration', icon: ListOrdered, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold ${color}`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${color}`}>
       <Icon className="w-3.5 h-3.5" />
       {label}
     </span>
   );
 }
 
-// ─── Answer display for a question (used in flashcard back + study sheet) ───
 function AnswerDisplay({ question }) {
   if (question.type === 'multiple_choice') {
     return (
-      <div className="space-y-2 mt-4">
+      <div className="space-y-2.5 mt-4">
         {question.options.map((opt) => {
           const isCorrect = opt.label === question.correctAnswer;
           return (
             <div
               key={opt.label}
-              className={`flex items-center gap-3 p-3 rounded-lg border transition-all ${
+              className={`flex items-center gap-3 p-3.5 rounded-xl border transition-all ${
                 isCorrect
-                  ? 'border-success-border bg-success-bg'
-                  : 'border-surface-700/30 bg-surface-800/20'
+                  ? 'border-emerald-500/50 bg-emerald-500/15 shadow-md shadow-emerald-500/10'
+                  : 'border-white/10 bg-white/5'
               }`}
             >
               <span
-                className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-bold shrink-0 ${
-                  isCorrect ? 'bg-success-500 text-white' : 'bg-surface-700 text-surface-400'
+                className={`inline-flex items-center justify-center w-8 h-8 rounded-lg text-xs font-extrabold font-mono shrink-0 ${
+                  isCorrect ? 'bg-emerald-500 text-white' : 'bg-white/10 text-white/50'
                 }`}
               >
                 {opt.label}
               </span>
-              <span className={`text-sm font-medium flex-1 ${isCorrect ? 'text-success-400' : 'text-surface-300'}`}>
+              <span className={`text-sm font-semibold flex-1 ${isCorrect ? 'text-emerald-300' : 'text-white/70'}`}>
                 {opt.text}
               </span>
               {isCorrect && (
-                <span className="correct-badge text-xs font-bold px-2 py-0.5 rounded-md">
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 text-xs font-extrabold uppercase tracking-wider">
                   ✓ Correct
                 </span>
               )}
@@ -63,9 +61,9 @@ function AnswerDisplay({ question }) {
   if (question.type === 'identification') {
     return (
       <div className="mt-4">
-        <span className="text-surface-400 text-xs font-semibold block mb-2">Answer:</span>
-        <div className="p-4 rounded-lg border border-success-border bg-success-bg">
-          <span className="text-success-400 text-lg font-bold">{question.correctAnswer}</span>
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider block mb-2">Answer:</span>
+        <div className="p-4 rounded-xl border border-emerald-500/40 bg-emerald-500/15">
+          <span className="text-emerald-300 text-lg font-bold font-mono">{question.correctAnswer}</span>
         </div>
       </div>
     );
@@ -74,14 +72,14 @@ function AnswerDisplay({ question }) {
   if (question.type === 'enumeration') {
     return (
       <div className="mt-4">
-        <span className="text-surface-400 text-xs font-semibold block mb-2">
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider block mb-2">
           Items ({question.correctAnswer.length}):
         </span>
         <div className="flex flex-wrap gap-2">
           {question.correctAnswer.map((item, i) => (
             <span
               key={i}
-              className="px-3 py-2 rounded-lg border border-success-border bg-success-bg text-success-400 text-sm font-semibold"
+              className="px-3.5 py-2 rounded-xl border border-emerald-500/40 bg-emerald-500/15 text-emerald-300 text-sm font-bold font-mono"
             >
               {i + 1}. {item}
             </span>
@@ -94,11 +92,9 @@ function AnswerDisplay({ question }) {
   return null;
 }
 
-// ─── Flashcard Component ──────────────────────────────────────────
 function Flashcard({ question, index, total }) {
   const [isFlipped, setIsFlipped] = useState(false);
 
-  // Reset flip when question changes
   useEffect(() => {
     setIsFlipped(false);
   }, [question.id]);
@@ -106,58 +102,58 @@ function Flashcard({ question, index, total }) {
   return (
     <div className="flashcard-perspective w-full max-w-2xl mx-auto">
       <motion.div
-        className="flashcard w-full"
+        className="flashcard w-full cursor-pointer"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
-        transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
         onClick={() => setIsFlipped(!isFlipped)}
       >
         {/* Front */}
-        <div className="flashcard-face flashcard-front glass-strong">
+        <div className="flashcard-face flashcard-front glass-apple-card p-8 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent-500/15 text-accent-400 font-bold text-sm">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 font-extrabold text-sm font-mono shadow-md">
                 {index + 1}
               </span>
-              <span className="text-surface-400 text-sm font-medium">
-                of {total}
+              <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">
+                Question {index + 1} of {total}
               </span>
             </div>
             <TypeBadge type={question.type} />
           </div>
 
-          <div className="flex-1 flex items-center justify-center">
-            <h2 className="text-xl sm:text-2xl font-semibold text-surface-100 leading-relaxed text-center">
+          <div className="flex-1 flex items-center justify-center my-4">
+            <h2 className="text-xl sm:text-2xl font-extrabold text-white leading-relaxed text-center tracking-tight">
               {question.question}
             </h2>
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-6 text-surface-500">
+          <div className="flex items-center justify-center gap-2 mt-6 text-purple-300/80 font-semibold text-xs bg-white/5 py-2 px-4 rounded-full border border-white/10 mx-auto">
             <Eye className="w-4 h-4" />
-            <span className="text-xs font-medium">Click to reveal answer</span>
+            <span>Click or tap to flip card</span>
           </div>
         </div>
 
         {/* Back */}
-        <div className="flashcard-face flashcard-back glass-strong">
+        <div className="flashcard-face flashcard-back glass-apple-card p-8 flex flex-col justify-between">
           <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-success-400" />
-              <span className="text-success-400 text-sm font-bold">Answer</span>
+              <Sparkles className="w-4 h-4 text-emerald-400" />
+              <span className="text-emerald-300 text-sm font-extrabold tracking-wide uppercase">Answer Key</span>
             </div>
             <TypeBadge type={question.type} />
           </div>
 
-          <h3 className="text-base sm:text-lg font-medium text-surface-300 mb-2 leading-relaxed">
+          <h3 className="text-sm font-semibold text-white/60 mb-2 leading-relaxed">
             {question.question}
           </h3>
 
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto my-2 pr-1">
             <AnswerDisplay question={question} />
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-4 text-surface-500">
+          <div className="flex items-center justify-center gap-2 mt-4 text-white/50 text-xs font-semibold bg-white/5 py-2 px-4 rounded-full border border-white/10 mx-auto">
             <EyeOff className="w-4 h-4" />
-            <span className="text-xs font-medium">Click to hide answer</span>
+            <span>Click or tap to hide answer</span>
           </div>
         </div>
       </motion.div>
@@ -165,46 +161,36 @@ function Flashcard({ question, index, total }) {
   );
 }
 
-// ─── Study Sheet Item ─────────────────────────────────────────────
 function StudySheetItem({ question, index }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.04, duration: 0.4 }}
-      className="study-sheet-item glass-strong rounded-xl p-5 sm:p-6"
+      transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 25 }}
+      className="glass-apple-card p-6 sm:p-7"
     >
-      {/* Header */}
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-accent-500/15 text-accent-400 font-bold text-sm">
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30 font-extrabold text-xs font-mono shadow-md">
           {index + 1}
         </span>
         <TypeBadge type={question.type} />
       </div>
 
-      {/* Question */}
-      <h3 className="text-base sm:text-lg font-semibold text-surface-100 leading-relaxed mb-1">
+      <h3 className="text-base sm:text-lg font-bold text-white leading-relaxed mb-2 tracking-tight">
         {question.question}
       </h3>
 
-      {/* Answer */}
       <AnswerDisplay question={question} />
     </motion.div>
   );
 }
 
-
-// ─── Main Reviewer Screen ─────────────────────────────────────────
 export default function ReviewerScreen({ questions, onStartExam, onBackToUpload }) {
-  const [viewMode, setViewMode] = useState('flashcard'); // 'flashcard' | 'sheet'
+  const [viewMode, setViewMode] = useState('flashcard');
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const totalQuestions = questions.length;
   const currentQ = questions[currentIndex];
-
-  const mcCount = questions.filter(q => q.type === 'multiple_choice').length;
-  const idCount = questions.filter(q => q.type === 'identification').length;
-  const enumCount = questions.filter(q => q.type === 'enumeration').length;
 
   const goNext = useCallback(() => {
     setCurrentIndex((prev) => Math.min(prev + 1, totalQuestions - 1));
@@ -214,7 +200,6 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  // Keyboard navigation for flashcards
   useEffect(() => {
     if (viewMode !== 'flashcard') return;
     const handler = (e) => {
@@ -239,94 +224,72 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-4xl mx-auto"
+        className="w-full max-w-4xl mx-auto mb-6"
       >
         <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
           <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-accent-400" />
-            <h1 className="text-xl sm:text-2xl font-bold text-surface-100">
+            <div className="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
               Reviewer Mode
             </h1>
           </div>
           <button
             id="back-to-upload-button"
             onClick={onBackToUpload}
-            className="inline-flex items-center gap-1.5 text-surface-400 hover:text-surface-200 text-sm font-medium transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl glass-apple-btn text-xs font-bold text-white/70 hover:text-white cursor-pointer inline-flex items-center gap-1.5"
           >
             <ArrowLeft className="w-4 h-4" />
-            Back
+            <span>Back</span>
           </button>
         </div>
 
-        {/* Stats Row */}
-        <div className="flex items-center gap-3 mb-6 flex-wrap">
-          <span className="text-surface-400 text-sm font-medium">
-            {totalQuestions} Questions
-          </span>
-          <span className="w-px h-4 bg-surface-700" />
-          {mcCount > 0 && (
-            <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-2.5 py-1 rounded-lg">
-              {mcCount} MC
-            </span>
-          )}
-          {idCount > 0 && (
-            <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-2.5 py-1 rounded-lg">
-              {idCount} ID
-            </span>
-          )}
-          {enumCount > 0 && (
-            <span className="text-xs font-medium text-surface-400 bg-surface-800/60 px-2.5 py-1 rounded-lg">
-              {enumCount} Enum
-            </span>
-          )}
-        </div>
-
-        {/* View Toggle */}
-        <div className="flex items-center justify-center mb-8">
-          <div className="view-toggle-pill inline-flex rounded-xl p-1 gap-1">
+        {/* View Switcher Tabs */}
+        <div className="flex items-center justify-center mb-6">
+          <div className="glass-apple-pill inline-flex rounded-2xl p-1.5 gap-2 border border-white/10">
             <button
               id="toggle-flashcard-view"
               onClick={() => setViewMode('flashcard')}
-              className={`view-toggle-option inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${
-                viewMode === 'flashcard' ? 'active' : 'text-surface-400 hover:text-surface-200'
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'flashcard' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
               }`}
             >
               <Layers className="w-4 h-4" />
-              Flashcards
+              <span>Flashcards</span>
             </button>
             <button
               id="toggle-sheet-view"
               onClick={() => setViewMode('sheet')}
-              className={`view-toggle-option inline-flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold cursor-pointer ${
-                viewMode === 'sheet' ? 'active' : 'text-surface-400 hover:text-surface-200'
+              className={`inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                viewMode === 'sheet' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
               }`}
             >
               <List className="w-4 h-4" />
-              Study Sheet
+              <span>Study Sheet</span>
             </button>
           </div>
         </div>
       </motion.div>
 
-      {/* Content Area */}
+      {/* Main Content Area */}
       <div className="flex-1 w-full max-w-4xl mx-auto">
         <AnimatePresence mode="wait">
           {viewMode === 'flashcard' ? (
             <motion.div
               key="flashcard-view"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 25 }}
             >
-              {/* Flashcard */}
               <AnimatePresence mode="wait">
                 <motion.div
                   key={currentIndex}
-                  initial={{ opacity: 0, x: 40 }}
+                  initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -40 }}
-                  transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+                  exit={{ opacity: 0, x: -30 }}
+                  transition={{ type: 'spring', stiffness: 300, damping: 26 }}
                 >
                   <Flashcard
                     question={currentQ}
@@ -336,23 +299,23 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                 </motion.div>
               </AnimatePresence>
 
-              {/* Navigation */}
-              <div className="flex items-center justify-between mt-6 max-w-2xl mx-auto gap-3">
+              {/* Flashcard Action Buttons & Progress Dots */}
+              <div className="flex items-center justify-between mt-8 max-w-2xl mx-auto gap-4">
                 <button
                   id="flashcard-prev-button"
                   onClick={goPrev}
                   disabled={isFirst}
-                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
                     isFirst
-                      ? 'bg-surface-800/40 text-surface-600 cursor-not-allowed'
-                      : 'bg-surface-800/80 text-surface-200 hover:bg-surface-700/80'
+                      ? 'opacity-40 cursor-not-allowed glass-apple-pill'
+                      : 'glass-apple-btn hover:text-white'
                   }`}
                 >
                   <ChevronLeft className="w-4 h-4" />
-                  Previous
+                  <span>Previous</span>
                 </button>
 
-                {/* Card Dots */}
+                {/* Dots indicator */}
                 <div className="flex items-center gap-1.5 overflow-x-auto px-2">
                   {questions.map((_, i) => (
                     <button
@@ -360,8 +323,8 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                       onClick={() => setCurrentIndex(i)}
                       className={`w-2.5 h-2.5 rounded-full shrink-0 transition-all cursor-pointer ${
                         i === currentIndex
-                          ? 'bg-accent-400 scale-125'
-                          : 'bg-surface-600 hover:bg-surface-400'
+                          ? 'bg-purple-400 scale-125 shadow-lg shadow-purple-400/50'
+                          : 'bg-white/20 hover:bg-white/40'
                       }`}
                     />
                   ))}
@@ -371,31 +334,29 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                   id="flashcard-next-button"
                   onClick={goNext}
                   disabled={isLast}
-                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+                  className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
                     isLast
-                      ? 'bg-surface-800/40 text-surface-600 cursor-not-allowed'
-                      : 'bg-surface-800/80 text-surface-200 hover:bg-surface-700/80'
+                      ? 'opacity-40 cursor-not-allowed glass-apple-pill'
+                      : 'glass-apple-btn hover:text-white'
                   }`}
                 >
-                  Next
+                  <span>Next</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
               </div>
 
-              {/* Keyboard hint */}
-              <p className="text-surface-600 text-xs mt-4 text-center hidden sm:block">
-                <span className="font-mono bg-surface-800/60 px-1.5 py-0.5 rounded">←→</span> navigate
-                &nbsp;<span className="font-mono bg-surface-800/60 px-1.5 py-0.5 rounded">click</span> flip card
+              <p className="text-white/40 text-xs font-medium mt-4 text-center hidden sm:block">
+                Press <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">←</span> <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">→</span> to switch cards
               </p>
             </motion.div>
           ) : (
             <motion.div
               key="sheet-view"
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3 }}
-              className="space-y-4"
+              exit={{ opacity: 0, y: -15 }}
+              transition={{ type: 'spring', stiffness: 280, damping: 25 }}
+              className="space-y-5"
             >
               {questions.map((q, i) => (
                 <StudySheetItem key={q.id} question={q} index={i} />
@@ -405,21 +366,21 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
         </AnimatePresence>
       </div>
 
-      {/* Floating CTA */}
-      <div className="fixed bottom-0 left-0 right-0 floating-cta z-50">
-        <div className="max-w-4xl mx-auto px-4 py-4 flex items-center justify-between gap-4">
-          <p className="text-surface-400 text-sm font-medium hidden sm:block">
-            Done studying? Test your knowledge →
+      {/* Floating CTA Dock */}
+      <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-40 w-full max-w-xl px-4">
+        <div className="glass-apple-pill p-3 px-6 rounded-full flex items-center justify-between shadow-2xl border border-white/20">
+          <p className="text-white/70 text-xs font-semibold hidden sm:block">
+            Ready to test your memory?
           </p>
           <motion.button
             id="start-exam-button"
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
             onClick={onStartExam}
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-500 to-[oklch(0.62_0.24_310)] text-white shadow-lg shadow-accent-500/25 hover:shadow-accent-500/40 transition-shadow cursor-pointer ml-auto"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full font-bold text-xs bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20 ml-auto sm:ml-0"
           >
             <Rocket className="w-4 h-4" />
-            I'm Ready — Take the Exam
+            <span>Take Exam</span>
           </motion.button>
         </div>
       </div>

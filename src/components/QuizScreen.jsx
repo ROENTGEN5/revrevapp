@@ -1,57 +1,55 @@
-import { useEffect, useCallback, useState } from 'react';
+import { useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight, Send, BookOpen, Type, List, CheckSquare } from 'lucide-react';
 import { useQuiz } from '../hooks/useQuiz';
 import ProgressBar from './ProgressBar';
 import QuestionNav from './QuestionNav';
 
-/** Badge showing the question type */
 function TypeBadge({ type }) {
   const config = {
-    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-accent-500/15 text-accent-400' },
-    identification: { label: 'Identification', icon: Type, color: 'bg-[oklch(0.72_0.18_200/0.15)] text-[oklch(0.72_0.18_200)]' },
-    enumeration: { label: 'Enumeration', icon: List, color: 'bg-[oklch(0.78_0.16_80/0.15)] text-[oklch(0.78_0.16_80)]' },
+    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
+    identification: { label: 'Identification', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
+    enumeration: { label: 'Enumeration', icon: List, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
 
   return (
-    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-semibold ${color}`}>
+    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold border shadow-sm ${color}`}>
       <Icon className="w-3.5 h-3.5" />
       {label}
     </span>
   );
 }
 
-/** Multiple Choice options */
 function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
   return (
-    <div className="space-y-3">
+    <div className="space-y-3.5">
       {question.options.map((option) => {
         const isSelected = selectedAnswer === option.label;
         return (
           <motion.button
             key={option.label}
             id={`option-${option.label}`}
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.99 }}
-            className={`option-card w-full flex items-center gap-4 p-4 sm:p-5 rounded-xl border text-left ${
+            whileHover={{ scale: 1.015, y: -1 }}
+            whileTap={{ scale: 0.985 }}
+            className={`option-card w-full flex items-center gap-4 p-4 sm:p-5 rounded-2xl text-left border ${
               isSelected
-                ? 'selected border-accent-500/50'
-                : 'border-surface-700/50 hover:border-surface-500/50'
+                ? 'selected border-purple-500/80 bg-purple-500/15 shadow-lg shadow-purple-500/10'
+                : 'border-white/10 hover:border-white/20'
             }`}
             onClick={() => onSelect(option.label)}
           >
             <span
-              className={`inline-flex items-center justify-center w-9 h-9 rounded-lg text-sm font-bold shrink-0 transition-colors duration-200 ${
+              className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors ${
                 isSelected
-                  ? 'bg-accent-500 text-white'
-                  : 'bg-surface-800 text-surface-400'
+                  ? 'bg-purple-600 text-white shadow-md'
+                  : 'bg-white/10 text-white/70'
               }`}
             >
               {option.label}
             </span>
-            <span className={`text-sm sm:text-base font-medium transition-colors ${
-              isSelected ? 'text-surface-100' : 'text-surface-300'
+            <span className={`text-sm sm:text-base font-semibold leading-snug transition-colors ${
+              isSelected ? 'text-white' : 'text-white/80'
             }`}>
               {option.text}
             </span>
@@ -62,37 +60,34 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
   );
 }
 
-/** Identification text input */
 function IdentificationInput({ question, currentValue, onChange }) {
   return (
     <div className="space-y-3">
-      <label className="block text-surface-400 text-sm font-medium mb-2">
-        Type your answer below:
+      <label className="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">
+        Type your answer:
       </label>
       <input
         id={`identification-input-${question.id}`}
         type="text"
         value={currentValue || ''}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Enter your answer..."
+        placeholder="Type answer here..."
         autoComplete="off"
-        className="w-full px-5 py-4 rounded-xl border border-surface-700/50 bg-surface-900/40 text-surface-100 text-base font-medium placeholder:text-surface-600 focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/20 transition-all"
+        className="w-full px-5 py-4 rounded-2xl glass-apple-input text-base font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
       />
-      <p className="text-surface-600 text-xs">
-        Answer is checked case-insensitively.
+      <p className="text-white/40 text-xs font-medium">
+        Case-insensitive evaluation.
       </p>
     </div>
   );
 }
 
-/** Enumeration — multiple text inputs */
 function EnumerationInput({ question, currentValues, onChange }) {
   const count = question.itemCount;
   const values = currentValues || new Array(count).fill('');
 
   const handleItemChange = (index, value) => {
     const updated = [...values];
-    // Ensure array is long enough
     while (updated.length < count) updated.push('');
     updated[index] = value;
     onChange(updated);
@@ -100,12 +95,12 @@ function EnumerationInput({ question, currentValues, onChange }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-surface-400 text-sm font-medium mb-2">
-        List <span className="text-accent-400 font-bold">{count}</span> items (any order):
+      <label className="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">
+        List <span className="text-purple-400 font-extrabold">{count}</span> items (any order):
       </label>
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-surface-800 text-surface-400 text-sm font-bold shrink-0">
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-white/10 text-white/70 text-xs font-extrabold font-mono shrink-0">
             {i + 1}
           </span>
           <input
@@ -115,26 +110,20 @@ function EnumerationInput({ question, currentValues, onChange }) {
             onChange={(e) => handleItemChange(i, e.target.value)}
             placeholder={`Item ${i + 1}...`}
             autoComplete="off"
-            className="flex-1 px-4 py-3 rounded-xl border border-surface-700/50 bg-surface-900/40 text-surface-100 text-sm font-medium placeholder:text-surface-600 focus:outline-none focus:border-accent-500/60 focus:ring-2 focus:ring-accent-500/20 transition-all"
+            className="flex-1 px-4 py-3.5 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
           />
         </div>
       ))}
-      <p className="text-surface-600 text-xs">
-        Order doesn't matter. Answers are checked case-insensitively.
-      </p>
     </div>
   );
 }
 
-
 export default function QuizScreen({ questions, onSubmit, onReset }) {
   const quiz = useQuiz(questions);
 
-  // Keyboard shortcuts
   const handleKeyDown = useCallback((e) => {
     if (quiz.isSubmitted) return;
 
-    // Only handle arrow keys if not focused on an input
     const tag = document.activeElement?.tagName?.toLowerCase();
     if (tag === 'input' || tag === 'textarea') return;
 
@@ -174,25 +163,27 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-4xl mx-auto"
+        className="w-full max-w-4xl mx-auto mb-4"
       >
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <BookOpen className="w-6 h-6 text-accent-400" />
-            <h1 className="text-xl sm:text-2xl font-bold text-surface-100">
-              Quiz Mode
+            <div className="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
+              <BookOpen className="w-5 h-5" />
+            </div>
+            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+              Exam Mode
             </h1>
           </div>
           <button
             id="reset-quiz-button"
             onClick={onReset}
-            className="text-surface-400 hover:text-surface-200 text-sm font-medium transition-colors cursor-pointer"
+            className="px-3.5 py-1.5 rounded-xl glass-apple-btn text-xs font-bold text-white/70 hover:text-white cursor-pointer"
           >
-            ✕ Exit
+            ✕ Exit Exam
           </button>
         </div>
 
-        {/* Progress */}
+        {/* Progress Bar */}
         <ProgressBar
           progress={quiz.progress}
           totalAnswered={quiz.totalAnswered}
@@ -200,122 +191,124 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
         />
       </motion.div>
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 w-full max-w-4xl mx-auto mt-6">
+      {/* Main Content Layout */}
+      <div className="flex-1 flex flex-col lg:flex-row gap-6 w-full max-w-4xl mx-auto mt-4">
         {/* Question Card */}
         <div className="flex-1 flex flex-col">
           <AnimatePresence mode="wait">
             <motion.div
               key={quiz.currentIndex}
-              initial={{ opacity: 0, x: 30 }}
+              initial={{ opacity: 0, x: 25 }}
               animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -30 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-              className="glass-strong rounded-2xl p-6 sm:p-8 flex-1"
+              exit={{ opacity: 0, x: -25 }}
+              transition={{ type: 'spring', stiffness: 300, damping: 26 }}
+              className="glass-apple-card p-6 sm:p-8 flex-1 flex flex-col justify-between"
             >
-              {/* Question Header */}
-              <div className="flex items-center justify-between gap-3 mb-6 flex-wrap">
-                <div className="flex items-center gap-3">
-                  <span className="inline-flex items-center justify-center w-10 h-10 rounded-xl bg-accent-500/15 text-accent-400 font-bold text-sm">
-                    {quiz.currentIndex + 1}
-                  </span>
-                  <span className="text-surface-400 text-sm font-medium">
-                    of {quiz.totalQuestions} questions
-                  </span>
+              <div>
+                {/* Question Info Header */}
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 font-extrabold text-sm font-mono shadow-md">
+                      {quiz.currentIndex + 1}
+                    </span>
+                    <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">
+                      Question {quiz.currentIndex + 1} of {quiz.totalQuestions}
+                    </span>
+                  </div>
+                  <TypeBadge type={currentQ?.type} />
                 </div>
-                <TypeBadge type={currentQ?.type} />
+
+                {/* Question Prompt */}
+                <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed mb-8 tracking-tight">
+                  {currentQ?.question}
+                </h2>
+
+                {/* Question Inputs */}
+                {currentQ?.type === 'multiple_choice' && (
+                  <MultipleChoiceOptions
+                    question={currentQ}
+                    selectedAnswer={quiz.answers[currentQ.id]}
+                    onSelect={(label) => quiz.selectAnswer(currentQ.id, label)}
+                  />
+                )}
+
+                {currentQ?.type === 'identification' && (
+                  <IdentificationInput
+                    question={currentQ}
+                    currentValue={quiz.answers[currentQ.id]}
+                    onChange={(value) => quiz.selectAnswer(currentQ.id, value)}
+                  />
+                )}
+
+                {currentQ?.type === 'enumeration' && (
+                  <EnumerationInput
+                    question={currentQ}
+                    currentValues={quiz.answers[currentQ.id]}
+                    onChange={(values) => quiz.selectAnswer(currentQ.id, values)}
+                  />
+                )}
               </div>
 
-              {/* Question Text */}
-              <h2 className="text-lg sm:text-xl font-semibold text-surface-100 leading-relaxed mb-8">
-                {currentQ?.question}
-              </h2>
-
-              {/* Answer Area — renders differently based on type */}
-              {currentQ?.type === 'multiple_choice' && (
-                <MultipleChoiceOptions
-                  question={currentQ}
-                  selectedAnswer={quiz.answers[currentQ.id]}
-                  onSelect={(label) => quiz.selectAnswer(currentQ.id, label)}
-                />
-              )}
-
-              {currentQ?.type === 'identification' && (
-                <IdentificationInput
-                  question={currentQ}
-                  currentValue={quiz.answers[currentQ.id]}
-                  onChange={(value) => quiz.selectAnswer(currentQ.id, value)}
-                />
-              )}
-
-              {currentQ?.type === 'enumeration' && (
-                <EnumerationInput
-                  question={currentQ}
-                  currentValues={quiz.answers[currentQ.id]}
-                  onChange={(values) => quiz.selectAnswer(currentQ.id, values)}
-                />
-              )}
-
-              {/* Keyboard Hint */}
-              <p className="text-surface-600 text-xs mt-6 hidden sm:block">
-                <span className="font-mono bg-surface-800/60 px-1.5 py-0.5 rounded">←→</span> navigate
+              {/* Keyboard Shortcuts Hint */}
+              <p className="text-white/40 text-xs font-medium mt-8 hidden sm:block">
+                Press <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">←</span> <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">→</span> to navigate
                 {currentQ?.type === 'multiple_choice' && (
-                  <> &nbsp;<span className="font-mono bg-surface-800/60 px-1.5 py-0.5 rounded">1-4</span> select answer</>
+                  <> or <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">1-4</span> to select option</>
                 )}
               </p>
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation Buttons */}
-          <div className="flex items-center justify-between mt-4 gap-3">
+          {/* Action Control Buttons */}
+          <div className="flex items-center justify-between mt-5 gap-4">
             <button
               id="prev-question-button"
               onClick={quiz.goPrev}
               disabled={isFirst}
-              className={`inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm transition-all cursor-pointer ${
+              className={`inline-flex items-center gap-2 px-5 py-3 rounded-2xl font-bold text-xs transition-all cursor-pointer ${
                 isFirst
-                  ? 'bg-surface-800/40 text-surface-600 cursor-not-allowed'
-                  : 'bg-surface-800/80 text-surface-200 hover:bg-surface-700/80'
+                  ? 'opacity-40 cursor-not-allowed glass-apple-pill'
+                  : 'glass-apple-btn hover:text-white'
               }`}
             >
               <ChevronLeft className="w-4 h-4" />
-              Previous
+              <span>Previous</span>
             </button>
 
             {isLast ? (
               <motion.button
                 id="submit-exam-button"
-                whileHover={{ scale: 1.03 }}
+                whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-500 to-[oklch(0.62_0.24_310)] text-white shadow-lg shadow-accent-500/20 hover:shadow-accent-500/30 transition-shadow cursor-pointer"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20"
               >
                 <Send className="w-4 h-4" />
-                Submit Exam
+                <span>Submit Exam</span>
               </motion.button>
             ) : (
               <button
                 id="next-question-button"
                 onClick={quiz.goNext}
-                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl font-semibold text-sm bg-surface-800/80 text-surface-200 hover:bg-surface-700/80 transition-all cursor-pointer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded-2xl glass-apple-btn font-bold text-xs hover:text-white transition cursor-pointer"
               >
-                Next
+                <span>Next</span>
                 <ChevronRight className="w-4 h-4" />
               </button>
             )}
           </div>
         </div>
 
-        {/* Sidebar Question Navigator */}
+        {/* Sidebar Question Nav Grid */}
         <motion.div
           initial={{ opacity: 0, x: 20 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-          className="lg:w-56 shrink-0"
+          transition={{ delay: 0.15 }}
+          className="lg:w-60 shrink-0"
         >
-          <div className="glass rounded-2xl p-4 lg:sticky lg:top-6">
-            <h3 className="text-surface-400 text-xs font-semibold uppercase tracking-wider mb-3">
-              Questions
+          <div className="glass-apple-card p-5 lg:sticky lg:top-6">
+            <h3 className="text-white/50 text-xs font-bold uppercase tracking-wider mb-4">
+              Questions Map
             </h3>
             <QuestionNav
               questions={questions}
