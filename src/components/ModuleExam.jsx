@@ -31,6 +31,7 @@ export default function ModuleExam() {
   const [questions, setQuestions] = useState(null);
   const [shuffledQuestions, setShuffledQuestions] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [phase, setPhase] = useState('quiz'); // 'quiz' | 'results'
   const [examResults, setExamResults] = useState(null);
 
@@ -42,6 +43,7 @@ export default function ModuleExam() {
         setShuffledQuestions(shuffleArray(qs));
       } catch (err) {
         console.error('Error loading questions:', err);
+        setError(err.message || 'Failed to load questions');
       } finally {
         setLoading(false);
       }
@@ -83,13 +85,42 @@ export default function ModuleExam() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          className="p-4 rounded-2xl glass-apple-pill text-purple-400"
         >
-          <Loader2 className="w-8 h-8 text-purple-400" />
+          <Loader2 className="w-8 h-8" />
         </motion.div>
+        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+          Loading Exam...
+        </span>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <div className="glass-apple-card p-8 rounded-3xl text-center max-w-sm w-full">
+          <div className="w-14 h-14 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center mx-auto mb-4">
+            <span className="text-xl">⚠️</span>
+          </div>
+          <h2 className="text-xl font-bold text-white mb-2">Error Loading Exam</h2>
+          <p className="text-white/60 text-xs mb-4">
+            Could not load questions for this module. This may be a Firebase permissions or connectivity issue.
+          </p>
+          <pre className="text-left text-rose-300 text-xs bg-black/40 p-3 rounded-xl mb-6 overflow-auto max-h-32 border border-white/10">
+            {error}
+          </pre>
+          <button
+            onClick={() => navigate(`/module/${moduleId}`)}
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl glass-apple-btn font-bold text-xs text-white cursor-pointer"
+          >
+            <span>Back to Module</span>
+          </button>
+        </div>
       </div>
     );
   }
@@ -135,3 +166,4 @@ export default function ModuleExam() {
     />
   );
 }
+
