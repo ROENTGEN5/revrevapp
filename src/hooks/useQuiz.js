@@ -29,6 +29,9 @@ function checkAnswer(question, userAnswer) {
       return true;
     }
 
+    case 'true_false':
+      return userAnswer === question.correctAnswer;
+
     default:
       return false;
   }
@@ -47,6 +50,8 @@ function isAnswered(question, userAnswer) {
       return userAnswer.toString().trim().length > 0;
     case 'enumeration':
       return Array.isArray(userAnswer) && userAnswer.some((s) => s.trim().length > 0);
+    case 'true_false':
+      return userAnswer === 'True' || userAnswer === 'False';
     default:
       return false;
   }

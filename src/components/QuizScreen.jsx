@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Send, BookOpen, Type, List, CheckSquare } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Send, BookOpen, Type, List, CheckSquare, ToggleLeft } from 'lucide-react';
 import { useQuiz } from '../hooks/useQuiz';
 import ProgressBar from './ProgressBar';
 import QuestionNav from './QuestionNav';
@@ -10,6 +10,7 @@ function TypeBadge({ type }) {
     multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
     identification: { label: 'Identification', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
     enumeration: { label: 'Enumeration', icon: List, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
 
@@ -118,6 +119,36 @@ function EnumerationInput({ question, currentValues, onChange }) {
   );
 }
 
+function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
+  return (
+    <div className="grid grid-cols-2 gap-4">
+      {['True', 'False'].map((val) => {
+        const isSelected = selectedAnswer === val;
+        const isTrue = val === 'True';
+        return (
+          <motion.button
+            key={val}
+            id={`tf-option-${val.toLowerCase()}`}
+            whileHover={{ scale: 1.02, y: -2 }}
+            whileTap={{ scale: 0.98 }}
+            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-2xl text-base font-extrabold border transition-all cursor-pointer ${
+              isSelected
+                ? isTrue
+                  ? 'border-emerald-500/60 bg-emerald-500/15 text-emerald-300 shadow-lg shadow-emerald-500/15'
+                  : 'border-rose-500/60 bg-rose-500/15 text-rose-300 shadow-lg shadow-rose-500/15'
+                : 'border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white/80'
+            }`}
+            onClick={() => onSelect(val)}
+          >
+            <span className="text-2xl">{isTrue ? '✓' : '✗'}</span>
+            <span className="text-lg tracking-wide">{val}</span>
+          </motion.button>
+        );
+      })}
+    </div>
+  );
+}
+
 export default function QuizScreen({ questions, onSubmit, onReset }) {
   const quiz = useQuiz(questions);
   const [selectedZoomImage, setSelectedZoomImage] = useState(null);
@@ -140,6 +171,12 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
       const option = quiz.currentQuestion?.options[idx];
       if (option) {
         quiz.selectAnswer(quiz.currentQuestion.id, option.label);
+      }
+    } else if (quiz.currentQuestion?.type === 'true_false') {
+      if (e.key.toLowerCase() === 't') {
+        quiz.selectAnswer(quiz.currentQuestion.id, 'True');
+      } else if (e.key.toLowerCase() === 'f') {
+        quiz.selectAnswer(quiz.currentQuestion.id, 'False');
       }
     }
   }, [quiz]);
@@ -260,6 +297,14 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                     onChange={(values) => quiz.selectAnswer(currentQ.id, values)}
                   />
                 )}
+
+                {currentQ?.type === 'true_false' && (
+                  <TrueFalseOptions
+                    question={currentQ}
+                    selectedAnswer={quiz.answers[currentQ.id]}
+                    onSelect={(val) => quiz.selectAnswer(currentQ.id, val)}
+                  />
+                )}
               </div>
 
               {/* Keyboard Shortcuts Hint */}
@@ -267,6 +312,9 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 Press <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">←</span> <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">→</span> to navigate
                 {currentQ?.type === 'multiple_choice' && (
                   <> or <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">1-4</span> to select option</>
+                )}
+                {currentQ?.type === 'true_false' && (
+                  <> or <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">T</span> / <span className="font-mono bg-white/10 px-1.5 py-0.5 rounded text-white/80">F</span> to select</>
                 )}
               </p>
             </motion.div>

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Trophy, RotateCcw, ArrowLeft, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, List, CheckSquare } from 'lucide-react';
+import { Trophy, RotateCcw, ArrowLeft, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, List, CheckSquare, ToggleLeft } from 'lucide-react';
 
 function ScoreRing({ score, total }) {
   const radius = 64;
@@ -55,6 +55,7 @@ function TypeTag({ type }) {
     multiple_choice: { label: 'MC', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
     identification: { label: 'ID', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
     enumeration: { label: 'ENUM', icon: List, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+    true_false: { label: 'T/F', icon: ToggleLeft, color: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
@@ -191,6 +192,38 @@ function EnumerationReview({ result }) {
   );
 }
 
+function TrueFalseReview({ result }) {
+  const { correctAnswer, userAnswer, isCorrect, isSkipped } = result;
+  return (
+    <div className="space-y-2 mt-3">
+      <div className={`flex items-center gap-3 p-3.5 rounded-xl border ${
+        isSkipped ? 'border-amber-500/40 bg-amber-500/15' :
+        isCorrect ? 'border-emerald-500/40 bg-emerald-500/15' :
+        'border-rose-500/40 bg-rose-500/15'
+      }`}>
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider shrink-0 w-24">Your answer:</span>
+        <span className={`text-sm font-bold flex-1 ${
+          isSkipped ? 'text-amber-300 italic' :
+          userAnswer === 'True' ? 'text-emerald-300' : 'text-rose-300'
+        }`}>
+          {isSkipped ? '(No answer)' : userAnswer}
+        </span>
+        {!isSkipped && (
+          <span className={`text-xs font-extrabold ${isCorrect ? 'text-emerald-300' : 'text-rose-300'}`}>
+            {isCorrect ? '✓ Correct' : '✗ Incorrect'}
+          </span>
+        )}
+      </div>
+      {!isCorrect && (
+        <div className="flex items-center gap-3 p-3.5 rounded-xl border border-emerald-500/40 bg-emerald-500/15">
+          <span className="text-white/50 text-xs font-bold uppercase tracking-wider shrink-0 w-24">Correct:</span>
+          <span className="text-emerald-300 text-sm font-bold flex-1">{correctAnswer}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function ReviewItem({ result, index }) {
   const [expanded, setExpanded] = useState(false);
   const { question, type, isCorrect, isSkipped } = result;
@@ -252,6 +285,7 @@ function ReviewItem({ result, index }) {
           {type === 'multiple_choice' && <MCReview result={result} />}
           {type === 'identification' && <IdentificationReview result={result} />}
           {type === 'enumeration' && <EnumerationReview result={result} />}
+          {type === 'true_false' && <TrueFalseReview result={result} />}
         </div>
       </motion.div>
     </motion.div>

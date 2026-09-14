@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Trash2, CheckSquare, Type, ListOrdered, ArrowRight,
   AlertCircle, GripVertical, ChevronDown, PenLine, Image as ImageIcon,
-  X, Loader2
+  X, Loader2, ToggleLeft
 } from 'lucide-react';
 import { compressImage } from '../utils/imageCompressor';
 
@@ -11,12 +11,14 @@ const QUESTION_TYPES = [
   { value: 'multiple_choice', label: 'Multiple Choice', icon: CheckSquare, color: 'accent' },
   { value: 'identification', label: 'Identification', icon: Type, color: 'info' },
   { value: 'enumeration', label: 'Enumeration', icon: ListOrdered, color: 'warning' },
+  { value: 'true_false', label: 'True or False', icon: ToggleLeft, color: 'teal' },
 ];
 
 const TYPE_STYLES = {
   multiple_choice: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
   identification: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
   enumeration: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
+  true_false: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
 };
 
 const EMPTY_MC = {
@@ -44,9 +46,17 @@ const EMPTY_ENUM = {
   enumItems: ['', ''],
 };
 
+const EMPTY_TF = {
+  type: 'true_false',
+  question: '',
+  image: null,
+  correctAnswer: '',
+};
+
 function getEmptyForm(type) {
   if (type === 'identification') return { ...EMPTY_ID };
   if (type === 'enumeration') return { ...EMPTY_ENUM, enumItems: ['', ''] };
+  if (type === 'true_false') return { ...EMPTY_TF };
   return { ...EMPTY_MC };
 }
 
@@ -295,6 +305,50 @@ function EnumItems({ form, setForm }) {
   );
 }
 
+// ─── True or False Options ────────────────────────────────────────
+function TFOptions({ form, setForm }) {
+  return (
+    <div className="space-y-3">
+      <label className="block text-surface-300 text-xs font-semibold uppercase tracking-wide">
+        Correct Answer <span className="text-danger-400 ml-1">*</span>
+      </label>
+      <div className="grid grid-cols-2 gap-3">
+        {['True', 'False'].map((val) => {
+          const isSelected = form.correctAnswer === val;
+          const isTrue = val === 'True';
+          return (
+            <button
+              key={val}
+              type="button"
+              onClick={() => setForm({ ...form, correctAnswer: val })}
+              className={`flex flex-col items-center justify-center gap-1.5 py-5 rounded-xl text-sm font-bold transition-all cursor-pointer border ${
+                isSelected
+                  ? isTrue
+                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-md shadow-emerald-500/10'
+                    : 'bg-rose-500/20 border-rose-500/50 text-rose-300 shadow-md shadow-rose-500/10'
+                  : 'bg-surface-800/40 border-surface-700/50 text-surface-400 hover:bg-surface-800/70 hover:text-surface-300'
+              }`}
+            >
+              <span className="text-lg font-extrabold">{isTrue ? '✓' : '✗'}</span>
+              <span>{val}</span>
+            </button>
+          );
+        })}
+      </div>
+      {form.correctAnswer && (
+        <p className="text-xs text-success-400 font-medium mt-1">
+          ✓ Correct answer: {form.correctAnswer}
+        </p>
+      )}
+      {!form.correctAnswer && (
+        <p className="text-xs text-surface-500 font-medium mt-1">
+          Click True or False to set the correct answer
+        </p>
+      )}
+    </div>
+  );
+}
+
 // ─── Added Question Preview ───────────────────────────────────────
 function QuestionPreview({ questions, onRemove }) {
   if (questions.length === 0) return null;
@@ -438,6 +492,18 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         correctAnswer: items,
         itemCount: items.length,
       };
+    } else if (form.type === 'true_false') {
+      if (!form.correctAnswer) {
+        setError('Please select True or False as the correct answer.');
+        return;
+      }
+      normalizedQ = {
+        _tempId: Date.now() + Math.random(),
+        type: 'true_false',
+        question: form.question.trim(),
+        image: form.image || null,
+        correctAnswer: form.correctAnswer,
+      };
     }
 
     setQuestions((prev) => [...prev, normalizedQ]);
@@ -514,6 +580,10 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
 
           {form.type === 'enumeration' && (
             <EnumItems form={form} setForm={setForm} />
+          )}
+
+          {form.type === 'true_false' && (
+            <TFOptions form={form} setForm={setForm} />
           )}
         </motion.div>
       </AnimatePresence>

@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   BookOpen, Layers, List, ChevronLeft, ChevronRight,
   Rocket, Eye, EyeOff, CheckSquare, Type, ListOrdered, Sparkles,
-  ArrowLeft
+  ArrowLeft, ToggleLeft
 } from 'lucide-react';
 
 function TypeBadge({ type }) {
@@ -11,6 +11,7 @@ function TypeBadge({ type }) {
     multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
     identification: { label: 'Identification', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
     enumeration: { label: 'Enumeration', icon: ListOrdered, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
+    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
@@ -84,6 +85,23 @@ function AnswerDisplay({ question }) {
               {i + 1}. {item}
             </span>
           ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (question.type === 'true_false') {
+    const isTrue = question.correctAnswer === 'True';
+    return (
+      <div className="mt-4">
+        <span className="text-white/50 text-xs font-bold uppercase tracking-wider block mb-2">Answer:</span>
+        <div className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-xl border font-bold text-base ${
+          isTrue
+            ? 'border-emerald-500/40 bg-emerald-500/15 text-emerald-300'
+            : 'border-rose-500/40 bg-rose-500/15 text-rose-300'
+        }`}>
+          <span className="text-lg">{isTrue ? '✓' : '✗'}</span>
+          <span>{question.correctAnswer}</span>
         </div>
       </div>
     );

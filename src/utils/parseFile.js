@@ -31,6 +31,8 @@ function normalizeQuestion(row, index) {
     type = 'identification';
   } else if (['enum', 'enumeration', 'enumerate', 'list'].includes(type.replace(/[\s_-]+/g, ''))) {
     type = 'enumeration';
+  } else if (['tf', 'truefalse', 'true_false', 'trueorfalse'].includes(type.replace(/[\s_-]+/g, ''))) {
+    type = 'true_false';
   } else if (!type && (q.optionA || q.optionB)) {
     // Auto-detect: if options are provided, treat as multiple choice
     type = 'multiple_choice';
@@ -96,7 +98,21 @@ function normalizeQuestion(row, index) {
     };
   }
 
-  throw new Error(`Row ${index + 1}: Unknown question type "${type}". Use "multiple_choice", "identification", or "enumeration".`);
+  // === TRUE OR FALSE ===
+  if (type === 'true_false') {
+    const normalized = q.correctAnswer.charAt(0).toUpperCase() + q.correctAnswer.slice(1).toLowerCase();
+    if (normalized !== 'True' && normalized !== 'False') {
+      throw new Error(`Row ${index + 1}: correctAnswer must be "True" or "False" for true/false questions. Got "${q.correctAnswer}".`);
+    }
+    return {
+      id: index,
+      type: 'true_false',
+      question: q.question,
+      correctAnswer: normalized,
+    };
+  }
+
+  throw new Error(`Row ${index + 1}: Unknown question type "${type}". Use "multiple_choice", "identification", "enumeration", or "true_false".`);
 }
 
 /**
