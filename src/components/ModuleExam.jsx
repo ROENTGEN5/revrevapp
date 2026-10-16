@@ -35,12 +35,22 @@ export default function ModuleExam() {
   const [phase, setPhase] = useState('quiz'); // 'quiz' | 'results'
   const [examResults, setExamResults] = useState(null);
 
+  /** Shuffle questions and also randomize options within each multiple_choice question. */
+  const prepareQuestions = useCallback((qs) => {
+    return shuffleArray(qs).map((q) => {
+      if (q.type === 'multiple_choice' && Array.isArray(q.options)) {
+        return { ...q, options: shuffleArray(q.options) };
+      }
+      return q;
+    });
+  }, []);
+
   useEffect(() => {
     async function load() {
       try {
         const qs = await getModuleQuestions(moduleId);
         setQuestions(qs);
-        setShuffledQuestions(shuffleArray(qs));
+        setShuffledQuestions(prepareQuestions(qs));
       } catch (err) {
         console.error('Error loading questions:', err);
         setError(err.message || 'Failed to load questions');
@@ -49,7 +59,7 @@ export default function ModuleExam() {
       }
     }
     load();
-  }, [moduleId]);
+  }, [moduleId, prepareQuestions]);
 
   const handleSubmit = useCallback(async (results, score, total) => {
     // Save attempt to Firestore
@@ -77,11 +87,11 @@ export default function ModuleExam() {
   }, [navigate, moduleId]);
 
   const handleRetake = useCallback(() => {
-    // Re-shuffle and restart
-    setShuffledQuestions(shuffleArray(questions));
+    // Re-shuffle questions and randomize options again
+    setShuffledQuestions(prepareQuestions(questions));
     setExamResults(null);
     setPhase('quiz');
-  }, [questions]);
+  }, [questions, prepareQuestions]);
 
   if (loading) {
     return (
