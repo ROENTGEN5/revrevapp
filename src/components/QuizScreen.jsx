@@ -7,10 +7,10 @@ import QuestionNav from './QuestionNav';
 
 function TypeBadge({ type }) {
   const config = {
-    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-purple-500/20 text-purple-300 border-purple-500/30' },
-    identification: { label: 'Identification', icon: Type, color: 'bg-blue-500/20 text-blue-300 border-blue-500/30' },
-    enumeration: { label: 'Enumeration', icon: List, color: 'bg-amber-500/20 text-amber-300 border-amber-500/30' },
-    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-teal-500/20 text-teal-300 border-teal-500/30' },
+    multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]' },
+    identification: { label: 'Identification', icon: Type, color: 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]' },
+    enumeration: { label: 'Enumeration', icon: List, color: 'bg-amber-50 text-amber-600 border-amber-200' },
+    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-[#F0FDFA] text-[#0D9488] border-[#99F6E4]' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
 
@@ -35,22 +35,22 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             whileTap={{ scale: 0.985 }}
             className={`option-card w-full flex items-center gap-4 p-4 sm:p-5 rounded-2xl text-left border ${
               isSelected
-                ? 'selected border-purple-500/80 bg-purple-500/15 shadow-lg shadow-purple-500/10'
-                : 'border-white/10 hover:border-white/20'
+                ? 'selected border-[#C60C30] bg-[rgba(198,12,48,0.04)] shadow-sm'
+                : 'border-[#E2DDD5]'
             }`}
             onClick={() => onSelect(option.label)}
           >
             <span
               className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors opacity-0 ${
                 isSelected
-                  ? 'bg-purple-600 text-white shadow-md'
-                  : 'bg-white/10 text-white/70'
+                  ? 'bg-[#C60C30] text-white shadow-md'
+                  : 'bg-[#F0EDE7] text-[#4A5568]'
               }`}
             >
               {option.label}
             </span>
             <span className={`text-sm sm:text-base font-semibold leading-snug transition-colors ${
-              isSelected ? 'text-white' : 'text-white/80'
+              isSelected ? 'text-[#0A1628]' : 'text-[#4A5568]'
             }`}>
               {option.text}
             </span>
@@ -64,7 +64,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
 function IdentificationInput({ question, currentValue, onChange }) {
   return (
     <div className="space-y-3">
-      <label className="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">
+      <label className="block text-[#4A5568] text-xs font-bold uppercase tracking-wider mb-2">
         Type your answer:
       </label>
       <input
@@ -74,9 +74,9 @@ function IdentificationInput({ question, currentValue, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="Type answer here..."
         autoComplete="off"
-        className="w-full px-5 py-4 rounded-2xl glass-apple-input text-base font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
+        className="w-full px-5 py-4 rounded-2xl glass-apple-input text-base font-semibold placeholder:text-[#A8A090] focus:ring-2 focus:ring-[#C60C30]/20"
       />
-      <p className="text-white/40 text-xs font-medium">
+      <p className="text-[#8A96A3] text-xs font-medium">
         Case-insensitive evaluation.
       </p>
     </div>
@@ -96,12 +96,12 @@ function EnumerationInput({ question, currentValues, onChange }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-white/70 text-xs font-bold uppercase tracking-wider mb-2">
-        List <span className="text-purple-400 font-extrabold">{count}</span> items (any order):
+      <label className="block text-[#4A5568] text-xs font-bold uppercase tracking-wider mb-2">
+        List <span className="text-[#C60C30] font-extrabold">{count}</span> items (any order):
       </label>
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
-          <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-white/10 text-white/70 text-xs font-extrabold font-mono shrink-0">
+          <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-[#F0EDE7] text-[#4A5568] text-xs font-extrabold font-mono shrink-0">
             {i + 1}
           </span>
           <input
@@ -111,7 +111,7 @@ function EnumerationInput({ question, currentValues, onChange }) {
             onChange={(e) => handleItemChange(i, e.target.value)}
             placeholder={`Item ${i + 1}...`}
             autoComplete="off"
-            className="flex-1 px-4 py-3.5 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
+            className="flex-1 px-4 py-3.5 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-[#A8A090] focus:ring-2 focus:ring-[#C60C30]/20"
           />
         </div>
       ))}
@@ -134,9 +134,9 @@ function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
             className={`flex flex-col items-center justify-center gap-2 py-8 rounded-2xl text-base font-extrabold border transition-all cursor-pointer ${
               isSelected
                 ? isTrue
-                  ? 'border-emerald-500/60 bg-emerald-500/15 text-emerald-300 shadow-lg shadow-emerald-500/15'
-                  : 'border-rose-500/60 bg-rose-500/15 text-rose-300 shadow-lg shadow-rose-500/15'
-                : 'border-white/10 bg-white/5 text-white/60 hover:border-white/20 hover:text-white/80'
+                  ? 'border-emerald-400 bg-emerald-50 text-emerald-700 shadow-sm'
+                  : 'border-red-400 bg-red-50 text-red-700 shadow-sm'
+                : 'border-[#E2DDD5] bg-[#FAFAF8] text-[#4A5568] hover:border-[#C8C0B0] hover:text-[#0A1628]'
             }`}
             onClick={() => onSelect(val)}
           >
@@ -208,7 +208,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
             <div className="p-2 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/30">
               <BookOpen className="w-5 h-5" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+            <h1 className="text-xl sm:text-2xl font-extrabold text-[#0A1628] tracking-tight">
               Exam Mode
             </h1>
           </div>
@@ -246,10 +246,10 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 {/* Question Info Header */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 font-extrabold text-sm font-mono shadow-md">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[#FEE2E8] text-[#C60C30] border border-[#FECDD3] font-extrabold text-sm font-mono shadow-sm">
                       {quiz.currentIndex + 1}
                     </span>
-                    <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">
+                    <span className="text-[#8A96A3] text-xs font-semibold uppercase tracking-wider">
                       Question {quiz.currentIndex + 1} of {quiz.totalQuestions}
                     </span>
                   </div>
@@ -257,7 +257,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 </div>
 
                 {/* Question Prompt */}
-                <h2 className="text-lg sm:text-xl font-bold text-white leading-relaxed mb-4 tracking-tight">
+                <h2 className="text-lg sm:text-xl font-bold text-[#0A1628] leading-relaxed mb-4 tracking-tight">
                   {currentQ?.question}
                 </h2>
 
@@ -342,7 +342,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 whileHover={{ scale: 1.03, y: -2 }}
                 whileTap={{ scale: 0.97 }}
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20"
+                className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl font-bold text-sm bg-[#C60C30] text-white shadow-xl shadow-[rgba(198,12,48,0.3)] hover:bg-[#A00825] transition-all cursor-pointer border border-[rgba(255,255,255,0.15)]"
               >
                 <Send className="w-4 h-4" />
                 <span>Submit Exam</span>
@@ -368,7 +368,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           className="lg:w-60 shrink-0"
         >
           <div className="glass-apple-card p-5 lg:sticky lg:top-6">
-            <h3 className="text-white/50 text-xs font-bold uppercase tracking-wider mb-4">
+            <h3 className="text-[#4A5568] text-xs font-bold uppercase tracking-wider mb-4">
               Questions Map
             </h3>
             <QuestionNav
