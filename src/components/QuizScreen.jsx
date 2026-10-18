@@ -41,7 +41,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             onClick={() => onSelect(option.label)}
           >
             <span
-              className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors ${
+              className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors opacity-0 ${
                 isSelected
                   ? 'bg-purple-600 text-white shadow-md'
                   : 'bg-white/10 text-white/70'

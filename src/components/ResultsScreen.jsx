@@ -94,7 +94,7 @@ function MCReview({ result }) {
 
         return (
           <div key={opt.label} className={`flex items-center gap-3 p-3 rounded-xl border ${optionClass}`}>
-            <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold font-mono shrink-0 ${labelClass}`}>
+            <span className={`inline-flex items-center justify-center w-7 h-7 rounded-lg text-xs font-bold font-mono shrink-0 opacity-0 ${labelClass}`}>
               {opt.label}
             </span>
             <span className="text-white/80 text-xs font-medium flex-1">{opt.text}</span>
@@ -261,7 +261,7 @@ function ReviewItem({ result, index }) {
             <span className="text-white/40 text-xs font-extrabold font-mono">Q{index + 1}</span>
             <TypeTag type={type} />
           </div>
-          <span className="text-white text-sm font-bold block truncate">{question}</span>
+          <span className="text-white text-sm font-bold block">{question}</span>
         </div>
         <span className={`text-xs font-extrabold px-3 py-1 rounded-full shrink-0 ${
           isCorrect ? 'bg-emerald-500/20 text-emerald-300' :
