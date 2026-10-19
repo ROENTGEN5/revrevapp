@@ -30,28 +30,32 @@ export default function ModuleReview() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#111318]">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC]"
         >
-          <Loader2 className="w-8 h-8 text-purple-400" />
+          <Loader2 className="w-8 h-8" />
         </motion.div>
+        <span className="text-xs font-semibold uppercase tracking-widest text-[#8E9196]">
+          Loading Flashcards...
+        </span>
       </div>
     );
   }
 
   if (!questions || questions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="glass-apple-card p-8 rounded-3xl text-center max-w-sm w-full">
-          <h2 className="text-xl font-bold text-white mb-2">No Questions Found</h2>
-          <p className="text-white/60 text-xs mb-6">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[#111318] text-[#E2E2E6]">
+        <div className="p-8 sm:p-10 rounded-[32px] bg-[#1D2024] border border-white/10 text-center max-w-sm w-full shadow-2xl">
+          <h2 className="text-xl font-bold text-[#E2E2E6] mb-2 tracking-tight">No Questions Found</h2>
+          <p className="text-[#8E9196] text-xs mb-6">
             This module does not have any questions available to review.
           </p>
           <button
             onClick={() => navigate(`/module/${moduleId}`)}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl glass-apple-btn font-bold text-xs text-white cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 font-bold text-xs text-[#E2E2E6] cursor-pointer transition"
           >
             <span>Back to Module</span>
           </button>

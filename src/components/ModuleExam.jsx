@@ -95,15 +95,15 @@ export default function ModuleExam() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#111318]">
         <motion.div
           animate={{ rotate: 360 }}
-          transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-2xl glass-apple-pill text-purple-400"
+          transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
+          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
-        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+        <span className="text-xs font-semibold uppercase tracking-widest text-[#8E9196]">
           Loading Exam...
         </span>
       </div>
@@ -112,21 +112,21 @@ export default function ModuleExam() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="glass-apple-card p-8 rounded-3xl text-center max-w-sm w-full">
-          <div className="w-14 h-14 rounded-2xl bg-rose-500/20 text-rose-400 border border-rose-500/30 flex items-center justify-center mx-auto mb-4">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[#111318] text-[#E2E2E6]">
+        <div className="p-8 sm:p-10 rounded-[32px] bg-[#1D2024] border border-white/10 text-center max-w-sm w-full shadow-2xl">
+          <div className="w-14 h-14 rounded-2xl bg-[#5C2822] text-[#FFB4AB] border border-[#FFB4AB]/30 flex items-center justify-center mx-auto mb-4">
             <span className="text-xl">⚠️</span>
           </div>
-          <h2 className="text-xl font-bold text-white mb-2">Error Loading Exam</h2>
-          <p className="text-white/60 text-xs mb-4">
-            Could not load questions for this module. This may be a Firebase permissions or connectivity issue.
+          <h2 className="text-xl font-bold text-[#E2E2E6] mb-2 tracking-tight">Error Loading Exam</h2>
+          <p className="text-[#8E9196] text-xs mb-4">
+            Could not load questions for this module.
           </p>
-          <pre className="text-left text-rose-300 text-xs bg-black/40 p-3 rounded-xl mb-6 overflow-auto max-h-32 border border-white/10">
+          <pre className="text-left text-[#FFB4AB] text-xs bg-[#16191D] p-3 rounded-2xl mb-6 overflow-auto max-h-32 border border-white/5 font-mono">
             {error}
           </pre>
           <button
             onClick={() => navigate(`/module/${moduleId}`)}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl glass-apple-btn font-bold text-xs text-white cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 font-bold text-xs text-[#E2E2E6] cursor-pointer transition"
           >
             <span>Back to Module</span>
           </button>
@@ -137,15 +137,15 @@ export default function ModuleExam() {
 
   if (!shuffledQuestions || shuffledQuestions.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <div className="glass-apple-card p-8 rounded-3xl text-center max-w-sm w-full">
-          <h2 className="text-xl font-bold text-white mb-2">No Questions Found</h2>
-          <p className="text-white/60 text-xs mb-6">
+      <div className="min-h-screen flex items-center justify-center px-4 bg-[#111318] text-[#E2E2E6]">
+        <div className="p-8 sm:p-10 rounded-[32px] bg-[#1D2024] border border-white/10 text-center max-w-sm w-full shadow-2xl">
+          <h2 className="text-xl font-bold text-[#E2E2E6] mb-2 tracking-tight">No Questions Found</h2>
+          <p className="text-[#8E9196] text-xs mb-6">
             This module does not have any questions available to take an exam.
           </p>
           <button
             onClick={() => navigate(`/module/${moduleId}`)}
-            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-2xl glass-apple-btn font-bold text-xs text-white cursor-pointer"
+            className="w-full inline-flex items-center justify-center gap-2 py-3 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 font-bold text-xs text-[#E2E2E6] cursor-pointer transition"
           >
             <span>Back to Module</span>
           </button>

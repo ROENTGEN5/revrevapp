@@ -2,23 +2,23 @@ import { useState, useCallback, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   Plus, Trash2, CheckSquare, Type, ListOrdered, ArrowRight,
-  AlertCircle, GripVertical, ChevronDown, PenLine, Image as ImageIcon,
+  AlertCircle, PenLine, Image as ImageIcon,
   X, Loader2, ToggleLeft
 } from 'lucide-react';
 import { compressImage } from '../utils/imageCompressor';
 
 const QUESTION_TYPES = [
-  { value: 'multiple_choice', label: 'Multiple Choice', icon: CheckSquare, color: 'accent' },
-  { value: 'identification', label: 'Identification', icon: Type, color: 'info' },
-  { value: 'enumeration', label: 'Enumeration', icon: ListOrdered, color: 'warning' },
-  { value: 'true_false', label: 'True or False', icon: ToggleLeft, color: 'teal' },
+  { value: 'multiple_choice', label: 'Multiple Choice', icon: CheckSquare },
+  { value: 'identification', label: 'Identification', icon: Type },
+  { value: 'enumeration', label: 'Enumeration', icon: ListOrdered },
+  { value: 'true_false', label: 'True or False', icon: ToggleLeft },
 ];
 
 const TYPE_STYLES = {
-  multiple_choice: 'bg-purple-500/20 text-purple-300 border-purple-500/30',
-  identification: 'bg-blue-500/20 text-blue-300 border-blue-500/30',
-  enumeration: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
-  true_false: 'bg-teal-500/20 text-teal-300 border-teal-500/30',
+  multiple_choice: 'bg-[#4A4458]/40 text-[#D0BCFF] border-[#D0BCFF]/30',
+  identification: 'bg-[#1E4378]/40 text-[#A8C7FA] border-[#A8C7FA]/30',
+  enumeration: 'bg-[#443600]/40 text-[#FDE293] border-[#FDE293]/30',
+  true_false: 'bg-[#16251E] text-[#A8E8BC] border-[#A8E8BC]/30',
 };
 
 const EMPTY_MC = {
@@ -69,13 +69,13 @@ function TypeSelector({ selected, onChange }) {
           key={value}
           type="button"
           onClick={() => onChange(value)}
-          className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-all cursor-pointer border ${
+          className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
             selected === value
-              ? TYPE_STYLES[value]
-              : 'bg-surface-800/40 text-surface-400 border-surface-700/50 hover:bg-surface-800/70 hover:text-surface-300'
+              ? TYPE_STYLES[value] + ' shadow-md'
+              : 'bg-[#191C20] text-[#8E9196] border-white/10 hover:bg-[#272A2F] hover:text-[#E2E2E6]'
           }`}
         >
-          <Icon className="w-4 h-4" />
+          <Icon className="w-3.5 h-3.5" />
           {label}
         </button>
       ))}
@@ -86,14 +86,14 @@ function TypeSelector({ selected, onChange }) {
 // ─── Input Field ──────────────────────────────────────────────────
 function FormInput({ label, value, onChange, placeholder, required, multiline }) {
   const baseClass =
-    'w-full bg-surface-900/60 border border-surface-700/50 rounded-xl px-4 py-3 text-sm text-surface-100 placeholder:text-surface-600 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/20 transition-all';
+    'w-full bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all';
 
   return (
     <div>
       {label && (
-        <label className="block text-surface-300 text-xs font-semibold mb-1.5 uppercase tracking-wide">
+        <label className="block text-[#8E9196] text-xs font-semibold mb-1.5 uppercase tracking-wide">
           {label}
-          {required && <span className="text-danger-400 ml-1">*</span>}
+          {required && <span className="text-[#FFB4AB] ml-1">*</span>}
         </label>
       )}
       {multiline ? (
@@ -148,16 +148,16 @@ function QuestionImageUploader({ image, onImageChange }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={compressing}
-          className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 text-white/70 text-xs font-semibold transition cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#191C20] hover:bg-[#272A2F] border border-white/10 text-[#A8E8BC] text-xs font-semibold transition cursor-pointer"
         >
           {compressing ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-purple-400" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#A8E8BC]" />
               <span>Compressing image...</span>
             </>
           ) : (
             <>
-              <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+              <ImageIcon className="w-3.5 h-3.5 text-[#A8E8BC]" />
               <span>Attach Diagram / Image (Auto-Compressed)</span>
             </>
           )}
@@ -167,12 +167,12 @@ function QuestionImageUploader({ image, onImageChange }) {
           <img
             src={image}
             alt="Question Diagram"
-            className="w-32 h-24 object-cover rounded-xl border border-white/20 shadow-md"
+            className="w-32 h-24 object-cover rounded-2xl border border-white/20 shadow-md"
           />
           <button
             type="button"
             onClick={() => onImageChange(null)}
-            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-rose-600 text-white flex items-center justify-center text-xs font-bold shadow-lg hover:bg-rose-500 transition cursor-pointer"
+            className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-[#5C2822] text-[#FFB4AB] border border-[#FFB4AB]/30 flex items-center justify-center text-xs font-bold shadow-lg hover:bg-[#690005] transition cursor-pointer"
             title="Remove Diagram"
           >
             <X className="w-3.5 h-3.5" />
@@ -188,8 +188,8 @@ function MCOptions({ form, setForm }) {
   const labels = ['A', 'B', 'C', 'D'];
   return (
     <div className="space-y-3">
-      <label className="block text-surface-300 text-xs font-semibold uppercase tracking-wide">
-        Options <span className="text-danger-400 ml-1">*</span>
+      <label className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wide">
+        Options <span className="text-[#FFB4AB] ml-1">*</span>
       </label>
       {labels.map((label) => {
         const key = `option${label}`;
@@ -199,10 +199,10 @@ function MCOptions({ form, setForm }) {
             <button
               type="button"
               onClick={() => setForm({ ...form, correctAnswer: label })}
-              className={`shrink-0 w-10 h-10 rounded-xl text-sm font-bold transition-all cursor-pointer border ${
+              className={`shrink-0 w-10 h-10 rounded-xl text-sm font-bold font-mono transition-all cursor-pointer border ${
                 isCorrect
-                  ? 'bg-success-bg border-success-border text-success-400 shadow-md shadow-success-500/10'
-                  : 'bg-surface-800/60 border-surface-700/50 text-surface-400 hover:border-surface-500'
+                  ? 'bg-[#1B5238] border-[#A8E8BC]/40 text-[#A8E8BC] shadow-md shadow-[#A8E8BC]/10'
+                  : 'bg-[#191C20] border-white/10 text-[#8E9196] hover:border-white/20'
               }`}
               title={`Set ${label} as correct answer`}
             >
@@ -213,18 +213,18 @@ function MCOptions({ form, setForm }) {
               value={form[key]}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })}
               placeholder={`Option ${label}${label === 'C' || label === 'D' ? ' (optional)' : ''}`}
-              className="flex-1 bg-surface-900/60 border border-surface-700/50 rounded-xl px-4 py-3 text-sm text-surface-100 placeholder:text-surface-600 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/20 transition-all"
+              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all"
             />
           </div>
         );
       })}
       {form.correctAnswer && (
-        <p className="text-xs text-success-400 font-medium mt-1">
+        <p className="text-xs text-[#A8E8BC] font-medium mt-1">
           ✓ Correct answer: {form.correctAnswer}
         </p>
       )}
       {!form.correctAnswer && (
-        <p className="text-xs text-surface-500 font-medium mt-1">
+        <p className="text-xs text-[#8E9196] font-medium mt-1">
           Click a letter to mark it as the correct answer
         </p>
       )}
@@ -253,9 +253,9 @@ function EnumItems({ form, setForm }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-surface-300 text-xs font-semibold uppercase tracking-wide">
-        Answer Items <span className="text-danger-400 ml-1">*</span>
-        <span className="text-surface-500 font-normal normal-case ml-2">
+      <label className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wide">
+        Answer Items <span className="text-[#FFB4AB] ml-1">*</span>
+        <span className="text-[#8E9196]/70 font-normal normal-case ml-2">
           (min. 2 items)
         </span>
       </label>
@@ -268,7 +268,7 @@ function EnumItems({ form, setForm }) {
             exit={{ opacity: 0, height: 0 }}
             className="flex items-center gap-3"
           >
-            <span className="shrink-0 w-8 h-8 rounded-lg bg-[oklch(0.78_0.16_80/0.15)] text-[oklch(0.78_0.16_80)] flex items-center justify-center text-xs font-bold">
+            <span className="shrink-0 w-8 h-8 rounded-xl bg-[#443600] text-[#FDE293] border border-[#FDE293]/30 flex items-center justify-center text-xs font-bold font-mono">
               {i + 1}
             </span>
             <input
@@ -276,16 +276,16 @@ function EnumItems({ form, setForm }) {
               value={item}
               onChange={(e) => updateItem(i, e.target.value)}
               placeholder={`Item ${i + 1}`}
-              className="flex-1 bg-surface-900/60 border border-surface-700/50 rounded-xl px-4 py-3 text-sm text-surface-100 placeholder:text-surface-600 focus:outline-none focus:border-accent-500/50 focus:ring-1 focus:ring-accent-500/20 transition-all"
+              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all"
             />
             <button
               type="button"
               onClick={() => removeItem(i)}
               disabled={items.length <= 2}
-              className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center transition-all cursor-pointer ${
+              className={`shrink-0 w-8 h-8 rounded-xl flex items-center justify-center transition-all cursor-pointer ${
                 items.length <= 2
-                  ? 'text-surface-700 cursor-not-allowed'
-                  : 'text-surface-500 hover:text-danger-400 hover:bg-danger-bg'
+                  ? 'text-white/20 cursor-not-allowed'
+                  : 'text-[#8E9196] hover:text-[#FFB4AB] hover:bg-[#5C2822]/30'
               }`}
             >
               <Trash2 className="w-4 h-4" />
@@ -296,7 +296,7 @@ function EnumItems({ form, setForm }) {
       <button
         type="button"
         onClick={addItem}
-        className="inline-flex items-center gap-2 text-sm text-accent-400 font-semibold hover:text-accent-300 transition-colors cursor-pointer mt-1"
+        className="inline-flex items-center gap-2 text-sm text-[#A8E8BC] font-semibold hover:text-[#B9F2CB] transition-colors cursor-pointer mt-1"
       >
         <Plus className="w-4 h-4" />
         Add item
@@ -309,8 +309,8 @@ function EnumItems({ form, setForm }) {
 function TFOptions({ form, setForm }) {
   return (
     <div className="space-y-3">
-      <label className="block text-surface-300 text-xs font-semibold uppercase tracking-wide">
-        Correct Answer <span className="text-danger-400 ml-1">*</span>
+      <label className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wide">
+        Correct Answer <span className="text-[#FFB4AB] ml-1">*</span>
       </label>
       <div className="grid grid-cols-2 gap-3">
         {['True', 'False'].map((val) => {
@@ -321,27 +321,27 @@ function TFOptions({ form, setForm }) {
               key={val}
               type="button"
               onClick={() => setForm({ ...form, correctAnswer: val })}
-              className={`flex flex-col items-center justify-center gap-1.5 py-5 rounded-xl text-sm font-bold transition-all cursor-pointer border ${
+              className={`flex flex-col items-center justify-center gap-1.5 py-5 rounded-2xl text-sm font-bold transition-all cursor-pointer border ${
                 isSelected
                   ? isTrue
-                    ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-300 shadow-md shadow-emerald-500/10'
-                    : 'bg-rose-500/20 border-rose-500/50 text-rose-300 shadow-md shadow-rose-500/10'
-                  : 'bg-surface-800/40 border-surface-700/50 text-surface-400 hover:bg-surface-800/70 hover:text-surface-300'
+                    ? 'bg-[#1B5238] border-[#A8E8BC]/50 text-[#A8E8BC] shadow-md shadow-[#A8E8BC]/10'
+                    : 'bg-[#5C2822] border-[#FFB4AB]/50 text-[#FFB4AB] shadow-md shadow-[#FFB4AB]/10'
+                  : 'bg-[#191C20] border-white/10 text-[#8E9196] hover:bg-[#272A2F] hover:text-[#E2E2E6]'
               }`}
             >
-              <span className="text-lg font-extrabold">{isTrue ? '✓' : '✗'}</span>
+              <span className="text-xl font-mono">{isTrue ? '✓' : '✗'}</span>
               <span>{val}</span>
             </button>
           );
         })}
       </div>
       {form.correctAnswer && (
-        <p className="text-xs text-success-400 font-medium mt-1">
+        <p className="text-xs text-[#A8E8BC] font-medium mt-1">
           ✓ Correct answer: {form.correctAnswer}
         </p>
       )}
       {!form.correctAnswer && (
-        <p className="text-xs text-surface-500 font-medium mt-1">
+        <p className="text-xs text-[#8E9196] font-medium mt-1">
           Click True or False to set the correct answer
         </p>
       )}
@@ -360,7 +360,7 @@ function QuestionPreview({ questions, onRemove }) {
       className="mt-6"
     >
       <div className="flex items-center justify-between mb-3">
-        <h3 className="text-surface-200 text-sm font-semibold">
+        <h3 className="text-[#E2E2E6] text-sm font-semibold">
           Added Questions ({questions.length})
         </h3>
       </div>
@@ -373,26 +373,26 @@ function QuestionPreview({ questions, onRemove }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: 20, height: 0 }}
               transition={{ duration: 0.25 }}
-              className="flex items-center gap-3 p-3 rounded-xl bg-surface-900/40 border border-surface-700/30 group"
+              className="flex items-center gap-3 p-3.5 rounded-2xl bg-[#191C20] border border-white/5 group"
             >
-              <span className="shrink-0 w-7 h-7 rounded-lg bg-surface-800 text-surface-400 flex items-center justify-center text-xs font-bold">
+              <span className="shrink-0 w-7 h-7 rounded-xl bg-[#272A2F] text-[#8E9196] flex items-center justify-center text-xs font-bold font-mono">
                 {i + 1}
               </span>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-surface-200 font-medium truncate">
+                <p className="text-sm text-[#E2E2E6] font-medium truncate">
                   {q.question}
                 </p>
-                <span className={`inline-block mt-1 text-[10px] font-semibold px-2 py-0.5 rounded-md ${TYPE_STYLES[q.type]}`}>
+                <span className={`inline-block mt-1 text-[10px] font-bold px-2 py-0.5 rounded-full border ${TYPE_STYLES[q.type]}`}>
                   {q.type.replace('_', ' ')}
                 </span>
               </div>
               <button
                 type="button"
                 onClick={() => onRemove(q._tempId)}
-                className="shrink-0 p-1.5 rounded-lg text-surface-600 hover:text-danger-400 hover:bg-danger-bg transition-all cursor-pointer opacity-0 group-hover:opacity-100"
+                className="shrink-0 p-1.5 rounded-full text-[#8E9196] hover:text-[#FFB4AB] hover:bg-[#5C2822]/30 transition-all cursor-pointer opacity-0 group-hover:opacity-100"
                 title="Remove question"
               >
-                <Trash2 className="w-3.5 h-3.5" />
+                <Trash2 className="w-4 h-4" />
               </button>
             </motion.div>
           ))}
@@ -402,13 +402,11 @@ function QuestionPreview({ questions, onRemove }) {
   );
 }
 
-
 // ─── Main Form Component ──────────────────────────────────────────
 export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, onQuestionsChange, initialQuestions }) {
   const [form, setForm] = useState(getEmptyForm('multiple_choice'));
   const [questions, setQuestions] = useState(initialQuestions || []);
   const [error, setError] = useState(null);
-  let nextId = 0;
 
   // Notify parent whenever questions change (for auto-save)
   const prevQuestionsRef = useRef(questions);
@@ -444,7 +442,6 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         setError('Please select the correct answer (A, B, C, or D).');
         return;
       }
-      // Check that the selected answer has text
       const answerKey = `option${form.correctAnswer}`;
       if (!form[answerKey]?.trim()) {
         setError(`Option ${form.correctAnswer} is selected as correct but has no text.`);
@@ -520,7 +517,6 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
       setError('Add at least one question before proceeding.');
       return;
     }
-    // Assign proper ids
     const finalQuestions = questions.map((q, i) => {
       const { _tempId, ...rest } = q;
       return { ...rest, id: i };
@@ -532,7 +528,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
     <div className="space-y-6">
       {/* Type Selector */}
       <div>
-        <label className="block text-surface-300 text-xs font-semibold mb-2 uppercase tracking-wide">
+        <label className="block text-[#8E9196] text-xs font-semibold mb-2 uppercase tracking-wide">
           Question Type
         </label>
         <TypeSelector selected={form.type} onChange={handleTypeChange} />
@@ -595,10 +591,10 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="flex items-start gap-3 p-4 rounded-xl bg-danger-bg border border-danger-border"
+            className="flex items-start gap-3 p-4 rounded-2xl bg-[#5C2822]/40 border border-[#FFB4AB]/30 text-[#FFB4AB]"
           >
-            <AlertCircle className="w-5 h-5 text-danger-400 shrink-0 mt-0.5" />
-            <p className="text-danger-400 text-sm">{error}</p>
+            <AlertCircle className="w-5 h-5 text-[#FFB4AB] shrink-0 mt-0.5" />
+            <p className="text-sm font-semibold">{error}</p>
           </motion.div>
         )}
       </AnimatePresence>
@@ -606,12 +602,12 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
       {/* Add Button */}
       <motion.button
         type="button"
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
+        whileHover={{ scale: 1.015 }}
+        whileTap={{ scale: 0.985 }}
         onClick={validateAndAdd}
-        className="w-full inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl font-semibold text-sm bg-surface-800/80 text-surface-200 hover:bg-surface-700/80 border border-surface-700/50 transition-all cursor-pointer"
+        className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 transition-all cursor-pointer"
       >
-        <Plus className="w-4 h-4" />
+        <Plus className="w-4 h-4 text-[#A8E8BC]" />
         Add Question
       </motion.button>
 
@@ -628,13 +624,13 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
           >
             <motion.button
               type="button"
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
               onClick={handleProceed}
               disabled={disabled}
-              className="w-full inline-flex items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm bg-gradient-to-r from-accent-500 to-[oklch(0.62_0.24_310)] text-white shadow-lg shadow-accent-500/25 hover:shadow-accent-500/40 transition-shadow cursor-pointer disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/25 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 disabled:opacity-50"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               {submitLabel || `Continue with ${questions.length} Question${questions.length !== 1 ? 's' : ''}`}
             </motion.button>
           </motion.div>

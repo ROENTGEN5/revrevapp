@@ -5,7 +5,6 @@ export default function QuestionNav({ questions, answers, currentIndex, onNaviga
     <div className="flex flex-wrap gap-2 justify-center">
       {questions.map((q, i) => {
         const raw = answers[q.id];
-        // Determine if answered based on question type
         let isAnswered = false;
         if (raw !== undefined && raw !== null) {
           if (q.type === 'multiple_choice') {
@@ -14,25 +13,27 @@ export default function QuestionNav({ questions, answers, currentIndex, onNaviga
             isAnswered = raw.toString().trim().length > 0;
           } else if (q.type === 'enumeration') {
             isAnswered = Array.isArray(raw) && raw.some((s) => s.trim().length > 0);
+          } else if (q.type === 'true_false') {
+            isAnswered = !!raw;
           }
         }
 
         const isCurrent = i === currentIndex;
 
-        let bgClass = 'bg-surface-800/60 text-surface-400 hover:bg-surface-700/80';
+        let bgClass = 'bg-[#272A2F] text-[#8E9196] hover:bg-[#32353A] hover:text-[#E2E2E6] border border-white/5';
         if (isCurrent) {
-          bgClass = 'bg-accent-500/30 text-accent-400 ring-2 ring-accent-500/50';
+          bgClass = 'bg-[#A8E8BC] text-[#003822] font-bold shadow-md shadow-[#A8E8BC]/25 ring-2 ring-[#A8E8BC]/50';
         } else if (isAnswered) {
-          bgClass = 'bg-surface-600/50 text-surface-200';
+          bgClass = 'bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 font-bold';
         }
 
         return (
           <motion.button
             key={q.id}
             id={`nav-question-${i + 1}`}
-            whileHover={{ scale: 1.1 }}
+            whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
-            className={`w-9 h-9 rounded-lg text-sm font-semibold cursor-pointer transition-colors duration-200 ${bgClass}`}
+            className={`w-9 h-9 rounded-xl text-xs font-mono font-bold cursor-pointer transition-all duration-150 flex items-center justify-center ${bgClass}`}
             onClick={() => onNavigate(i)}
           >
             {i + 1}

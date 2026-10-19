@@ -6,28 +6,22 @@ export default function ProgressBar({ progress, totalAnswered, totalQuestions })
   return (
     <div className="w-full">
       <div className="flex items-center justify-between mb-2">
-        <span className="text-surface-400 text-sm font-medium">
+        <span className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider">
           Progress
         </span>
-        <span className="text-surface-300 text-sm font-semibold tabular-nums">
-          {totalAnswered}/{totalQuestions} answered
+        <span className="text-[#E2E2E6] text-xs font-bold font-mono">
+          {totalAnswered}/{totalQuestions} answered ({percentage}%)
         </span>
       </div>
-      <div className="w-full h-2.5 rounded-full bg-surface-800/80 overflow-hidden">
+      <div className="w-full h-3 rounded-full bg-[#272A2F] overflow-hidden p-0.5 border border-white/5">
         <motion.div
-          className="h-full rounded-full"
-          style={{
-            background: 'linear-gradient(90deg, oklch(0.65 0.25 280), oklch(0.72 0.22 310), oklch(0.65 0.25 280))',
-            backgroundSize: '200% 100%',
-          }}
+          className="h-full rounded-full bg-gradient-to-r from-[#A8E8BC] to-[#7BD99F]"
           initial={{ width: 0 }}
           animate={{
             width: `${percentage}%`,
-            backgroundPosition: ['0% 0%', '100% 0%'],
           }}
           transition={{
-            width: { duration: 0.5, ease: [0.22, 1, 0.36, 1] },
-            backgroundPosition: { duration: 3, repeat: Infinity, ease: 'linear' },
+            width: { duration: 0.4, ease: [0.2, 0, 0, 1] },
           }}
         />
       </div>

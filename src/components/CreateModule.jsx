@@ -233,6 +233,7 @@ export default function CreateModule() {
         await updateDraftModule(draftId, {
           title: title.trim(),
           description: description.trim(),
+          ...(coverImage ? { coverImage } : {}),
         });
         await saveDraftQuestions(draftId, questions);
         await publishModule(draftId);
@@ -241,6 +242,7 @@ export default function CreateModule() {
         const moduleId = await createModule({
           title: title.trim(),
           description: description.trim(),
+          ...(coverImage ? { coverImage } : {}),
           questions,
         });
         navigate(`/module/${moduleId}`);
@@ -253,15 +255,15 @@ export default function CreateModule() {
 
   if (loadingDraft) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-3">
+      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#111318]">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-2xl glass-apple-pill text-purple-400"
+          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
-        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
+        <span className="text-xs font-semibold uppercase tracking-widest text-[#8E9196]">
           Loading Draft...
         </span>
       </div>
@@ -269,7 +271,7 @@ export default function CreateModule() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 sm:py-12">
+    <div className="min-h-screen flex flex-col items-center px-4 py-8 sm:py-12 bg-[#111318] text-[#E2E2E6]">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -281,9 +283,9 @@ export default function CreateModule() {
           <button
             id="back-to-dashboard-create"
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-apple-btn text-xs font-semibold hover:text-white cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-semibold text-[#E2E2E6] transition cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4" />
+            <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
             <span>Dashboard</span>
           </button>
 
@@ -298,12 +300,12 @@ export default function CreateModule() {
             transition={{ type: 'spring', stiffness: 300, damping: 25 }}
             className="inline-flex items-center gap-2 mb-3"
           >
-            <Sparkles className="w-7 h-7 text-purple-400" />
-            <h1 className="text-3xl sm:text-4xl font-extrabold gradient-text tracking-tight">
+            <Sparkles className="w-7 h-7 text-[#A8E8BC]" />
+            <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E2E2E6] tracking-tight">
               {existingDraftId ? 'Edit Module' : 'Create Module'}
             </h1>
           </motion.div>
-          <p className="text-white/60 text-sm sm:text-base max-w-md mx-auto">
+          <p className="text-[#8E9196] text-sm sm:text-base max-w-md mx-auto">
             {existingDraftId
               ? 'Continue crafting your module. Questions save automatically.'
               : 'Upload a CSV/JSON file or write questions manually. Auto-saved live.'}
@@ -315,17 +317,17 @@ export default function CreateModule() {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="glass-apple-card p-6 sm:p-8 mb-6"
+          className="rounded-[32px] bg-[#1D2024] border border-white/[0.06] p-7 sm:p-9 mb-6 shadow-xl"
         >
           <div className="flex items-center gap-2 mb-5">
-            <BookOpen className="w-4 h-4 text-purple-400" />
-            <span className="text-white text-sm font-bold tracking-tight">Module Information</span>
+            <BookOpen className="w-4 h-4 text-[#A8E8BC]" />
+            <span className="text-[#E2E2E6] text-sm font-bold tracking-tight">Module Information</span>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="module-title" className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                Title <span className="text-rose-400">*</span>
+              <label htmlFor="module-title" className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wider mb-2">
+                Title <span className="text-[#FFB4AB]">*</span>
               </label>
               <input
                 id="module-title"
@@ -333,12 +335,12 @@ export default function CreateModule() {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 placeholder="e.g. Computer Science Fundamentals"
-                className="w-full px-4 py-3 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
+                className="w-full px-5 py-3.5 rounded-2xl bg-[#191C20] border border-white/10 text-sm font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 focus:outline-none transition-all"
               />
             </div>
             <div>
-              <label htmlFor="module-description" className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                Description <span className="text-white/40 font-normal lowercase">(optional)</span>
+              <label htmlFor="module-description" className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wider mb-2">
+                Description <span className="text-[#8E9196]/60 font-normal lowercase">(optional)</span>
               </label>
               <input
                 id="module-description"
@@ -346,14 +348,14 @@ export default function CreateModule() {
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder="e.g. Data structures, algorithms, and logic gates"
-                className="w-full px-4 py-3 rounded-xl glass-apple-input text-sm font-semibold placeholder:text-white/30 focus:ring-2 focus:ring-purple-500/50"
+                className="w-full px-5 py-3.5 rounded-2xl bg-[#191C20] border border-white/10 text-sm font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 focus:outline-none transition-all"
               />
             </div>
 
             {/* Module Cover Image Attachment */}
             <div>
-              <label className="block text-white/70 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                Module Cover Image <span className="text-white/40 font-normal lowercase">(optional)</span>
+              <label className="block text-[#8E9196] text-xs font-semibold uppercase tracking-wider mb-2">
+                Module Cover Image <span className="text-[#8E9196]/60 font-normal lowercase">(optional)</span>
               </label>
               <input
                 ref={coverInputRef}
@@ -380,31 +382,31 @@ export default function CreateModule() {
                   type="button"
                   onClick={() => coverInputRef.current?.click()}
                   disabled={isCompressingCover}
-                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl glass-apple-input text-xs font-bold text-purple-300 hover:text-white transition cursor-pointer"
+                  className="w-full inline-flex items-center justify-center gap-2 py-3.5 px-4 rounded-2xl bg-[#191C20] hover:bg-[#272A2F] border border-white/10 text-xs font-bold text-[#A8E8BC] transition cursor-pointer"
                 >
                   {isCompressingCover ? (
                     <>
-                      <Loader2 className="w-4 h-4 animate-spin text-purple-400" />
+                      <Loader2 className="w-4 h-4 animate-spin text-[#A8E8BC]" />
                       <span>Compressing cover image...</span>
                     </>
                   ) : (
                     <>
-                      <ImageIcon className="w-4 h-4 text-purple-400" />
+                      <ImageIcon className="w-4 h-4 text-[#A8E8BC]" />
                       <span>Upload Module Cover Image (Auto-Compressed)</span>
                     </>
                   )}
                 </button>
               ) : (
-                <div className="relative rounded-2xl overflow-hidden border border-white/20 shadow-lg mt-1 group">
+                <div className="relative rounded-[24px] overflow-hidden border border-white/15 shadow-lg mt-1 group">
                   <img
                     src={coverImage}
                     alt="Module Cover Preview"
-                    className="w-full h-32 object-cover"
+                    className="w-full h-36 object-cover"
                   />
                   <button
                     type="button"
                     onClick={() => setCoverImage(null)}
-                    className="absolute top-2 right-2 p-1.5 rounded-full bg-rose-600/80 hover:bg-rose-600 text-white backdrop-blur-md transition cursor-pointer shadow-lg"
+                    className="absolute top-2.5 right-2.5 p-2 rounded-full bg-[#5C2822] hover:bg-[#690005] text-[#FFB4AB] border border-[#FFB4AB]/30 transition cursor-pointer shadow-lg"
                     title="Remove Cover Image"
                   >
                     <X className="w-4 h-4" />
@@ -415,19 +417,21 @@ export default function CreateModule() {
           </div>
         </motion.div>
 
-        {/* Apple Segmented Mode Switcher */}
+        {/* Pixel Segmented Mode Switcher */}
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.15 }}
           className="flex items-center justify-center mb-8"
         >
-          <div className="glass-apple-pill inline-flex rounded-2xl p-1.5 gap-2 border border-white/10">
+          <div className="inline-flex rounded-full p-1.5 gap-1.5 bg-[#1D2024] border border-white/10 shadow-lg">
             <button
               id="toggle-upload-mode"
               onClick={() => { setMode('upload'); setError(null); }}
-              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer relative ${
-                mode === 'upload' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                mode === 'upload'
+                  ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
+                  : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
               <Upload className="w-4 h-4" />
@@ -436,8 +440,10 @@ export default function CreateModule() {
             <button
               id="toggle-manual-mode"
               onClick={() => { setMode('manual'); setError(null); }}
-              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer relative ${
-                mode === 'manual' ? 'bg-white/20 text-white shadow-md' : 'text-white/50 hover:text-white'
+              className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                mode === 'manual'
+                  ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
+                  : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
               <PenLine className="w-4 h-4" />
@@ -459,7 +465,7 @@ export default function CreateModule() {
               {/* Drop Zone */}
               <div
                 id="upload-drop-zone"
-                className={`drop-zone rounded-3xl p-10 sm:p-14 text-center cursor-pointer transition-all ${
+                className={`drop-zone rounded-[32px] p-10 sm:p-14 text-center cursor-pointer transition-all ${
                   isDragOver ? 'drag-over' : ''
                 }`}
                 onDrop={handleDrop}
@@ -481,25 +487,25 @@ export default function CreateModule() {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-                      className="p-4 rounded-2xl bg-purple-500/20 text-purple-300"
+                      className="p-4 rounded-3xl bg-[#1B5238] text-[#A8E8BC]"
                     >
                       <FileText className="w-10 h-10" />
                     </motion.div>
-                    <p className="text-white/80 font-semibold text-sm">
-                      Parsing <span className="text-purple-400">{fileName}</span>...
+                    <p className="text-[#E2E2E6] font-semibold text-sm">
+                      Parsing <span className="text-[#A8E8BC]">{fileName}</span>...
                     </p>
                   </div>
                 ) : parsedQuestions ? (
                   <div className="flex flex-col items-center gap-4">
-                    <div className="w-16 h-16 rounded-2xl bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 flex items-center justify-center shadow-lg shadow-emerald-500/10">
+                    <div className="w-16 h-16 rounded-3xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 flex items-center justify-center shadow-lg shadow-[#A8E8BC]/10">
                       <CheckCircle2 className="w-8 h-8" />
                     </div>
                     <div>
-                      <p className="text-white font-bold text-lg mb-1">{fileName}</p>
-                      <p className="text-emerald-300 text-sm font-extrabold font-mono">
+                      <p className="text-[#E2E2E6] font-bold text-lg mb-1">{fileName}</p>
+                      <p className="text-[#A8E8BC] text-sm font-extrabold font-mono">
                         {parsedQuestions.length} Questions Loaded ✓
                       </p>
-                      <p className="text-white/40 text-xs mt-2">
+                      <p className="text-[#8E9196] text-xs mt-2">
                         Click to select a different file
                       </p>
                     </div>
@@ -509,16 +515,16 @@ export default function CreateModule() {
                     <motion.div
                       animate={isDragOver ? { scale: 1.15, y: -4 } : { scale: 1, y: 0 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className="p-4 rounded-2xl bg-white/5 text-purple-300 border border-white/10 shadow-xl"
+                      className="p-4 rounded-3xl bg-white/5 text-[#A8E8BC] border border-white/10 shadow-xl"
                     >
                       <Upload className="w-10 h-10" />
                     </motion.div>
                     <div>
-                      <p className="text-white font-bold text-lg mb-1">
-                        Drop your quiz file here, or <span className="text-purple-400 underline underline-offset-4">browse</span>
+                      <p className="text-[#E2E2E6] font-bold text-lg mb-1">
+                        Drop your quiz file here, or <span className="text-[#A8E8BC] underline underline-offset-4">browse</span>
                       </p>
-                      <p className="text-white/50 text-xs">
-                        Supports <span className="font-mono text-white/80 font-bold">.csv</span> and <span className="font-mono text-white/80 font-bold">.json</span> files
+                      <p className="text-[#8E9196] text-xs">
+                        Supports <span className="font-mono text-[#E2E2E6] font-bold">.csv</span> and <span className="font-mono text-[#E2E2E6] font-bold">.json</span> files
                       </p>
                     </div>
                   </div>
@@ -526,24 +532,24 @@ export default function CreateModule() {
               </div>
 
               {/* Format Guide & Download Templates */}
-              <div className="mt-6 glass-apple-card p-5">
-                <div className="flex items-center justify-between">
-                  <span className="text-white text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-                    <FileText className="w-4 h-4 text-purple-400" />
+              <div className="mt-6 p-5 sm:p-6 rounded-[28px] bg-[#1D2024] border border-white/[0.06] shadow-lg">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <span className="text-[#E2E2E6] text-xs font-bold uppercase tracking-wider flex items-center gap-2">
+                    <FileText className="w-4 h-4 text-[#A8E8BC]" />
                     Supported File Formats (CSV & JSON)
                   </span>
                   <div className="flex items-center gap-2">
                     <a
                       href="/sample-quiz.csv"
                       download="sample-quiz.csv"
-                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[11px] font-bold transition flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-[#E2E2E6] text-xs font-bold transition flex items-center gap-1.5"
                     >
                       <span>Sample CSV</span>
                     </a>
                     <a
                       href="/sample-quiz.json"
                       download="sample-quiz.json"
-                      className="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-white text-[11px] font-bold transition flex items-center gap-1.5"
+                      className="px-4 py-2 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-[#E2E2E6] text-xs font-bold transition flex items-center gap-1.5"
                     >
                       <span>Sample JSON</span>
                     </a>
@@ -560,11 +566,11 @@ export default function CreateModule() {
                 >
                   <motion.button
                     id="save-module-button"
-                    whileHover={{ scale: 1.03, y: -2 }}
-                    whileTap={{ scale: 0.97 }}
+                    whileHover={{ scale: 1.02, y: -1 }}
+                    whileTap={{ scale: 0.98 }}
                     onClick={() => handlePublish(parsedQuestions)}
                     disabled={isSaving}
-                    className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-2xl font-bold text-sm bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all cursor-pointer border border-white/20 disabled:opacity-50"
+                    className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/25 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 disabled:opacity-50"
                   >
                     {isSaving ? (
                       <>
@@ -589,10 +595,12 @@ export default function CreateModule() {
               exit={{ opacity: 0, y: -15 }}
               transition={{ type: 'spring', stiffness: 280, damping: 25 }}
             >
-              <div className="glass-apple-card p-6 sm:p-8">
+              <div className="p-7 sm:p-9 rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <PenLine className="w-5 h-5 text-purple-400" />
-                  <h2 className="text-lg font-extrabold text-white tracking-tight">
+                  <div className="p-2.5 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30">
+                    <PenLine className="w-5 h-5" />
+                  </div>
+                  <h2 className="text-lg font-extrabold text-[#E2E2E6] tracking-tight">
                     Add Questions Manually
                   </h2>
                 </div>
@@ -604,7 +612,7 @@ export default function CreateModule() {
                   initialQuestions={draftQuestions}
                 />
                 {!title.trim() && (
-                  <p className="text-amber-300 text-xs font-semibold mt-4">
+                  <p className="text-[#FDE293] text-xs font-semibold mt-4">
                     ↑ Please fill in the module title above before publishing.
                   </p>
                 )}
@@ -620,7 +628,7 @@ export default function CreateModule() {
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
-              className="mt-6 flex items-start gap-3 p-4 rounded-2xl bg-rose-500/20 border border-rose-500/30 text-rose-300 shadow-xl"
+              className="mt-6 flex items-start gap-3 p-4 rounded-2xl bg-[#5C2822]/40 border border-[#FFB4AB]/30 text-[#FFB4AB] shadow-xl"
             >
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <p className="text-sm font-semibold">{error}</p>
@@ -642,24 +650,24 @@ function AutoSaveIndicator({ status }) {
         initial={{ opacity: 0, x: 10 }}
         animate={{ opacity: 1, x: 0 }}
         exit={{ opacity: 0, x: 10 }}
-        className="glass-apple-pill px-3 py-1.5 rounded-full inline-flex items-center gap-2 border border-white/10"
+        className="px-4 py-1.5 rounded-full inline-flex items-center gap-2 bg-[#1D2024] border border-white/10 shadow-md"
       >
         {status === 'saving' && (
           <>
-            <Loader2 className="w-3.5 h-3.5 text-purple-400 animate-spin" />
-            <span className="text-white/70 text-xs font-semibold">Auto-saving...</span>
+            <Loader2 className="w-3.5 h-3.5 text-[#A8E8BC] animate-spin" />
+            <span className="text-[#8E9196] text-xs font-semibold">Auto-saving...</span>
           </>
         )}
         {status === 'saved' && (
           <>
-            <Cloud className="w-3.5 h-3.5 text-emerald-400" />
-            <span className="text-emerald-300 text-xs font-semibold">Auto-saved</span>
+            <Cloud className="w-3.5 h-3.5 text-[#A8E8BC]" />
+            <span className="text-[#A8E8BC] text-xs font-semibold">Auto-saved</span>
           </>
         )}
         {status === 'error' && (
           <>
-            <CloudOff className="w-3.5 h-3.5 text-rose-400" />
-            <span className="text-rose-300 text-xs font-semibold">Save error</span>
+            <CloudOff className="w-3.5 h-3.5 text-[#FFB4AB]" />
+            <span className="text-[#FFB4AB] text-xs font-semibold">Save error</span>
           </>
         )}
       </motion.div>
