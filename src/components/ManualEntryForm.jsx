@@ -6,6 +6,7 @@ import {
   X, Loader2, ToggleLeft
 } from 'lucide-react';
 import { compressImage } from '../utils/imageCompressor';
+import { playChoiceSound, playSubmitSound } from '../utils/soundEffects';
 
 const QUESTION_TYPES = [
   { value: 'multiple_choice', label: 'Multiple Choice', icon: CheckSquare },
@@ -198,7 +199,10 @@ function MCOptions({ form, setForm }) {
           <div key={label} className="flex items-center gap-3">
             <button
               type="button"
-              onClick={() => setForm({ ...form, correctAnswer: label })}
+              onClick={() => {
+                playChoiceSound();
+                setForm({ ...form, correctAnswer: label });
+              }}
               className={`shrink-0 w-10 h-10 rounded-xl text-sm font-bold font-mono transition-all cursor-pointer border ${
                 isCorrect
                   ? 'bg-[#1B5238] border-[#A8E8BC]/40 text-[#A8E8BC] shadow-md shadow-[#A8E8BC]/10'
@@ -320,7 +324,10 @@ function TFOptions({ form, setForm }) {
             <button
               key={val}
               type="button"
-              onClick={() => setForm({ ...form, correctAnswer: val })}
+              onClick={() => {
+                playChoiceSound();
+                setForm({ ...form, correctAnswer: val });
+              }}
               className={`flex flex-col items-center justify-center gap-1.5 py-5 rounded-2xl text-sm font-bold transition-all cursor-pointer border ${
                 isSelected
                   ? isTrue
@@ -418,6 +425,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
   }, [questions, onQuestionsChange]);
 
   const handleTypeChange = useCallback((type) => {
+    playChoiceSound();
     setForm(getEmptyForm(type));
     setError(null);
   }, []);
@@ -503,12 +511,14 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
       };
     }
 
+    playChoiceSound();
     setQuestions((prev) => [...prev, normalizedQ]);
     // Reset form but keep the same type
     setForm(getEmptyForm(form.type));
   }, [form]);
 
   const removeQuestion = useCallback((tempId) => {
+    playChoiceSound();
     setQuestions((prev) => prev.filter((q) => q._tempId !== tempId));
   }, []);
 
@@ -521,6 +531,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
       const { _tempId, ...rest } = q;
       return { ...rest, id: i };
     });
+    playSubmitSound();
     onQuizReady(finalQuestions);
   }, [questions, onQuizReady]);
 

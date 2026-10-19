@@ -6,6 +6,7 @@ import {
   ChevronDown, Layers, Loader2, TrendingUp, Sparkles, CheckSquare, Type, ListOrdered, ToggleLeft
 } from 'lucide-react';
 import { getModule, getModuleQuestions, getAttemptHistory } from '../services/firebaseService';
+import { playNavSound, playSubmitSound, playChoiceSound } from '../utils/soundEffects';
 
 export default function ModuleDetail() {
   const { moduleId } = useParams();
@@ -96,7 +97,10 @@ export default function ModuleDetail() {
         >
           <button
             id="back-to-dashboard"
-            onClick={() => navigate('/')}
+            onClick={() => {
+              playNavSound();
+              navigate('/');
+            }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-semibold text-[#E2E2E6] transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
@@ -228,7 +232,10 @@ export default function ModuleDetail() {
             id="start-review-button"
             whileHover={{ scale: 1.015, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate(`/module/${moduleId}/review`)}
+            onClick={() => {
+              playNavSound();
+              navigate(`/module/${moduleId}/review`);
+            }}
             className="p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] hover:border-[#D0BCFF]/40 hover:bg-[#23272D] flex items-center gap-5 cursor-pointer text-left group shadow-lg transition-all"
           >
             <div className="w-14 h-14 rounded-2xl bg-[#4A4458] text-[#D0BCFF] border border-[#D0BCFF]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
@@ -236,7 +243,7 @@ export default function ModuleDetail() {
             </div>
             <div>
               <p className="text-[#E2E2E6] font-extrabold text-lg tracking-tight">Review Mode</p>
-              <p className="text-[#8E9196] text-xs mt-1">Study 3D flashcards & complete study sheets</p>
+              <p className="text-[#8E9196] text-xs mt-1">Study 3D flashcards &amp; complete study sheets</p>
             </div>
           </motion.button>
 
@@ -245,7 +252,10 @@ export default function ModuleDetail() {
             id="start-exam-button"
             whileHover={{ scale: 1.015, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate(`/module/${moduleId}/exam`)}
+            onClick={() => {
+              playSubmitSound();
+              navigate(`/module/${moduleId}/exam`);
+            }}
             className="p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] hover:border-[#A8E8BC]/40 hover:bg-[#23272D] flex items-center gap-5 cursor-pointer text-left group shadow-lg transition-all"
           >
             <div className="w-14 h-14 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
@@ -253,7 +263,7 @@ export default function ModuleDetail() {
             </div>
             <div>
               <p className="text-[#E2E2E6] font-extrabold text-lg tracking-tight">Take Exam</p>
-              <p className="text-[#8E9196] text-xs mt-1">Test your knowledge with live grading & history</p>
+              <p className="text-[#8E9196] text-xs mt-1">Test your knowledge with live grading &amp; history</p>
             </div>
           </motion.button>
         </motion.div>
@@ -267,7 +277,10 @@ export default function ModuleDetail() {
           >
             <button
               id="toggle-history"
-              onClick={() => setShowHistory(!showHistory)}
+              onClick={() => {
+                playChoiceSound();
+                setShowHistory(!showHistory);
+              }}
               className="w-full p-5 rounded-[28px] bg-[#1D2024] border border-white/[0.06] flex items-center justify-between cursor-pointer hover:bg-[#23272D] transition shadow-lg"
             >
               <div className="flex items-center gap-3">

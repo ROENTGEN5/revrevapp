@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, ListOrdered, CheckSquare, ToggleLeft } from 'lucide-react';
+import { playResultSound, playNavSound, playSubmitSound } from '../utils/soundEffects';
 
 function ScoreRing({ score, total }) {
   const radius = 64;
@@ -296,6 +297,10 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
   const skipped = results.filter(r => r.isSkipped).length;
   const incorrect = totalQuestions - score - skipped;
 
+  useEffect(() => {
+    playResultSound();
+  }, []);
+
   let verdict, verdictColor;
   if (percentage >= 0.9) { verdict = 'Outstanding Mastery! 🎉'; verdictColor = 'text-[#A8E8BC]'; }
   else if (percentage >= 0.7) { verdict = 'Great Performance! 👏'; verdictColor = 'text-[#A8E8BC]'; }
@@ -365,7 +370,10 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
             id="review-again-button"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            onClick={onReviewAgain}
+            onClick={() => {
+              playNavSound();
+              onReviewAgain();
+            }}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 font-bold text-xs transition cursor-pointer"
           >
             <RotateCcw className="w-4 h-4 text-[#A8E8BC]" />
@@ -377,7 +385,10 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
               id="retake-exam-button"
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              onClick={onRetake}
+              onClick={() => {
+                playSubmitSound();
+                onRetake();
+              }}
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0"
             >
               <RotateCcw className="w-4 h-4 stroke-[2.5]" />
@@ -389,7 +400,10 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
             id="back-to-module-button"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            onClick={onReset}
+            onClick={() => {
+              playNavSound();
+              onReset();
+            }}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 font-bold text-xs transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />

@@ -6,6 +6,7 @@ import {
   ArrowLeft, ToggleLeft
 } from 'lucide-react';
 import { saveQuestionMastery } from '../services/firebaseService';
+import { playChoiceSound, playNavSound, playSubmitSound } from '../utils/soundEffects';
 
 function TypeBadge({ type }) {
   const config = {
@@ -126,7 +127,10 @@ function Flashcard({ question, index, total, onRate }) {
         className="flashcard w-full cursor-pointer"
         animate={{ rotateY: isFlipped ? 180 : 0 }}
         transition={{ duration: 0.5, ease: [0.2, 0, 0, 1] }}
-        onClick={() => setIsFlipped(!isFlipped)}
+        onClick={() => {
+          playChoiceSound();
+          setIsFlipped(!isFlipped);
+        }}
       >
         {/* Front */}
         <div className="flashcard-face flashcard-front p-8 sm:p-10 flex flex-col justify-between rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-2xl">
@@ -196,6 +200,7 @@ function Flashcard({ question, index, total, onRate }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  playChoiceSound();
                   onRate(1);
                 }}
                 className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[#5C2822]/40 hover:bg-[#5C2822]/70 border border-[#FFB4AB]/30 text-[#FFB4AB] transition cursor-pointer active:scale-95"
@@ -208,6 +213,7 @@ function Flashcard({ question, index, total, onRate }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  playChoiceSound();
                   onRate(2);
                 }}
                 className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[#443600]/40 hover:bg-[#443600]/70 border border-[#FDE293]/30 text-[#FDE293] transition cursor-pointer active:scale-95"
@@ -220,6 +226,7 @@ function Flashcard({ question, index, total, onRate }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  playChoiceSound();
                   onRate(3);
                 }}
                 className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[#1B5238]/40 hover:bg-[#1B5238]/70 border border-[#A8E8BC]/30 text-[#A8E8BC] transition cursor-pointer active:scale-95"
@@ -232,6 +239,7 @@ function Flashcard({ question, index, total, onRate }) {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
+                  playChoiceSound();
                   onRate(4);
                 }}
                 className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[#1E4378]/40 hover:bg-[#1E4378]/70 border border-[#A8C7FA]/30 text-[#A8C7FA] transition cursor-pointer active:scale-95"
@@ -280,10 +288,12 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
   const currentQ = questions[currentIndex];
 
   const goNext = useCallback(() => {
+    playNavSound();
     setCurrentIndex((prev) => Math.min(prev + 1, totalQuestions - 1));
   }, [totalQuestions]);
 
   const goPrev = useCallback(() => {
+    playNavSound();
     setCurrentIndex((prev) => Math.max(prev - 1, 0));
   }, []);
 
@@ -339,7 +349,10 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
           </div>
           <button
             id="back-to-upload-button"
-            onClick={onBackToUpload}
+            onClick={() => {
+              playNavSound();
+              onBackToUpload();
+            }}
             className="px-4 py-2 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-bold text-[#E2E2E6] cursor-pointer inline-flex items-center gap-2 transition"
           >
             <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
@@ -352,7 +365,10 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
           <div className="inline-flex rounded-full p-1.5 gap-1.5 bg-[#1D2024] border border-white/10 shadow-lg">
             <button
               id="toggle-flashcard-view"
-              onClick={() => setViewMode('flashcard')}
+              onClick={() => {
+                playNavSound();
+                setViewMode('flashcard');
+              }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'flashcard'
                   ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
@@ -364,7 +380,10 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
             </button>
             <button
               id="toggle-sheet-view"
-              onClick={() => setViewMode('sheet')}
+              onClick={() => {
+                playNavSound();
+                setViewMode('sheet');
+              }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'sheet'
                   ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
@@ -427,7 +446,10 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                   {questions.map((_, i) => (
                     <button
                       key={i}
-                      onClick={() => setCurrentIndex(i)}
+                      onClick={() => {
+                        playNavSound();
+                        setCurrentIndex(i);
+                      }}
                       className={`w-2.5 h-2.5 rounded-full shrink-0 transition-all cursor-pointer ${
                         i === currentIndex
                           ? 'bg-[#A8E8BC] scale-125 shadow-md shadow-[#A8E8BC]/40'
@@ -483,7 +505,10 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
             id="start-exam-button"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            onClick={onStartExam}
+            onClick={() => {
+              playSubmitSound();
+              onStartExam();
+            }}
             className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full font-bold text-xs bg-[#A8E8BC] text-[#003822] shadow-lg shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 ml-auto sm:ml-0"
           >
             <Rocket className="w-4 h-4 stroke-[2.5]" />

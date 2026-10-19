@@ -7,6 +7,7 @@ import {
   Loader2, PenLine, Search, Brain, Zap, Calendar, X
 } from 'lucide-react';
 import { getModules, getAllAttempts, deleteModule, getAllDueQuestions } from '../services/firebaseService';
+import { playNavSound, playSubmitSound, playChoiceSound } from '../utils/soundEffects';
 
 export default function Dashboard() {
   const navigate = useNavigate();
@@ -167,7 +168,10 @@ export default function Dashboard() {
             id="create-module-button"
             whileHover={{ scale: 1.02, y: -1 }}
             whileTap={{ scale: 0.98 }}
-            onClick={() => navigate('/create')}
+            onClick={() => {
+              playSubmitSound();
+              navigate('/create');
+            }}
             className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-lg shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] hover:shadow-[#A8E8BC]/30 transition-all cursor-pointer border-0 shrink-0"
           >
             <Plus className="w-5 h-5 stroke-[2.5]" />
@@ -245,6 +249,7 @@ export default function Dashboard() {
               whileTap={{ scale: 0.98 }}
               onClick={() => {
                 if (dueQuestions.length > 0) {
+                  playSubmitSound();
                   const firstDue = dueQuestions[0];
                   navigate(`/module/${firstDue.moduleId}/review`);
                 }
@@ -286,7 +291,10 @@ export default function Dashboard() {
                   />
                   {searchQuery && (
                     <button
-                      onClick={() => setSearchQuery('')}
+                      onClick={() => {
+                        playChoiceSound();
+                        setSearchQuery('');
+                      }}
                       className="text-[#8E9196] hover:text-[#E2E2E6] transition cursor-pointer"
                     >
                       <X className="w-4 h-4" />
@@ -326,7 +334,10 @@ export default function Dashboard() {
                         onDeleteRequest={() => setDeleteConfirm(mod.id)}
                         onDeleteConfirm={() => handleDelete(mod.id)}
                         onDeleteCancel={() => setDeleteConfirm(null)}
-                        onClick={() => navigate(`/create/${mod.id}`)}
+                        onClick={() => {
+                          playNavSound();
+                          navigate(`/create/${mod.id}`);
+                        }}
                       />
                     ))}
                   </div>
@@ -352,7 +363,10 @@ export default function Dashboard() {
                       onDeleteRequest={() => setDeleteConfirm(mod.id)}
                       onDeleteConfirm={() => handleDelete(mod.id)}
                       onDeleteCancel={() => setDeleteConfirm(null)}
-                      onClick={() => navigate(`/module/${mod.id}`)}
+                      onClick={() => {
+                        playNavSound();
+                        navigate(`/module/${mod.id}`);
+                      }}
                     />
                   ))}
                 </div>
@@ -382,7 +396,12 @@ export default function Dashboard() {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.05 * i }}
                     className="flex items-center gap-4 px-6 py-4 hover:bg-white/5 transition-colors cursor-pointer"
-                    onClick={() => mod && navigate(`/module/${mod.id}`)}
+                    onClick={() => {
+                      if (mod) {
+                        playNavSound();
+                        navigate(`/module/${mod.id}`);
+                      }
+                    }}
                   >
                     <div
                       className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border ${

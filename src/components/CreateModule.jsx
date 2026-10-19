@@ -18,6 +18,7 @@ import {
   getModuleQuestions,
 } from '../services/firebaseService';
 import ManualEntryForm from './ManualEntryForm';
+import { playNavSound, playSubmitSound, playChoiceSound } from '../utils/soundEffects';
 
 export default function CreateModule() {
   const navigate = useNavigate();
@@ -282,7 +283,10 @@ export default function CreateModule() {
         <div className="flex items-center justify-between mb-8">
           <button
             id="back-to-dashboard-create"
-            onClick={() => navigate('/')}
+            onClick={() => {
+              playNavSound();
+              navigate('/');
+            }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-semibold text-[#E2E2E6] transition cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
@@ -427,7 +431,7 @@ export default function CreateModule() {
           <div className="inline-flex rounded-full p-1.5 gap-1.5 bg-[#1D2024] border border-white/10 shadow-lg">
             <button
               id="toggle-upload-mode"
-              onClick={() => { setMode('upload'); setError(null); }}
+              onClick={() => { playChoiceSound(); setMode('upload'); setError(null); }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 mode === 'upload'
                   ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
@@ -439,7 +443,7 @@ export default function CreateModule() {
             </button>
             <button
               id="toggle-manual-mode"
-              onClick={() => { setMode('manual'); setError(null); }}
+              onClick={() => { playChoiceSound(); setMode('manual'); setError(null); }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 mode === 'manual'
                   ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
@@ -568,7 +572,10 @@ export default function CreateModule() {
                     id="save-module-button"
                     whileHover={{ scale: 1.02, y: -1 }}
                     whileTap={{ scale: 0.98 }}
-                    onClick={() => handlePublish(parsedQuestions)}
+                    onClick={() => {
+                      playSubmitSound();
+                      handlePublish(parsedQuestions);
+                    }}
                     disabled={isSaving}
                     className="inline-flex items-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/25 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 disabled:opacity-50"
                   >

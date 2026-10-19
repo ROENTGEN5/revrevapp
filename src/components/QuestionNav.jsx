@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { playNavSound } from '../utils/soundEffects';
 
 export default function QuestionNav({ questions, answers, currentIndex, onNavigate }) {
   return (
@@ -34,7 +35,10 @@ export default function QuestionNav({ questions, answers, currentIndex, onNaviga
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.95 }}
             className={`w-9 h-9 rounded-xl text-xs font-mono font-bold cursor-pointer transition-all duration-150 flex items-center justify-center ${bgClass}`}
-            onClick={() => onNavigate(i)}
+            onClick={() => {
+              playNavSound();
+              onNavigate(i);
+            }}
           >
             {i + 1}
           </motion.button>

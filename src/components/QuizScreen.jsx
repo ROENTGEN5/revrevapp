@@ -4,6 +4,7 @@ import { ChevronLeft, ChevronRight, Send, BookOpen, Type, ListOrdered, CheckSqua
 import { useQuiz } from '../hooks/useQuiz';
 import ProgressBar from './ProgressBar';
 import QuestionNav from './QuestionNav';
+import { playChoiceSound, playNavSound, playSubmitSound } from '../utils/soundEffects';
 
 function TypeBadge({ type }) {
   const config = {
@@ -38,7 +39,10 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
                 ? 'border-[#A8E8BC] bg-[#1B5238]/40 shadow-lg shadow-[#A8E8BC]/10'
                 : 'border-white/[0.08] bg-[#191C20] hover:bg-[#272A2F] hover:border-white/20'
             }`}
-            onClick={() => onSelect(option.label)}
+            onClick={() => {
+              playChoiceSound();
+              onSelect(option.label);
+            }}
           >
             <span
               className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors ${
@@ -138,7 +142,10 @@ function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
                   : 'border-[#FFB4AB] bg-[#5C2822] text-[#FFB4AB] shadow-lg shadow-[#FFB4AB]/20'
                 : 'border-white/10 bg-[#191C20] text-[#C4C7C5] hover:border-white/20 hover:text-[#E2E2E6]'
             }`}
-            onClick={() => onSelect(val)}
+            onClick={() => {
+              playChoiceSound();
+              onSelect(val);
+            }}
           >
             <span className="text-3xl font-mono">{isTrue ? '✓' : '✗'}</span>
             <span className="text-lg tracking-wide">{val}</span>
@@ -161,21 +168,26 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
 
     if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
       e.preventDefault();
+      playNavSound();
       quiz.goNext();
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault();
+      playNavSound();
       quiz.goPrev();
     } else if (['1', '2', '3', '4'].includes(e.key) && quiz.currentQuestion?.type === 'multiple_choice') {
       const labels = ['A', 'B', 'C', 'D'];
       const idx = parseInt(e.key) - 1;
       const option = quiz.currentQuestion?.options[idx];
       if (option) {
+        playChoiceSound();
         quiz.selectAnswer(quiz.currentQuestion.id, option.label);
       }
     } else if (quiz.currentQuestion?.type === 'true_false') {
       if (e.key.toLowerCase() === 't') {
+        playChoiceSound();
         quiz.selectAnswer(quiz.currentQuestion.id, 'True');
       } else if (e.key.toLowerCase() === 'f') {
+        playChoiceSound();
         quiz.selectAnswer(quiz.currentQuestion.id, 'False');
       }
     }
@@ -187,6 +199,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
   }, [handleKeyDown]);
 
   const handleSubmit = () => {
+    playSubmitSound();
     quiz.submitQuiz();
     onSubmit(quiz.results, quiz.score, quiz.totalQuestions);
   };
@@ -326,7 +339,10 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           <div className="flex items-center justify-between mt-5 gap-4">
             <button
               id="prev-question-button"
-              onClick={quiz.goPrev}
+              onClick={() => {
+                playNavSound();
+                quiz.goPrev();
+              }}
               disabled={isFirst}
               className={`inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold text-xs transition-all cursor-pointer ${
                 isFirst
@@ -352,7 +368,10 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
             ) : (
               <button
                 id="next-question-button"
-                onClick={quiz.goNext}
+                onClick={() => {
+                  playNavSound();
+                  quiz.goNext();
+                }}
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 font-bold text-xs transition cursor-pointer"
               >
                 <span>Next</span>
