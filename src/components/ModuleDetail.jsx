@@ -44,11 +44,11 @@ export default function ModuleDetail() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-2xl bg-white border border-[#E2DDD5] shadow-lg text-[#C60C30]"
+          className="p-4 rounded-2xl bg-[#0D1528] border border-white/10 shadow-xl text-[#C60C30]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
-        <span className="text-xs font-semibold uppercase tracking-widest text-[#8A96A3]">
+        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
           Loading Module...
         </span>
       </div>
@@ -96,7 +96,7 @@ export default function ModuleDetail() {
           <button
             id="back-to-dashboard"
             onClick={() => navigate('/')}
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-apple-btn text-xs font-semibold hover:text-[#0A1628] cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl glass-apple-btn text-xs font-semibold hover:text-white cursor-pointer"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Dashboard</span>
@@ -111,15 +111,15 @@ export default function ModuleDetail() {
           className="glass-apple-card p-6 sm:p-8 mb-6 relative overflow-hidden"
         >
           <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-purple-500/20 text-purple-300 border border-purple-500/30 flex items-center justify-center shrink-0 shadow-lg shadow-purple-500/10">
+            <div className="w-16 h-16 rounded-2xl bg-red-950/40 text-[#C60C30] border border-red-800/40 flex items-center justify-center shrink-0 shadow-lg">
               <BookOpen className="w-8 h-8" />
             </div>
             <div className="flex-1 min-w-0">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#0A1628] mb-1.5 tracking-tight">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-white mb-1.5 tracking-tight">
                 {module.title}
               </h1>
               {module.description && (
-                <p className="text-[#4A5568] text-sm sm:text-base mb-4 leading-relaxed">
+                <p className="text-white/60 text-sm sm:text-base mb-4 leading-relaxed">
                   {module.description}
                 </p>
               )}
@@ -159,23 +159,23 @@ export default function ModuleDetail() {
           >
             <div className="glass-apple-card p-5">
               <div className="flex items-center gap-2 mb-2">
-                <BarChart3 className="w-4 h-4 text-blue-500" />
-                <span className="text-[#8A96A3] text-xs font-semibold uppercase tracking-wider">Attempts</span>
+                <BarChart3 className="w-4 h-4 text-blue-400" />
+                <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">Attempts</span>
               </div>
-              <p className="text-3xl font-extrabold text-[#0A1628] font-mono">{history.length}</p>
+              <p className="text-3xl font-extrabold text-white font-mono">{history.length}</p>
             </div>
             <div className="glass-apple-card p-5">
               <div className="flex items-center gap-2 mb-2">
-                <Trophy className="w-4 h-4 text-amber-500" />
-                <span className="text-[#8A96A3] text-xs font-semibold uppercase tracking-wider">Best Score</span>
+                <Trophy className="w-4 h-4 text-amber-400" />
+                <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">Best Score</span>
               </div>
               <p
                 className={`text-3xl font-extrabold font-mono ${
                   bestAttempt.percentage >= 80
-                    ? 'text-emerald-600'
+                    ? 'text-emerald-400'
                     : bestAttempt.percentage >= 50
-                    ? 'text-amber-600'
-                    : 'text-red-600'
+                    ? 'text-amber-400'
+                    : 'text-red-400'
                 }`}
               >
                 {bestAttempt.percentage}%
@@ -183,16 +183,16 @@ export default function ModuleDetail() {
             </div>
             <div className="glass-apple-card p-5 col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-emerald-500" />
-                <span className="text-[#8A96A3] text-xs font-semibold uppercase tracking-wider">Last Score</span>
+                <TrendingUp className="w-4 h-4 text-emerald-400" />
+                <span className="text-white/50 text-xs font-semibold uppercase tracking-wider">Last Score</span>
               </div>
               <p
                 className={`text-3xl font-extrabold font-mono ${
                   lastAttempt.percentage >= 80
-                    ? 'text-emerald-600'
+                    ? 'text-emerald-400'
                     : lastAttempt.percentage >= 50
-                    ? 'text-amber-600'
-                    : 'text-red-600'
+                    ? 'text-amber-400'
+                    : 'text-red-400'
                 }`}
               >
                 {lastAttempt.percentage}%
@@ -214,9 +214,9 @@ export default function ModuleDetail() {
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => navigate(`/module/${moduleId}/review`)}
-            className="glass-apple-card p-6 flex items-center gap-5 cursor-pointer text-left group border hover:border-[#C60C30]/30"
+            className="glass-apple-card p-6 flex items-center gap-5 cursor-pointer text-left group border hover:border-[#C60C30]/40"
           >
-            <div className="w-14 h-14 rounded-2xl bg-[#F5F3FF] text-[#7C3AED] border border-[#DDD6FE] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-purple-950/40 text-purple-400 border border-purple-800/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
               <Layers className="w-7 h-7" />
             </div>
             <div>
@@ -233,7 +233,7 @@ export default function ModuleDetail() {
             onClick={() => navigate(`/module/${moduleId}/exam`)}
             className="glass-apple-card p-6 flex items-center gap-5 cursor-pointer text-left group border hover:border-[#C60C30]/40"
           >
-            <div className="w-14 h-14 rounded-2xl bg-[#FEE2E8] text-[#C60C30] border border-[#FECDD3] flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-red-950/40 text-[#C60C30] border border-red-800/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
               <Rocket className="w-7 h-7" />
             </div>
             <div>
@@ -257,12 +257,12 @@ export default function ModuleDetail() {
             >
               <div className="flex items-center gap-3">
                 <Clock className="w-5 h-5 text-[#C60C30]" />
-                <span className="text-[#0A1628] font-bold text-sm">
+                <span className="text-white font-bold text-sm">
                   Score History ({history.length} {history.length === 1 ? 'attempt' : 'attempts'})
                 </span>
               </div>
               <motion.div animate={{ rotate: showHistory ? 180 : 0 }} transition={{ duration: 0.2 }}>
-                <ChevronDown className="w-5 h-5 text-[#8A96A3]" />
+                <ChevronDown className="w-5 h-5 text-white/50" />
               </motion.div>
             </button>
 
@@ -276,7 +276,7 @@ export default function ModuleDetail() {
                   className="overflow-hidden"
                 >
                   <div className="mt-3 glass-apple-card overflow-hidden divide-y divide-white/5">
-                    <div className="grid grid-cols-4 gap-4 px-6 py-3 text-xs font-bold uppercase tracking-wider text-[#8A96A3]">
+                    <div className="grid grid-cols-4 gap-4 px-6 py-3 text-xs font-bold uppercase tracking-wider text-white/50">
                       <span>#</span>
                       <span>Date</span>
                       <span>Score</span>
@@ -285,24 +285,24 @@ export default function ModuleDetail() {
 
                     {history.map((attempt, i) => (
                       <div key={attempt.id} className="grid grid-cols-4 gap-4 px-6 py-3.5 items-center">
-                        <span className="text-[#4A5568] text-sm font-mono">{i + 1}</span>
-                        <span className="text-[#0A1628] text-xs font-semibold">
+                        <span className="text-white/50 text-sm font-mono">{i + 1}</span>
+                        <span className="text-white text-xs font-semibold">
                           {attempt.completedAt?.toLocaleDateString?.('en-US', {
                             month: 'short',
                             day: 'numeric',
                             year: 'numeric',
                           })}
                         </span>
-                        <span className="text-[#0A1628] text-sm font-bold font-mono">
+                        <span className="text-white text-sm font-bold font-mono">
                           {attempt.score}/{attempt.totalQuestions}
                         </span>
                         <span
                           className={`text-sm font-extrabold font-mono text-right ${
                             attempt.percentage >= 80
-                              ? 'text-emerald-600'
+                              ? 'text-emerald-400'
                               : attempt.percentage >= 50
-                              ? 'text-amber-600'
-                              : 'text-red-600'
+                              ? 'text-amber-400'
+                              : 'text-red-400'
                           }`}
                         >
                           {attempt.percentage}%

@@ -93,11 +93,11 @@ export default function Dashboard() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-2xl bg-white border border-[#E2DDD5] shadow-lg text-[#C60C30]"
+          className="p-4 rounded-2xl bg-[#0D1528] border border-white/10 shadow-xl text-[#C60C30]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
-        <span className="text-xs font-semibold uppercase tracking-widest text-[#8A96A3]">
+        <span className="text-xs font-semibold uppercase tracking-widest text-white/50">
           Loading QuizForge...
         </span>
       </div>
@@ -184,23 +184,23 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 25 }}
-            className="glass-apple-card p-6 mb-10 border border-emerald-200 bg-gradient-to-r from-emerald-50 via-white to-emerald-50 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-lg"
+            className="glass-apple-card p-6 mb-10 border border-emerald-500/20 bg-gradient-to-r from-emerald-950/25 via-[#0D1526] to-emerald-950/25 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-lg"
           >
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-emerald-100 text-emerald-600 border border-emerald-200 flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-emerald-950/40 text-emerald-400 border border-emerald-500/30 flex items-center justify-center shrink-0 shadow-md">
                 <Brain className="w-7 h-7" />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full bg-emerald-950/50 text-emerald-300 border border-emerald-500/30 text-[10px] font-extrabold uppercase tracking-wider">
                     Spaced Repetition Active
                   </span>
-                  <span className="text-[#8A96A3] text-xs font-mono">SM-2 Algorithm</span>
+                  <span className="text-white/50 text-xs font-mono">SM-2 Algorithm</span>
                 </div>
-                <h3 className="text-lg font-extrabold text-[#0A1628] tracking-tight">
+                <h3 className="text-lg font-extrabold text-white tracking-tight">
                   🧠 {dueQuestions.length} {dueQuestions.length === 1 ? 'Card' : 'Cards'} Due For Review Today
                 </h3>
-                <p className="text-[#4A5568] text-xs mt-0.5">
+                <p className="text-white/60 text-xs mt-0.5">
                   Reviewing these target cards today builds maximum long-term memory retention.
                 </p>
               </div>
@@ -231,9 +231,9 @@ export default function Dashboard() {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-extrabold text-[#0A1628] tracking-tight flex items-center gap-2">
+            <h2 className="text-2xl font-extrabold text-white tracking-tight flex items-center gap-2">
               <span>Your Modules</span>
-              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-[#F0EDE7] text-[#4A5568] border border-[#D8D2C8]">
+              <span className="text-xs font-semibold px-2.5 py-0.5 rounded-full bg-white/10 text-white/80 border border-white/15">
                 {modules.length}
               </span>
             </h2>
@@ -325,8 +325,8 @@ export default function Dashboard() {
             transition={{ delay: 0.3, type: 'spring', stiffness: 280, damping: 25 }}
             className="mt-12"
           >
-            <h2 className="text-xl font-bold text-[#0A1628] mb-4 tracking-tight">Recent Activity</h2>
-            <div className="glass-apple-card overflow-hidden divide-y divide-[#E2DDD5]">
+            <h2 className="text-xl font-bold text-white mb-4 tracking-tight">Recent Activity</h2>
+            <div className="glass-apple-card overflow-hidden divide-y divide-white/10">
               {recentAttempts.map((attempt, i) => {
                 const mod = modules.find((m) => m.id === attempt.moduleId);
                 return (
@@ -341,29 +341,29 @@ export default function Dashboard() {
                     <div
                       className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 shadow-md ${
                         attempt.percentage >= 80
-                          ? 'bg-emerald-100 text-emerald-600 border border-emerald-200'
+                          ? 'bg-emerald-950/40 text-emerald-400 border border-emerald-500/30'
                           : attempt.percentage >= 50
-                          ? 'bg-amber-100 text-amber-600 border border-amber-200'
-                          : 'bg-red-100 text-red-600 border border-red-200'
+                          ? 'bg-amber-950/40 text-amber-400 border border-amber-500/30'
+                          : 'bg-red-950/40 text-red-400 border border-red-500/30'
                       }`}
                     >
                       <Trophy className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-[#0A1628] text-sm font-bold truncate">
+                      <p className="text-white text-sm font-bold truncate">
                         {mod?.title || 'Unknown Module'}
                       </p>
-                      <p className="text-[#8A96A3] text-xs">
+                      <p className="text-white/50 text-xs">
                         {attempt.completedAt?.toLocaleDateString?.() || 'Recent'} · {attempt.score}/{attempt.totalQuestions} correct
                       </p>
                     </div>
                     <span
                       className={`text-sm font-extrabold font-mono px-3 py-1 rounded-full ${
                         attempt.percentage >= 80
-                          ? 'bg-emerald-100 text-emerald-700'
+                          ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/30'
                           : attempt.percentage >= 50
-                          ? 'bg-amber-100 text-amber-700'
-                          : 'bg-red-100 text-red-700'
+                          ? 'bg-amber-950/50 text-amber-400 border border-amber-500/30'
+                          : 'bg-red-950/50 text-red-400 border border-red-500/30'
                       }`}
                     >
                       {attempt.percentage}%
@@ -383,13 +383,13 @@ export default function Dashboard() {
 
 function StatCard({ icon, label, value, color }) {
   const colorStyles = {
-    red: 'bg-[#FEE2E8] text-[#C60C30] border-[#FECDD3]',
-    navy: 'bg-[#EEF2FF] text-[#0A1628] border-[#C7D2FE]',
-    amber: 'bg-amber-50 text-amber-600 border-amber-200',
-    emerald: 'bg-emerald-50 text-emerald-600 border-emerald-200',
+    red: 'bg-red-950/40 text-red-400 border-red-800/40',
+    navy: 'bg-blue-950/40 text-blue-300 border-blue-800/40',
+    amber: 'bg-amber-950/40 text-amber-400 border-amber-800/40',
+    emerald: 'bg-emerald-950/40 text-emerald-400 border-emerald-800/40',
     // Legacy compat
-    purple: 'bg-[#F5F3FF] text-[#7C3AED] border-[#DDD6FE]',
-    blue: 'bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]',
+    purple: 'bg-purple-950/40 text-purple-400 border-purple-800/40',
+    blue: 'bg-sky-950/40 text-sky-400 border-sky-800/40',
   };
 
   return (
@@ -401,8 +401,8 @@ function StatCard({ icon, label, value, color }) {
         {icon}
       </div>
       <div>
-        <p className="text-3xl font-extrabold text-[#0A1628] tracking-tight tabular-nums">{value}</p>
-        <p className="text-[#8A96A3] text-xs font-semibold uppercase tracking-wider mt-1">{label}</p>
+        <p className="text-3xl font-extrabold text-white tracking-tight tabular-nums">{value}</p>
+        <p className="text-white/50 text-xs font-semibold uppercase tracking-wider mt-1">{label}</p>
       </div>
     </motion.div>
   );
@@ -438,7 +438,7 @@ function ModuleCard({
         <button
           id={`module-menu-${module.id}`}
           onClick={onMenuToggle}
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-[#8A96A3] hover:text-[#0A1628] hover:bg-[#F0EDE7] transition cursor-pointer"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition cursor-pointer"
         >
           <MoreVertical className="w-4 h-4" />
         </button>
@@ -450,7 +450,7 @@ function ModuleCard({
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.9, y: -4 }}
               transition={{ duration: 0.15 }}
-              className="absolute right-0 top-10 z-50 min-w-[150px] bg-white border border-[#E2DDD5] rounded-2xl overflow-hidden shadow-xl p-1"
+              className="absolute right-0 top-10 z-50 min-w-[150px] bg-[#0E1729] border border-white/15 rounded-2xl overflow-hidden shadow-2xl p-1 backdrop-blur-xl"
               onClick={(e) => e.stopPropagation()}
             >
               {deleteConfirm ? (
@@ -498,38 +498,38 @@ function ModuleCard({
         <div className="flex items-center justify-between mb-4">
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-sm ${
               isDraft
-                ? 'bg-amber-50 text-amber-600 border-amber-200'
-                : 'bg-[#FEE2E8] text-[#C60C30] border-[#FECDD3]'
+                ? 'bg-amber-950/40 text-amber-400 border-amber-800/40'
+                : 'bg-red-950/40 text-red-400 border-red-800/40'
             }`}
           >
             {isDraft ? <PenLine className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
           </div>
           {isDraft && (
-            <span className="px-2.5 py-0.5 rounded-full bg-amber-50 border border-amber-200 text-amber-700 text-[10px] font-extrabold uppercase tracking-wider">
+            <span className="px-2.5 py-0.5 rounded-full bg-amber-950/50 border border-amber-800/50 text-amber-300 text-[10px] font-extrabold uppercase tracking-wider">
               Draft
             </span>
           )}
         </div>
 
         {/* Title & Description */}
-        <h3 className="text-lg font-bold text-[#0A1628] mb-1.5 pr-8 truncate tracking-tight">
+        <h3 className="text-lg font-bold text-white mb-1.5 pr-8 truncate tracking-tight">
           {module.title}
         </h3>
         {module.description && (
-          <p className="text-[#4A5568] text-xs mb-4 line-clamp-2 leading-relaxed">
+          <p className="text-white/60 text-xs mb-4 line-clamp-2 leading-relaxed">
             {module.description}
           </p>
         )}
       </div>
 
       {/* Stats Footer */}
-      <div className="flex items-center justify-between pt-4 border-t border-[#E2DDD5] text-xs mt-4">
-        <span className="text-[#8A96A3] font-medium">
+      <div className="flex items-center justify-between pt-4 border-t border-white/10 text-xs mt-4">
+        <span className="text-white/50 font-medium">
           {module.questionCount} {module.questionCount === 1 ? 'question' : 'questions'}
         </span>
 
         {isDraft ? (
-          <span className="text-amber-600 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+          <span className="text-amber-400 font-bold flex items-center gap-1 group-hover:translate-x-1 transition-transform">
             Edit →
           </span>
         ) : (
@@ -538,16 +538,16 @@ function ModuleCard({
               <span
                 className={`font-bold font-mono px-2 py-0.5 rounded-md ${
                   bestScore.percentage >= 80
-                    ? 'bg-emerald-100 text-emerald-700'
+                    ? 'bg-emerald-950/50 text-emerald-400 border border-emerald-500/30'
                     : bestScore.percentage >= 50
-                    ? 'bg-amber-100 text-amber-700'
-                    : 'bg-red-100 text-red-700'
+                    ? 'bg-amber-950/50 text-amber-400 border border-amber-500/30'
+                    : 'bg-red-950/50 text-red-400 border border-red-500/30'
                 }`}
               >
                 Best: {bestScore.percentage}%
               </span>
             ) : (
-              <span className="text-[#8A96A3] font-medium">Unattempted</span>
+              <span className="text-white/40 font-medium">Unattempted</span>
             )}
             <ChevronRight className="w-4 h-4 text-[#C60C30] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
           </div>
@@ -562,13 +562,13 @@ function EmptyState({ onCreateClick }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="glass-apple-card p-10 sm:p-14 text-center border-2 border-dashed border-[#D8D2C8]"
+      className="glass-apple-card p-10 sm:p-14 text-center border-2 border-dashed border-white/15"
     >
-      <div className="w-16 h-16 rounded-3xl bg-[#FEE2E8] border border-[#FECDD3] text-[#C60C30] flex items-center justify-center mx-auto mb-5 shadow-lg">
+      <div className="w-16 h-16 rounded-3xl bg-red-950/40 border border-red-800/40 text-[#C60C30] flex items-center justify-center mx-auto mb-5 shadow-lg">
         <BookOpen className="w-8 h-8" />
       </div>
-      <h3 className="text-2xl font-bold text-[#0A1628] mb-2 tracking-tight">No Modules Yet</h3>
-      <p className="text-[#4A5568] text-sm mb-6 max-w-md mx-auto leading-relaxed">
+      <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">No Modules Yet</h3>
+      <p className="text-white/60 text-sm mb-6 max-w-md mx-auto leading-relaxed">
         Start building your flashcards & quiz library by uploading a CSV/JSON file or entering questions manually.
       </p>
       <motion.button

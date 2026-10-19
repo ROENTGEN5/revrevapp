@@ -28,11 +28,11 @@ html {
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: #EDEAE3;
+  background-color: #060B13;
   background-image:
-    radial-gradient(ellipse at 15% 0%, rgba(198, 12, 48, 0.05) 0%, transparent 50%),
-    radial-gradient(ellipse at 85% 100%, rgba(10, 22, 40, 0.05) 0%, transparent 50%);
-  color: #0A1628;
+    radial-gradient(ellipse at 15% 0%, rgba(198, 12, 48, 0.16) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 100%, rgba(10, 22, 40, 0.7) 0%, transparent 60%);
+  color: #F8FAFC;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -43,112 +43,126 @@ body {
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #E8E4DC;
+  background: #080D18;
 }
 ::-webkit-scrollbar-thumb {
-  background: #C8C0B0;
+  background: #1E293B;
   border-radius: 999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #A8A090;
+  background: #334155;
 }
 
-/* ===== Clean Card System ===== */
+/* ===== Dark Luxury Card System ===== */
 
 .glass {
-  background: #FFFFFF;
-  border: 1px solid #E2DDD5;
+  background: rgba(13, 21, 38, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
-  box-shadow: 0 1px 4px rgba(10,22,40,0.06), 0 4px 16px rgba(10,22,40,0.06);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 .glass-strong {
-  background: #FFFFFF;
-  border: 1px solid #D8D2C8;
+  background: rgba(16, 27, 49, 0.9);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 1rem;
-  box-shadow: 0 2px 8px rgba(10,22,40,0.08), 0 8px 24px rgba(10,22,40,0.08);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
 }
 
 /* Main Card */
 .glass-apple-card {
-  background: #FFFFFF;
-  border: 1px solid #E2DDD5;
+  background: rgba(13, 21, 38, 0.75);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: 1.5rem;
   box-shadow:
-    0 1px 3px rgba(10,22,40,0.05),
-    0 4px 16px rgba(10,22,40,0.06),
-    0 8px 32px rgba(10,22,40,0.05);
+    0 16px 40px -10px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-apple-card:hover {
   box-shadow:
-    0 2px 8px rgba(10,22,40,0.08),
-    0 8px 32px rgba(10,22,40,0.10),
-    0 16px 48px rgba(10,22,40,0.08);
-  border-color: #D8D2C8;
+    0 24px 50px -10px rgba(0, 0, 0, 0.75),
+    0 0 30px rgba(198, 12, 48, 0.15),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  border-color: rgba(198, 12, 48, 0.35);
+  border-top-color: rgba(198, 12, 48, 0.6);
 }
 
 /* Pill / Badge container */
 .glass-apple-pill {
-  background: #F0EDE7;
-  border: 1.5px solid #D8D2C8;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 999px;
-  box-shadow: 0 1px 4px rgba(10,22,40,0.07);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
 }
 
 /* Input fields */
 .glass-apple-input {
-  background: #F7F5F0;
-  border: 1.5px solid #D8D2C8;
+  background: rgba(8, 14, 26, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 0.875rem;
-  color: #0A1628;
+  color: #FFFFFF;
   transition: all 0.2s ease;
 }
 
 .glass-apple-input::placeholder {
-  color: #A8A090;
+  color: #64748B;
 }
 
 .glass-apple-input:focus {
   outline: none;
   border-color: #C60C30;
-  background: #FFFFFF;
-  box-shadow: 0 0 0 3px rgba(198, 12, 48, 0.12);
+  background: rgba(10, 18, 33, 0.95);
+  box-shadow: 0 0 0 3px rgba(198, 12, 48, 0.25);
 }
 
 /* Secondary/ghost buttons */
 .glass-apple-btn {
-  background: #F0EDE7;
-  border: 1.5px solid #D8D2C8;
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 0.875rem;
-  color: #0A1628;
+  color: #FFFFFF;
   transition: all 0.2s ease;
-  box-shadow: 0 1px 4px rgba(10,22,40,0.07);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 
 .glass-apple-btn:hover {
-  background: #E8E4DC;
-  border-color: #C8C0B0;
-  box-shadow: 0 2px 8px rgba(10,22,40,0.10);
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.22);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #C60C30 0%, #E8103A 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #F1F5F9 50%, #C60C30 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .gradient-text-gold {
-  background: linear-gradient(135deg, #0A1628 0%, #1A2A48 100%);
+  background: linear-gradient(135deg, #F8FAFC 0%, #CBD5E1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
-/* Subtle page glow (kept for layout compat but now invisible/minimal) */
+/* Subtle page glow */
 .ambient-glow {
   position: fixed;
   inset: 0;
@@ -163,8 +177,8 @@ body {
   width: 700px;
   height: 700px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(198, 12, 48, 0.05) 0%, transparent 70%);
-  filter: blur(80px);
+  background: radial-gradient(circle, rgba(198, 12, 48, 0.16) 0%, transparent 70%);
+  filter: blur(100px);
   top: -200px;
   right: -100px;
 }
@@ -175,8 +189,8 @@ body {
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(10, 22, 40, 0.04) 0%, transparent 70%);
-  filter: blur(80px);
+  background: radial-gradient(circle, rgba(14, 28, 54, 0.45) 0%, transparent 70%);
+  filter: blur(100px);
   bottom: -150px;
   left: -100px;
 }
@@ -187,53 +201,56 @@ body {
 
 /* ===== Drag & Drop Zone ===== */
 .drop-zone {
-  border: 2px dashed #D8D2C8;
+  border: 2px dashed rgba(255, 255, 255, 0.15);
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  background: #FAFAF8;
+  background: rgba(8, 14, 26, 0.45);
   border-radius: 1.25rem;
 }
 
 .drop-zone:hover,
 .drop-zone.drag-over {
   border-color: #C60C30;
-  background: rgba(198, 12, 48, 0.04);
-  box-shadow: 0 0 0 4px rgba(198, 12, 48, 0.10);
+  background: rgba(198, 12, 48, 0.08);
+  box-shadow: 0 0 0 4px rgba(198, 12, 48, 0.2);
 }
 
 /* ===== Option Cards ===== */
 .option-card {
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  background: #FAFAF8;
-  border: 1.5px solid #E2DDD5;
+  background: rgba(13, 21, 38, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
   border-radius: 1rem;
   cursor: pointer;
   display: flex;
   align-items: center;
+  color: #F1F5F9;
 }
 
 .option-card:hover {
   transform: translateY(-1px);
-  background: #F5F2EC;
-  border-color: #C8C0B0;
-  box-shadow: 0 4px 16px rgba(10, 22, 40, 0.08);
+  background: rgba(18, 30, 56, 0.85);
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
 }
 
 .option-card.selected {
   border-color: #C60C30;
-  background: rgba(198, 12, 48, 0.04);
-  box-shadow: 0 0 0 3px rgba(198, 12, 48, 0.12);
+  background: rgba(198, 12, 48, 0.18);
+  box-shadow: 0 0 0 3px rgba(198, 12, 48, 0.25);
 }
 
 .option-card.correct {
-  border-color: #16A34A;
-  background: #F0FDF4;
-  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12);
+  border-color: #10B981;
+  background: rgba(16, 185, 129, 0.18);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
 }
 
 .option-card.incorrect {
-  border-color: #DC2626;
-  background: #FEF2F2;
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12);
+  border-color: #EF4444;
+  background: rgba(239, 68, 68, 0.18);
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25);
 }
 
 /* ===== Flashcard 3D Flip ===== */
