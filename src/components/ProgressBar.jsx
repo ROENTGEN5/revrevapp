@@ -15,7 +15,7 @@ export default function ProgressBar({ progress, totalAnswered, totalQuestions })
       </div>
       <div className="w-full h-3 rounded-full bg-[#272A2F] overflow-hidden p-0.5 border border-white/5">
         <motion.div
-          className="h-full rounded-full bg-gradient-to-r from-[#A8E8BC] to-[#7BD99F]"
+          className="h-full rounded-full bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent)]"
           initial={{ width: 0 }}
           animate={{
             width: `${percentage}%`,

@@ -64,7 +64,7 @@ export default function UploadScreen({ onQuizReady }) {
             transition={{ delay: 0.15, duration: 0.5 }}
             className="inline-flex items-center gap-2 mb-4"
           >
-            <Sparkles className="w-8 h-8 text-[#A8E8BC]" />
+            <Sparkles className="w-8 h-8 text-[color:var(--accent)]" />
             <h1 className="text-4xl sm:text-5xl font-extrabold text-[#E2E2E6] tracking-tight">
               QuizForge
             </h1>
@@ -86,7 +86,7 @@ export default function UploadScreen({ onQuizReady }) {
               id="toggle-upload-mode"
               onClick={() => { setMode('upload'); setError(null); }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                mode === 'upload' ? 'bg-[#A8E8BC] text-[#003822] shadow-md' : 'text-[#8E9196] hover:text-[#E2E2E6]'
+                mode === 'upload' ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-md' : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
               <Upload className="w-4 h-4" />
@@ -96,7 +96,7 @@ export default function UploadScreen({ onQuizReady }) {
               id="toggle-manual-mode"
               onClick={() => { setMode('manual'); setError(null); }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
-                mode === 'manual' ? 'bg-[#A8E8BC] text-[#003822] shadow-md' : 'text-[#8E9196] hover:text-[#E2E2E6]'
+                mode === 'manual' ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-md' : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
               <PenLine className="w-4 h-4" />
@@ -138,12 +138,12 @@ export default function UploadScreen({ onQuizReady }) {
                     <motion.div
                       animate={{ rotate: 360 }}
                       transition={{ duration: 1.5, repeat: Infinity, ease: 'linear' }}
-                      className="p-4 rounded-3xl bg-[#1B5238] text-[#A8E8BC]"
+                      className="p-4 rounded-3xl bg-[color:var(--accent-container)] text-[color:var(--accent)]"
                     >
                       <FileText className="w-12 h-12" />
                     </motion.div>
                     <p className="text-[#E2E2E6] font-semibold text-sm">
-                      Parsing <span className="text-[#A8E8BC]">{fileName}</span>...
+                      Parsing <span className="text-[color:var(--accent)]">{fileName}</span>...
                     </p>
                   </div>
                 ) : (
@@ -151,13 +151,13 @@ export default function UploadScreen({ onQuizReady }) {
                     <motion.div
                       animate={isDragOver ? { scale: 1.15, y: -4 } : { scale: 1, y: 0 }}
                       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-                      className="p-4 rounded-3xl bg-white/5 text-[#A8E8BC] border border-white/10 shadow-xl"
+                      className="p-4 rounded-3xl bg-white/5 text-[color:var(--accent)] border border-white/10 shadow-xl"
                     >
                       <Upload className="w-12 h-12" />
                     </motion.div>
                     <div>
                       <p className="text-[#E2E2E6] font-bold text-lg mb-1">
-                        Drop your file here, or <span className="text-[#A8E8BC] underline underline-offset-4">browse</span>
+                        Drop your file here, or <span className="text-[color:var(--accent)] underline underline-offset-4">browse</span>
                       </p>
                       <p className="text-[#8E9196] text-xs">
                         Supports <span className="font-mono text-[#E2E2E6] font-bold">.csv</span> and <span className="font-mono text-[#E2E2E6] font-bold">.json</span> formats
@@ -199,7 +199,7 @@ export default function UploadScreen({ onQuizReady }) {
             >
               <div className="p-7 sm:p-9 rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-xl">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="p-2.5 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30">
+                  <div className="p-2.5 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30">
                     <PenLine className="w-5 h-5" />
                   </div>
                   <h2 className="text-lg font-bold text-[#E2E2E6]">
@@ -227,7 +227,7 @@ function FormatGuide() {
         onClick={() => setOpen(!open)}
       >
         <div className="flex items-center gap-3">
-          <FileJson className="w-5 h-5 text-[#A8E8BC]" />
+          <FileJson className="w-5 h-5 text-[color:var(--accent)]" />
           <span className="text-[#E2E2E6] font-semibold text-sm">File Format Guide</span>
         </div>
         <motion.div animate={{ rotate: open ? 180 : 0 }} transition={{ duration: 0.25 }}>
@@ -249,7 +249,7 @@ function FormatGuide() {
               <span className="px-3.5 py-1 rounded-full bg-[#4A4458]/40 text-[#D0BCFF] border border-[#D0BCFF]/30 text-xs font-semibold">multiple_choice</span>
               <span className="px-3.5 py-1 rounded-full bg-[#1E4378]/40 text-[#A8C7FA] border border-[#A8C7FA]/30 text-xs font-semibold">identification</span>
               <span className="px-3.5 py-1 rounded-full bg-[#443600]/40 text-[#FDE293] border border-[#FDE293]/30 text-xs font-semibold">enumeration</span>
-              <span className="px-3.5 py-1 rounded-full bg-[#16251E] text-[#A8E8BC] border border-[#A8E8BC]/30 text-xs font-semibold">true_false</span>
+              <span className="px-3.5 py-1 rounded-full bg-[color:var(--accent-surface)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-xs font-semibold">true_false</span>
             </div>
           </div>
 
@@ -298,13 +298,13 @@ function FormatGuide() {
 
           <div className="space-y-1.5 text-xs text-[#8E9196]">
             <p>
-              <strong className="text-[#E2E2E6]">Multiple Choice:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[#A8E8BC]">correctAnswer</code> = A, B, C, or D.
+              <strong className="text-[#E2E2E6]">Multiple Choice:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[color:var(--accent)]">correctAnswer</code> = A, B, C, or D.
             </p>
             <p>
-              <strong className="text-[#E2E2E6]">Identification:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[#A8E8BC]">correctAnswer</code> = the exact text answer (case-insensitive).
+              <strong className="text-[#E2E2E6]">Identification:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[color:var(--accent)]">correctAnswer</code> = the exact text answer (case-insensitive).
             </p>
             <p>
-              <strong className="text-[#E2E2E6]">Enumeration:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[#A8E8BC]">correctAnswer</code> = items separated by <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[#A8E8BC]">|</code> (order doesn't matter).
+              <strong className="text-[#E2E2E6]">Enumeration:</strong> <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[color:var(--accent)]">correctAnswer</code> = items separated by <code className="bg-[#16191D] px-1.5 py-0.5 rounded text-[color:var(--accent)]">|</code> (order doesn't matter).
             </p>
           </div>
         </div>

@@ -23,9 +23,9 @@ export default function QuestionNav({ questions, answers, currentIndex, onNaviga
 
         let bgClass = 'bg-[#272A2F] text-[#8E9196] hover:bg-[#32353A] hover:text-[#E2E2E6] border border-white/5';
         if (isCurrent) {
-          bgClass = 'bg-[#A8E8BC] text-[#003822] font-bold shadow-md shadow-[#A8E8BC]/25 ring-2 ring-[#A8E8BC]/50';
+          bgClass = 'bg-[color:var(--accent)] text-[color:var(--accent-on)] font-bold shadow-md shadow-[color:var(--accent)]/25 ring-2 ring-[color:var(--accent)]/50';
         } else if (isAnswered) {
-          bgClass = 'bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 font-bold';
+          bgClass = 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 font-bold';
         }
 
         return (

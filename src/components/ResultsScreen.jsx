@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, RotateCcw, ArrowLeft, CheckCircle2, XCircle, MinusCircle, ChevronDown, Type, ListOrdered, CheckSquare, ToggleLeft } from 'lucide-react';
 import { playResultSound, playNavSound, playSubmitSound } from '../utils/soundEffects';
+import { getAccentColor } from '../utils/theme';
+import confetti from 'canvas-confetti';
 
 function ScoreRing({ score, total }) {
   const radius = 64;
@@ -25,8 +27,8 @@ function ScoreRing({ score, total }) {
     requestAnimationFrame(animate);
   }, [score]);
 
-  let ringColor = '#A8E8BC'; // Pixel Mint default
-  if (percentage >= 0.8) ringColor = '#A8E8BC'; // Pixel Mint
+  let ringColor = 'var(--accent)'; // Pixel Mint default
+  if (percentage >= 0.8) ringColor = 'var(--accent)'; // Pixel Mint
   else if (percentage >= 0.5) ringColor = '#FDE293'; // Pixel Gold
   else ringColor = '#FFB4AB'; // Pixel Coral
 
@@ -56,7 +58,7 @@ function TypeTag({ type }) {
     multiple_choice: { label: 'MC', icon: CheckSquare, color: 'bg-[#4A4458]/40 text-[#D0BCFF] border-[#D0BCFF]/30' },
     identification: { label: 'ID', icon: Type, color: 'bg-[#1E4378]/40 text-[#A8C7FA] border-[#A8C7FA]/30' },
     enumeration: { label: 'ENUM', icon: ListOrdered, color: 'bg-[#443600]/40 text-[#FDE293] border-[#FDE293]/30' },
-    true_false: { label: 'T/F', icon: ToggleLeft, color: 'bg-[#16251E] text-[#A8E8BC] border-[#A8E8BC]/30' },
+    true_false: { label: 'T/F', icon: ToggleLeft, color: 'bg-[color:var(--accent-surface)] text-[color:var(--accent)] border-[color:var(--accent)]/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
@@ -80,8 +82,8 @@ function MCReview({ result }) {
         let suffix = '';
 
         if (isCorrectOption) {
-          optionClass = 'border-[#A8E8BC]/40 bg-[#1B5238]/30';
-          labelClass = 'bg-[#A8E8BC] text-[#003822]';
+          optionClass = 'border-[color:var(--accent)]/40 bg-[color:var(--accent-container)]/30';
+          labelClass = 'bg-[color:var(--accent)] text-[color:var(--accent-on)]';
           suffix = ' ✓ Correct Answer';
         }
         if (isUserPick && !isCorrect) {
@@ -100,7 +102,7 @@ function MCReview({ result }) {
             </span>
             <span className="text-[#E2E2E6] text-xs font-medium flex-1">{opt.text}</span>
             {suffix && (
-              <span className={`text-xs font-bold shrink-0 ${isCorrectOption ? 'text-[#A8E8BC]' : 'text-[#FFB4AB]'}`}>
+              <span className={`text-xs font-bold shrink-0 ${isCorrectOption ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
                 {suffix}
               </span>
             )}
@@ -117,7 +119,7 @@ function IdentificationReview({ result }) {
     <div className="space-y-2 mt-3">
       <div className={`flex items-center gap-3 p-3.5 rounded-2xl border ${
         isSkipped ? 'border-[#FDE293]/30 bg-[#443600]/25' :
-        isCorrect ? 'border-[#A8E8BC]/30 bg-[#1B5238]/25' :
+        isCorrect ? 'border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/25' :
         'border-[#FFB4AB]/30 bg-[#5C2822]/25'
       }`}>
         <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider shrink-0 w-24">Your answer:</span>
@@ -125,15 +127,15 @@ function IdentificationReview({ result }) {
           {isSkipped ? '(No answer)' : userAnswer}
         </span>
         {!isSkipped && (
-          <span className={`text-xs font-extrabold ${isCorrect ? 'text-[#A8E8BC]' : 'text-[#FFB4AB]'}`}>
+          <span className={`text-xs font-extrabold ${isCorrect ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
             {isCorrect ? '✓ Correct' : '✗ Incorrect'}
           </span>
         )}
       </div>
       {!isCorrect && (
-        <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-[#A8E8BC]/30 bg-[#1B5238]/25">
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/25">
           <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider shrink-0 w-24">Correct:</span>
-          <span className="text-[#A8E8BC] text-xs font-bold font-mono flex-1">{correctAnswer}</span>
+          <span className="text-[color:var(--accent)] text-xs font-bold font-mono flex-1">{correctAnswer}</span>
         </div>
       )}
     </div>
@@ -162,13 +164,13 @@ function EnumerationReview({ result }) {
               const isItemCorrect = correctSet.has(normalizeItem(trimmed));
               return (
                 <div key={i} className={`flex items-center gap-3 p-3 rounded-2xl border ${
-                  isItemCorrect ? 'border-[#A8E8BC]/30 bg-[#1B5238]/25' : 'border-[#FFB4AB]/30 bg-[#5C2822]/25'
+                  isItemCorrect ? 'border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/25' : 'border-[#FFB4AB]/30 bg-[#5C2822]/25'
                 }`}>
                   <span className={`inline-flex items-center justify-center w-6 h-6 rounded-lg text-xs font-bold font-mono shrink-0 ${
-                    isItemCorrect ? 'bg-[#A8E8BC] text-[#003822]' : 'bg-[#FFB4AB] text-[#561E18]'
+                    isItemCorrect ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)]' : 'bg-[#FFB4AB] text-[#561E18]'
                   }`}>{i + 1}</span>
                   <span className="text-[#E2E2E6] text-xs font-semibold flex-1">{trimmed}</span>
-                  <span className={`text-xs font-extrabold ${isItemCorrect ? 'text-[#A8E8BC]' : 'text-[#FFB4AB]'}`}>
+                  <span className={`text-xs font-extrabold ${isItemCorrect ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
                     {isItemCorrect ? '✓' : '✗'}
                   </span>
                 </div>
@@ -182,7 +184,7 @@ function EnumerationReview({ result }) {
           <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider block mb-2">Correct answers:</span>
           <div className="flex flex-wrap gap-2">
             {correctAnswer.map((item, i) => (
-              <span key={i} className="px-3 py-1.5 rounded-full border border-[#A8E8BC]/30 bg-[#1B5238]/30 text-[#A8E8BC] text-xs font-bold font-mono">
+              <span key={i} className="px-3 py-1.5 rounded-full border border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/30 text-[color:var(--accent)] text-xs font-bold font-mono">
                 {item}
               </span>
             ))}
@@ -199,26 +201,26 @@ function TrueFalseReview({ result }) {
     <div className="space-y-2 mt-3">
       <div className={`flex items-center gap-3 p-3.5 rounded-2xl border ${
         isSkipped ? 'border-[#FDE293]/30 bg-[#443600]/25' :
-        isCorrect ? 'border-[#A8E8BC]/30 bg-[#1B5238]/25' :
+        isCorrect ? 'border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/25' :
         'border-[#FFB4AB]/30 bg-[#5C2822]/25'
       }`}>
         <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider shrink-0 w-24">Your answer:</span>
         <span className={`text-sm font-bold flex-1 ${
           isSkipped ? 'text-[#FDE293] italic' :
-          userAnswer === 'True' ? 'text-[#A8E8BC]' : 'text-[#FFB4AB]'
+          userAnswer === 'True' ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'
         }`}>
           {isSkipped ? '(No answer)' : userAnswer}
         </span>
         {!isSkipped && (
-          <span className={`text-xs font-extrabold ${isCorrect ? 'text-[#A8E8BC]' : 'text-[#FFB4AB]'}`}>
+          <span className={`text-xs font-extrabold ${isCorrect ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
             {isCorrect ? '✓ Correct' : '✗ Incorrect'}
           </span>
         )}
       </div>
       {!isCorrect && (
-        <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-[#A8E8BC]/30 bg-[#1B5238]/25">
+        <div className="flex items-center gap-3 p-3.5 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/25">
           <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider shrink-0 w-24">Correct:</span>
-          <span className="text-[#A8E8BC] text-sm font-bold flex-1">{correctAnswer}</span>
+          <span className="text-[color:var(--accent)] text-sm font-bold flex-1">{correctAnswer}</span>
         </div>
       )}
     </div>
@@ -236,10 +238,10 @@ function ReviewItem({ result, index }) {
     statusText = 'Skipped';
     statusBadge = 'bg-[#443600] text-[#FDE293] border border-[#FDE293]/30';
   } else if (isCorrect) {
-    statusIcon = <CheckCircle2 className="w-5 h-5 text-[#A8E8BC]" />;
-    statusBg = 'border-[#A8E8BC]/20 bg-[#1D2024]';
+    statusIcon = <CheckCircle2 className="w-5 h-5 text-[color:var(--accent)]" />;
+    statusBg = 'border-[color:var(--accent)]/20 bg-[#1D2024]';
     statusText = 'Correct';
-    statusBadge = 'bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30';
+    statusBadge = 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30';
   } else {
     statusIcon = <XCircle className="w-5 h-5 text-[#FFB4AB]" />;
     statusBg = 'border-[#FFB4AB]/20 bg-[#1D2024]';
@@ -299,11 +301,35 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
 
   useEffect(() => {
     playResultSound();
+
+    // Confetti celebration for 85%+ scores, tinted with the active accent color
+    if (percentage >= 0.85) {
+      const colors = [getAccentColor(), '#A8C7FA', '#D0BCFF', '#FDE293', '#FFFFFF'];
+      const burst = (originX, angle) =>
+        confetti({
+          particleCount: 70,
+          spread: 70,
+          angle,
+          origin: { x: originX, y: 0.7 },
+          colors,
+          disableForReducedMotion: true,
+        });
+      const t1 = setTimeout(() => { burst(0.1, 60); burst(0.9, 120); }, 250);
+      const t2 = setTimeout(() => confetti({
+        particleCount: 90,
+        spread: 100,
+        origin: { x: 0.5, y: 0.55 },
+        colors,
+        disableForReducedMotion: true,
+      }), 700);
+      return () => { clearTimeout(t1); clearTimeout(t2); };
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   let verdict, verdictColor;
-  if (percentage >= 0.9) { verdict = 'Outstanding Mastery! 🎉'; verdictColor = 'text-[#A8E8BC]'; }
-  else if (percentage >= 0.7) { verdict = 'Great Performance! 👏'; verdictColor = 'text-[#A8E8BC]'; }
+  if (percentage >= 0.9) { verdict = 'Outstanding Mastery! 🎉'; verdictColor = 'text-[color:var(--accent)]'; }
+  else if (percentage >= 0.7) { verdict = 'Great Performance! 👏'; verdictColor = 'text-[color:var(--accent)]'; }
   else if (percentage >= 0.5) { verdict = 'Solid Practice! 💪'; verdictColor = 'text-[#FDE293]'; }
   else { verdict = 'Needs Additional Study 📚'; verdictColor = 'text-[#FFB4AB]'; }
 
@@ -334,7 +360,7 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
           {/* Stats Bar */}
           <div className="flex items-center justify-center gap-6 mt-6">
             <div className="text-center">
-              <p className="text-2xl font-extrabold text-[#A8E8BC] font-mono">{score}</p>
+              <p className="text-2xl font-extrabold text-[color:var(--accent)] font-mono">{score}</p>
               <p className="text-xs text-[#8E9196] font-bold uppercase tracking-wider">Correct</p>
             </div>
             <div className="w-px h-8 bg-white/10" />
@@ -376,7 +402,7 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
             }}
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 py-3.5 rounded-full bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 font-bold text-xs transition cursor-pointer"
           >
-            <RotateCcw className="w-4 h-4 text-[#A8E8BC]" />
+            <RotateCcw className="w-4 h-4 text-[color:var(--accent)]" />
             <span>Review Flashcards</span>
           </motion.button>
 
@@ -389,7 +415,7 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
                 playSubmitSound();
                 onRetake();
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
             >
               <RotateCcw className="w-4 h-4 stroke-[2.5]" />
               <span>Retake Exam</span>

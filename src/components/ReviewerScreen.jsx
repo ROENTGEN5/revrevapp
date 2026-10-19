@@ -13,7 +13,7 @@ function TypeBadge({ type }) {
     multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-[#4A4458]/40 text-[#D0BCFF] border-[#D0BCFF]/30' },
     identification: { label: 'Identification', icon: Type, color: 'bg-[#1E4378]/40 text-[#A8C7FA] border-[#A8C7FA]/30' },
     enumeration: { label: 'Enumeration', icon: ListOrdered, color: 'bg-[#443600]/40 text-[#FDE293] border-[#FDE293]/30' },
-    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-[#16251E] text-[#A8E8BC] border-[#A8E8BC]/30' },
+    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-[color:var(--accent-surface)] text-[color:var(--accent)] border-[color:var(--accent)]/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
   return (
@@ -35,22 +35,22 @@ function AnswerDisplay({ question }) {
               key={opt.label}
               className={`flex items-center gap-3 p-3.5 rounded-2xl border transition-all ${
                 isCorrect
-                  ? 'border-[#A8E8BC]/40 bg-[#1B5238]/30 shadow-md shadow-[#A8E8BC]/10'
+                  ? 'border-[color:var(--accent)]/40 bg-[color:var(--accent-container)]/30 shadow-md shadow-[color:var(--accent)]/10'
                   : 'border-white/5 bg-[#191C20]'
               }`}
             >
               <span
                 className={`inline-flex items-center justify-center w-8 h-8 rounded-xl text-xs font-extrabold font-mono shrink-0 ${
-                  isCorrect ? 'bg-[#A8E8BC] text-[#003822]' : 'bg-[#272A2F] text-[#8E9196]'
+                  isCorrect ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)]' : 'bg-[#272A2F] text-[#8E9196]'
                 }`}
               >
                 {opt.label}
               </span>
-              <span className={`text-sm font-semibold flex-1 ${isCorrect ? 'text-[#A8E8BC]' : 'text-[#C4C7C5]'}`}>
+              <span className={`text-sm font-semibold flex-1 ${isCorrect ? 'text-[color:var(--accent)]' : 'text-[#C4C7C5]'}`}>
                 {opt.text}
               </span>
               {isCorrect && (
-                <span className="px-3 py-0.5 rounded-full bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 text-[11px] font-extrabold uppercase tracking-wider">
+                <span className="px-3 py-0.5 rounded-full bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-[11px] font-extrabold uppercase tracking-wider">
                   ✓ Correct
                 </span>
               )}
@@ -65,8 +65,8 @@ function AnswerDisplay({ question }) {
     return (
       <div className="mt-4">
         <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider block mb-2">Answer:</span>
-        <div className="p-4 rounded-2xl border border-[#A8E8BC]/30 bg-[#1B5238]/30">
-          <span className="text-[#A8E8BC] text-lg font-bold font-mono">{question.correctAnswer}</span>
+        <div className="p-4 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/30">
+          <span className="text-[color:var(--accent)] text-lg font-bold font-mono">{question.correctAnswer}</span>
         </div>
       </div>
     );
@@ -82,7 +82,7 @@ function AnswerDisplay({ question }) {
           {question.correctAnswer.map((item, i) => (
             <span
               key={i}
-              className="px-3.5 py-2 rounded-2xl border border-[#A8E8BC]/30 bg-[#1B5238]/30 text-[#A8E8BC] text-sm font-bold font-mono"
+              className="px-3.5 py-2 rounded-2xl border border-[color:var(--accent)]/30 bg-[color:var(--accent-container)]/30 text-[color:var(--accent)] text-sm font-bold font-mono"
             >
               {i + 1}. {item}
             </span>
@@ -99,7 +99,7 @@ function AnswerDisplay({ question }) {
         <span className="text-[#8E9196] text-xs font-bold uppercase tracking-wider block mb-2">Answer:</span>
         <div className={`inline-flex items-center gap-2.5 px-5 py-3 rounded-2xl border font-bold text-base ${
           isTrue
-            ? 'border-[#7BD99F]/40 bg-[#1B5238]/30 text-[#A8E8BC]'
+            ? 'border-[color:var(--accent)]/40 bg-[color:var(--accent-container)]/30 text-[color:var(--accent)]'
             : 'border-[#FFB4AB]/40 bg-[#5C2822]/30 text-[#FFB4AB]'
         }`}>
           <span className="text-lg">{isTrue ? '✓' : '✗'}</span>
@@ -136,7 +136,7 @@ function Flashcard({ question, index, total, onRate }) {
         <div className="flashcard-face flashcard-front p-8 sm:p-10 flex flex-col justify-between rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-2xl">
           <div className="flex items-center justify-between mb-6 flex-wrap gap-2">
             <div className="flex items-center gap-3">
-              <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 font-extrabold text-sm font-mono shadow-md">
+              <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 font-extrabold text-sm font-mono shadow-md">
                 {index + 1}
               </span>
               <span className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider">
@@ -167,7 +167,7 @@ function Flashcard({ question, index, total, onRate }) {
             )}
           </div>
 
-          <div className="flex items-center justify-center gap-2 mt-6 text-[#A8E8BC] font-semibold text-xs bg-[#272A2F] py-2 px-5 rounded-full border border-white/10 mx-auto shadow-sm">
+          <div className="flex items-center justify-center gap-2 mt-6 text-[color:var(--accent)] font-semibold text-xs bg-[#272A2F] py-2 px-5 rounded-full border border-white/10 mx-auto shadow-sm">
             <Eye className="w-4 h-4" />
             <span>Click or tap to flip card</span>
           </div>
@@ -177,8 +177,8 @@ function Flashcard({ question, index, total, onRate }) {
         <div className="flashcard-face flashcard-back p-8 sm:p-10 flex flex-col justify-between rounded-[32px] bg-[#22262C] border border-white/[0.08] shadow-2xl">
           <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[#A8E8BC]" />
-              <span className="text-[#A8E8BC] text-sm font-extrabold tracking-wide uppercase">Answer Key</span>
+              <Sparkles className="w-4 h-4 text-[color:var(--accent)]" />
+              <span className="text-[color:var(--accent)] text-sm font-extrabold tracking-wide uppercase">Answer Key</span>
             </div>
             <TypeBadge type={question.type} />
           </div>
@@ -229,7 +229,7 @@ function Flashcard({ question, index, total, onRate }) {
                   playChoiceSound();
                   onRate(3);
                 }}
-                className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[#1B5238]/40 hover:bg-[#1B5238]/70 border border-[#A8E8BC]/30 text-[#A8E8BC] transition cursor-pointer active:scale-95"
+                className="flex flex-col items-center justify-center py-2.5 rounded-2xl bg-[color:var(--accent-container)]/40 hover:bg-[color:var(--accent-container)]/70 border border-[color:var(--accent)]/30 text-[color:var(--accent)] transition cursor-pointer active:scale-95"
                 title="Review in 6 days"
               >
                 <span className="text-xs font-bold">Good</span>
@@ -265,7 +265,7 @@ function StudySheetItem({ question, index }) {
       className="p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] shadow-lg"
     >
       <div className="flex items-center gap-3 mb-4 flex-wrap">
-        <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 font-extrabold text-xs font-mono shadow-md">
+        <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 font-extrabold text-xs font-mono shadow-md">
           {index + 1}
         </span>
         <TypeBadge type={question.type} />
@@ -355,7 +355,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
             }}
             className="px-4 py-2 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-bold text-[#E2E2E6] cursor-pointer inline-flex items-center gap-2 transition"
           >
-            <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
+            <ArrowLeft className="w-4 h-4 text-[color:var(--accent)]" />
             <span>Back</span>
           </button>
         </div>
@@ -371,7 +371,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
               }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'flashcard'
-                  ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
+                  ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-md'
                   : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
@@ -386,7 +386,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
               }}
               className={`inline-flex items-center gap-2 px-6 py-2.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
                 viewMode === 'sheet'
-                  ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
+                  ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-md'
                   : 'text-[#8E9196] hover:text-[#E2E2E6]'
               }`}
             >
@@ -452,7 +452,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
                       }}
                       className={`w-2.5 h-2.5 rounded-full shrink-0 transition-all cursor-pointer ${
                         i === currentIndex
-                          ? 'bg-[#A8E8BC] scale-125 shadow-md shadow-[#A8E8BC]/40'
+                          ? 'bg-[color:var(--accent)] scale-125 shadow-md shadow-[color:var(--accent)]/40'
                           : 'bg-white/20 hover:bg-white/40'
                       }`}
                     />
@@ -509,7 +509,7 @@ export default function ReviewerScreen({ questions, onStartExam, onBackToUpload 
               playSubmitSound();
               onStartExam();
             }}
-            className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full font-bold text-xs bg-[#A8E8BC] text-[#003822] shadow-lg shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 ml-auto sm:ml-0"
+            className="inline-flex items-center gap-2 px-7 py-2.5 rounded-full font-bold text-xs bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-lg shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0 ml-auto sm:ml-0"
           >
             <Rocket className="w-4 h-4 stroke-[2.5]" />
             <span>Take Exam</span>

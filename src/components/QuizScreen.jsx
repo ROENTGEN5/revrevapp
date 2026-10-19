@@ -11,7 +11,7 @@ function TypeBadge({ type }) {
     multiple_choice: { label: 'Multiple Choice', icon: CheckSquare, color: 'bg-[#4A4458]/40 text-[#D0BCFF] border-[#D0BCFF]/30' },
     identification: { label: 'Identification', icon: Type, color: 'bg-[#1E4378]/40 text-[#A8C7FA] border-[#A8C7FA]/30' },
     enumeration: { label: 'Enumeration', icon: ListOrdered, color: 'bg-[#443600]/40 text-[#FDE293] border-[#FDE293]/30' },
-    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-[#16251E] text-[#A8E8BC] border-[#A8E8BC]/30' },
+    true_false: { label: 'True or False', icon: ToggleLeft, color: 'bg-[color:var(--accent-surface)] text-[color:var(--accent)] border-[color:var(--accent)]/30' },
   };
   const { label, icon: Icon, color } = config[type] || config.multiple_choice;
 
@@ -36,7 +36,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             whileTap={{ scale: 0.99 }}
             className={`w-full flex items-center gap-4 p-4 sm:p-5 rounded-[20px] text-left border transition-all cursor-pointer ${
               isSelected
-                ? 'border-[#A8E8BC] bg-[#1B5238]/40 shadow-lg shadow-[#A8E8BC]/10'
+                ? 'border-[color:var(--accent)] bg-[color:var(--accent-container)]/40 shadow-lg shadow-[color:var(--accent)]/10'
                 : 'border-white/[0.08] bg-[#191C20] hover:bg-[#272A2F] hover:border-white/20'
             }`}
             onClick={() => {
@@ -47,7 +47,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             <span
               className={`inline-flex items-center justify-center w-10 h-10 rounded-xl text-sm font-extrabold font-mono shrink-0 transition-colors ${
                 isSelected
-                  ? 'bg-[#A8E8BC] text-[#003822] shadow-md'
+                  ? 'bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-md'
                   : 'bg-[#272A2F] text-[#8E9196]'
               }`}
             >
@@ -78,7 +78,7 @@ function IdentificationInput({ question, currentValue, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="Type answer here..."
         autoComplete="off"
-        className="w-full px-5 py-4 rounded-2xl bg-[#191C20] border border-white/10 text-base font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 focus:outline-none transition-all"
+        className="w-full px-5 py-4 rounded-2xl bg-[#191C20] border border-white/10 text-base font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
       />
       <p className="text-[#8E9196] text-xs font-medium">
         Case-insensitive evaluation.
@@ -101,7 +101,7 @@ function EnumerationInput({ question, currentValues, onChange }) {
   return (
     <div className="space-y-3">
       <label className="block text-[#8E9196] text-xs font-bold uppercase tracking-wider mb-2">
-        List <span className="text-[#A8E8BC] font-extrabold">{count}</span> items (any order):
+        List <span className="text-[color:var(--accent)] font-extrabold">{count}</span> items (any order):
       </label>
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
@@ -115,7 +115,7 @@ function EnumerationInput({ question, currentValues, onChange }) {
             onChange={(e) => handleItemChange(i, e.target.value)}
             placeholder={`Item ${i + 1}...`}
             autoComplete="off"
-            className="flex-1 px-4 py-3.5 rounded-xl bg-[#191C20] border border-white/10 text-sm font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 focus:outline-none transition-all"
+            className="flex-1 px-4 py-3.5 rounded-xl bg-[#191C20] border border-white/10 text-sm font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
           />
         </div>
       ))}
@@ -138,7 +138,7 @@ function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
             className={`flex flex-col items-center justify-center gap-2 py-8 rounded-[24px] text-base font-extrabold border transition-all cursor-pointer ${
               isSelected
                 ? isTrue
-                  ? 'border-[#7BD99F] bg-[#1B5238] text-[#A8E8BC] shadow-lg shadow-[#A8E8BC]/20'
+                  ? 'border-[color:var(--accent)] bg-[color:var(--accent-container)] text-[color:var(--accent)] shadow-lg shadow-[color:var(--accent)]/20'
                   : 'border-[#FFB4AB] bg-[#5C2822] text-[#FFB4AB] shadow-lg shadow-[#FFB4AB]/20'
                 : 'border-white/10 bg-[#191C20] text-[#C4C7C5] hover:border-white/20 hover:text-[#E2E2E6]'
             }`}
@@ -218,7 +218,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
       >
         <div className="flex items-center justify-between mb-5">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 shadow-md">
+            <div className="p-2.5 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 shadow-md">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
@@ -261,7 +261,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 {/* Question Info Header */}
                 <div className="flex items-center justify-between gap-3 mb-6">
                   <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 font-extrabold text-sm font-mono shadow-sm">
+                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 font-extrabold text-sm font-mono shadow-sm">
                       {quiz.currentIndex + 1}
                     </span>
                     <span className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider">
@@ -360,7 +360,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
               >
                 <Send className="w-4 h-4 stroke-[2.5]" />
                 <span>Submit Exam</span>

@@ -19,7 +19,7 @@ const TYPE_STYLES = {
   multiple_choice: 'bg-[#4A4458]/40 text-[#D0BCFF] border-[#D0BCFF]/30',
   identification: 'bg-[#1E4378]/40 text-[#A8C7FA] border-[#A8C7FA]/30',
   enumeration: 'bg-[#443600]/40 text-[#FDE293] border-[#FDE293]/30',
-  true_false: 'bg-[#16251E] text-[#A8E8BC] border-[#A8E8BC]/30',
+  true_false: 'bg-[color:var(--accent-surface)] text-[color:var(--accent)] border-[color:var(--accent)]/30',
 };
 
 const EMPTY_MC = {
@@ -87,7 +87,7 @@ function TypeSelector({ selected, onChange }) {
 // ─── Input Field ──────────────────────────────────────────────────
 function FormInput({ label, value, onChange, placeholder, required, multiline }) {
   const baseClass =
-    'w-full bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all';
+    'w-full bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 transition-all';
 
   return (
     <div>
@@ -149,16 +149,16 @@ function QuestionImageUploader({ image, onImageChange }) {
           type="button"
           onClick={() => fileInputRef.current?.click()}
           disabled={compressing}
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#191C20] hover:bg-[#272A2F] border border-white/10 text-[#A8E8BC] text-xs font-semibold transition cursor-pointer"
+          className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[#191C20] hover:bg-[#272A2F] border border-white/10 text-[color:var(--accent)] text-xs font-semibold transition cursor-pointer"
         >
           {compressing ? (
             <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin text-[#A8E8BC]" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin text-[color:var(--accent)]" />
               <span>Compressing image...</span>
             </>
           ) : (
             <>
-              <ImageIcon className="w-3.5 h-3.5 text-[#A8E8BC]" />
+              <ImageIcon className="w-3.5 h-3.5 text-[color:var(--accent)]" />
               <span>Attach Diagram / Image (Auto-Compressed)</span>
             </>
           )}
@@ -205,7 +205,7 @@ function MCOptions({ form, setForm }) {
               }}
               className={`shrink-0 w-10 h-10 rounded-xl text-sm font-bold font-mono transition-all cursor-pointer border ${
                 isCorrect
-                  ? 'bg-[#1B5238] border-[#A8E8BC]/40 text-[#A8E8BC] shadow-md shadow-[#A8E8BC]/10'
+                  ? 'bg-[color:var(--accent-container)] border-[color:var(--accent)]/40 text-[color:var(--accent)] shadow-md shadow-[color:var(--accent)]/10'
                   : 'bg-[#191C20] border-white/10 text-[#8E9196] hover:border-white/20'
               }`}
               title={`Set ${label} as correct answer`}
@@ -217,13 +217,13 @@ function MCOptions({ form, setForm }) {
               value={form[key]}
               onChange={(e) => setForm({ ...form, [key]: e.target.value })}
               placeholder={`Option ${label}${label === 'C' || label === 'D' ? ' (optional)' : ''}`}
-              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all"
+              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 transition-all"
             />
           </div>
         );
       })}
       {form.correctAnswer && (
-        <p className="text-xs text-[#A8E8BC] font-medium mt-1">
+        <p className="text-xs text-[color:var(--accent)] font-medium mt-1">
           ✓ Correct answer: {form.correctAnswer}
         </p>
       )}
@@ -280,7 +280,7 @@ function EnumItems({ form, setForm }) {
               value={item}
               onChange={(e) => updateItem(i, e.target.value)}
               placeholder={`Item ${i + 1}`}
-              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[#A8E8BC] focus:ring-2 focus:ring-[#A8E8BC]/20 transition-all"
+              className="flex-1 bg-[#191C20] border border-white/10 rounded-2xl px-4 py-3 text-sm text-[#E2E2E6] placeholder:text-[#8E9196] focus:outline-none focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 transition-all"
             />
             <button
               type="button"
@@ -300,7 +300,7 @@ function EnumItems({ form, setForm }) {
       <button
         type="button"
         onClick={addItem}
-        className="inline-flex items-center gap-2 text-sm text-[#A8E8BC] font-semibold hover:text-[#B9F2CB] transition-colors cursor-pointer mt-1"
+        className="inline-flex items-center gap-2 text-sm text-[color:var(--accent)] font-semibold hover:text-[color:var(--accent-hover)] transition-colors cursor-pointer mt-1"
       >
         <Plus className="w-4 h-4" />
         Add item
@@ -331,7 +331,7 @@ function TFOptions({ form, setForm }) {
               className={`flex flex-col items-center justify-center gap-1.5 py-5 rounded-2xl text-sm font-bold transition-all cursor-pointer border ${
                 isSelected
                   ? isTrue
-                    ? 'bg-[#1B5238] border-[#A8E8BC]/50 text-[#A8E8BC] shadow-md shadow-[#A8E8BC]/10'
+                    ? 'bg-[color:var(--accent-container)] border-[color:var(--accent)]/50 text-[color:var(--accent)] shadow-md shadow-[color:var(--accent)]/10'
                     : 'bg-[#5C2822] border-[#FFB4AB]/50 text-[#FFB4AB] shadow-md shadow-[#FFB4AB]/10'
                   : 'bg-[#191C20] border-white/10 text-[#8E9196] hover:bg-[#272A2F] hover:text-[#E2E2E6]'
               }`}
@@ -343,7 +343,7 @@ function TFOptions({ form, setForm }) {
         })}
       </div>
       {form.correctAnswer && (
-        <p className="text-xs text-[#A8E8BC] font-medium mt-1">
+        <p className="text-xs text-[color:var(--accent)] font-medium mt-1">
           ✓ Correct answer: {form.correctAnswer}
         </p>
       )}
@@ -618,7 +618,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
         onClick={validateAndAdd}
         className="w-full inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-sm bg-[#272A2F] text-[#E2E2E6] hover:bg-[#32353A] border border-white/10 transition-all cursor-pointer"
       >
-        <Plus className="w-4 h-4 text-[#A8E8BC]" />
+        <Plus className="w-4 h-4 text-[color:var(--accent)]" />
         Add Question
       </motion.button>
 
@@ -639,7 +639,7 @@ export default function ManualEntryForm({ onQuizReady, submitLabel, disabled, on
               whileTap={{ scale: 0.98 }}
               onClick={handleProceed}
               disabled={disabled}
-              className="w-full inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/25 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 disabled:opacity-50"
+              className="w-full inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/25 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0 disabled:opacity-50"
             >
               <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               {submitLabel || `Continue with ${questions.length} Question${questions.length !== 1 ? 's' : ''}`}

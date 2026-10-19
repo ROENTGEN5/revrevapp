@@ -9,6 +9,7 @@ import ModuleReview from './components/ModuleReview';
 import ModuleExam from './components/ModuleExam';
 import PomodoroTimer from './components/PomodoroTimer';
 import ErrorBoundary from './components/ErrorBoundary';
+import QuickSettings from './components/QuickSettings';
 import { signInAnonymous } from './services/firebaseService';
 
 const pageVariants = {
@@ -66,7 +67,7 @@ export default function App() {
       <>
         <div className="ambient-glow" />
         <div className="min-h-screen flex flex-col items-center justify-center gap-3">
-          <div className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC] animate-spin">
+          <div className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[color:var(--accent)] animate-spin">
             <svg className="w-8 h-8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
               <path d="M21 12a9 9 0 1 1-6.219-8.56" />
             </svg>
@@ -89,6 +90,8 @@ export default function App() {
           <AnimatedRoutes />
           {/* Global Floating Pixel Pomodoro Timer Widget */}
           <PomodoroTimer />
+          {/* Global Quick Settings pill: sound toggle + accent theme */}
+          <QuickSettings />
         </ErrorBoundary>
       </BrowserRouter>
     </>

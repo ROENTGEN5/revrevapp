@@ -31,6 +31,49 @@
   --color-brand-cream: #E2E2E6;
 }
 
+/* ===== Dynamic Material You Accent Themes ===== */
+:root,
+:root[data-theme="mint"] {
+  --accent: #A8E8BC;
+  --accent-rgb: 168 232 188;
+  --accent-container: #1B5238;
+  --accent-on: #003822;
+  --accent-hover: #B9F2CB;
+  --accent-surface: #16251E;
+}
+:root[data-theme="sky"] {
+  --accent: #A8C7FA;
+  --accent-rgb: 168 199 250;
+  --accent-container: #1E4378;
+  --accent-on: #043265;
+  --accent-hover: #BBD3FB;
+  --accent-surface: #16202E;
+}
+:root[data-theme="lavender"] {
+  --accent: #D0BCFF;
+  --accent-rgb: 208 188 255;
+  --accent-container: #4F378B;
+  --accent-on: #381E72;
+  --accent-hover: #DDCDFF;
+  --accent-surface: #221B33;
+}
+:root[data-theme="coral"] {
+  --accent: #FFB4AB;
+  --accent-rgb: 255 180 171;
+  --accent-container: #5C2822;
+  --accent-on: #561E18;
+  --accent-hover: #FFC5BE;
+  --accent-surface: #2B1816;
+}
+:root[data-theme="gold"] {
+  --accent: #FDE293;
+  --accent-rgb: 253 226 147;
+  --accent-container: #4D3F00;
+  --accent-on: #3B2F00;
+  --accent-hover: #FEEBB0;
+  --accent-surface: #2A2410;
+}
+
 /* ===== Base Styles ===== */
 *,
 *::before,
@@ -49,7 +92,7 @@ body {
   font-family: var(--font-sans);
   background-color: #111318;
   background-image:
-    radial-gradient(ellipse at 15% 0%, rgba(168, 232, 188, 0.08) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 0%, rgb(var(--accent-rgb) / 0.08) 0%, transparent 55%),
     radial-gradient(ellipse at 85% 100%, rgba(168, 199, 250, 0.07) 0%, transparent 60%),
     radial-gradient(ellipse at 50% 50%, rgba(208, 188, 255, 0.03) 0%, transparent 70%);
   color: #E2E2E6;
@@ -90,8 +133,8 @@ body {
 
 .pixel-card:hover,
 .glass-apple-card:hover {
-  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(168, 232, 188, 0.15);
-  border-color: rgba(168, 232, 188, 0.22);
+  box-shadow: 0 10px 30px -4px rgba(0, 0, 0, 0.5), 0 0 0 1px rgb(var(--accent-rgb) / 0.15);
+  border-color: rgb(var(--accent-rgb) / 0.22);
 }
 
 .pixel-card-high,
@@ -131,8 +174,8 @@ body {
 .glass-apple-input:focus {
   outline: none;
   background: #1D2024;
-  border-color: #A8E8BC;
-  box-shadow: 0 0 0 3px rgba(168, 232, 188, 0.2);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgb(var(--accent-rgb) / 0.2);
 }
 
 /* Search bar with pill shape */
@@ -146,16 +189,16 @@ body {
 
 .pixel-search-bar:focus-within {
   background: #242930;
-  border-color: #A8E8BC;
-  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 0 2px rgba(168, 232, 188, 0.25);
+  border-color: var(--accent);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35), 0 0 0 2px rgb(var(--accent-rgb) / 0.25);
 }
 
 /* ===== Pixel UI Buttons ===== */
 
 /* Primary Pill Button (Pixel Mint) */
 .pixel-btn-primary {
-  background: #A8E8BC;
-  color: #003822;
+  background: var(--accent);
+  color: var(--accent-on);
   font-weight: 700;
   border-radius: 9999px;
   transition: all 0.2s cubic-bezier(0.2, 0, 0, 1);
@@ -163,8 +206,8 @@ body {
 }
 
 .pixel-btn-primary:hover {
-  background: #B9F2CB;
-  box-shadow: 0 6px 18px rgba(168, 232, 188, 0.25);
+  background: var(--accent-hover);
+  box-shadow: 0 6px 18px rgb(var(--accent-rgb) / 0.25);
   transform: translateY(-1px);
 }
 
@@ -222,9 +265,9 @@ body {
 }
 
 .pixel-chip-mint {
-  background: rgba(168, 232, 188, 0.14);
-  border-color: rgba(168, 232, 188, 0.3);
-  color: #A8E8BC;
+  background: rgb(var(--accent-rgb) / 0.14);
+  border-color: rgb(var(--accent-rgb) / 0.3);
+  color: var(--accent);
 }
 
 .pixel-chip-sky {
@@ -253,7 +296,7 @@ body {
 
 /* ===== Text Treatments ===== */
 .gradient-text {
-  background: linear-gradient(135deg, #FFFFFF 0%, #E2E2E6 60%, #A8E8BC 100%);
+  background: linear-gradient(135deg, #FFFFFF 0%, #E2E2E6 60%, var(--accent) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -288,7 +331,7 @@ body {
   width: 600px;
   height: 600px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(168, 232, 188, 0.08) 0%, transparent 70%);
+  background: radial-gradient(circle, rgb(var(--accent-rgb) / 0.08) 0%, transparent 70%);
   filter: blur(90px);
   top: -150px;
   right: -50px;
@@ -320,9 +363,9 @@ body {
 
 .drop-zone:hover,
 .drop-zone.drag-over {
-  border-color: #A8E8BC;
-  background: rgba(168, 232, 188, 0.06);
-  box-shadow: 0 0 0 4px rgba(168, 232, 188, 0.15);
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 0.06);
+  box-shadow: 0 0 0 4px rgb(var(--accent-rgb) / 0.15);
 }
 
 /* ===== Option Cards (Exam / Quiz) ===== */
@@ -345,14 +388,14 @@ body {
 }
 
 .option-card.selected {
-  border-color: #A8E8BC;
-  background: rgba(168, 232, 188, 0.14);
+  border-color: var(--accent);
+  background: rgb(var(--accent-rgb) / 0.14);
   color: #FFFFFF;
-  box-shadow: 0 0 0 2px rgba(168, 232, 188, 0.35);
+  box-shadow: 0 0 0 2px rgb(var(--accent-rgb) / 0.35);
 }
 
 .option-card.correct {
-  border-color: #7BD99F;
+  border-color: var(--accent);
   background: rgba(123, 217, 159, 0.16);
   color: #FFFFFF;
   box-shadow: 0 0 0 2px rgba(123, 217, 159, 0.35);
@@ -415,8 +458,8 @@ body {
 }
 
 .view-toggle-option.active {
-  background: #A8E8BC;
-  color: #003822;
+  background: var(--accent);
+  color: var(--accent-on);
   font-weight: 700;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }

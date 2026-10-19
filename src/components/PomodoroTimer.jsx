@@ -174,11 +174,11 @@ export default function PomodoroTimer() {
   // Google Pixel Material You Mode Colors
   const modeColors = {
     work: {
-      accent: '#A8E8BC', // Pixel Mint
-      glow: 'rgba(168, 232, 188, 0.4)',
-      bgPill: 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/30',
-      stroke: '#A8E8BC',
-      onAccent: '#003822',
+      accent: 'var(--accent)', // Pixel Mint
+      glow: 'rgb(var(--accent-rgb) / 0.4)',
+      bgPill: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/30',
+      stroke: 'var(--accent)',
+      onAccent: 'var(--accent-on)',
     },
     shortBreak: {
       accent: '#A8C7FA', // Pixel Sky Blue
@@ -209,7 +209,7 @@ export default function PomodoroTimer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 10, scale: 0.95 }}
             transition={{ duration: 0.25, ease: [0.2, 0, 0, 1] }}
-            className="flex items-center gap-3 px-4 py-2.5 rounded-full shadow-2xl bg-[#1D2024] border border-white/10 cursor-pointer hover:border-[#A8E8BC]/30 transition-all group backdrop-blur-xl"
+            className="flex items-center gap-3 px-4 py-2.5 rounded-full shadow-2xl bg-[#1D2024] border border-white/10 cursor-pointer hover:border-[color:var(--accent)]/30 transition-all group backdrop-blur-xl"
             onClick={() => setIsExpanded(true)}
           >
             <div className="relative flex items-center justify-center">
@@ -278,7 +278,7 @@ export default function PomodoroTimer() {
             {/* Header */}
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-[#A8E8BC]" />
+                <Sparkles className="w-4 h-4 text-[color:var(--accent)]" />
                 <span className="text-xs font-bold uppercase tracking-widest text-[#8E9196]">
                   Pixel Focus Timer
                 </span>
@@ -319,7 +319,7 @@ export default function PomodoroTimer() {
                     key={tab.id}
                     onClick={() => switchMode(tab.id)}
                     className={`flex-1 flex items-center justify-center gap-1.5 py-2 text-xs font-medium rounded-full transition-all relative z-10 ${
-                      active ? 'text-[#003822] font-bold' : 'text-[#8E9196] hover:text-[#E2E2E6]'
+                      active ? 'text-[color:var(--accent-on)] font-bold' : 'text-[#8E9196] hover:text-[#E2E2E6]'
                     }`}
                   >
                     {active && (
@@ -383,7 +383,7 @@ export default function PomodoroTimer() {
 
                 {/* Session Counter Badge */}
                 <div className="mt-4 flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#191C20] border border-white/5 text-xs text-[#8E9196]">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-[#A8E8BC]" />
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[color:var(--accent)]" />
                   <span>
                     Sessions Completed: <strong className="text-[#E2E2E6]">{completedSessions}</strong>
                   </span>
@@ -458,7 +458,7 @@ export default function PomodoroTimer() {
                       onChange={(e) =>
                         setSettings({ ...settings, workMinutes: Math.max(1, parseInt(e.target.value) || 1) })
                       }
-                      className="w-16 px-2.5 py-1.5 rounded-xl bg-[#191C20] border border-white/15 text-center text-sm text-[#E2E2E6] font-mono focus:outline-none focus:border-[#A8E8BC]"
+                      className="w-16 px-2.5 py-1.5 rounded-xl bg-[#191C20] border border-white/15 text-center text-sm text-[#E2E2E6] font-mono focus:outline-none focus:border-[color:var(--accent)]"
                     />
                     <span className="text-xs text-[#8E9196]">min</span>
                   </div>
@@ -512,7 +512,7 @@ export default function PomodoroTimer() {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {settings.soundEnabled ? (
-                      <Volume2 className="w-4 h-4 text-[#A8E8BC]" />
+                      <Volume2 className="w-4 h-4 text-[color:var(--accent)]" />
                     ) : (
                       <VolumeX className="w-4 h-4 text-[#8E9196]" />
                     )}
@@ -521,12 +521,12 @@ export default function PomodoroTimer() {
                   <button
                     onClick={() => setSettings({ ...settings, soundEnabled: !settings.soundEnabled })}
                     className={`w-12 h-6 rounded-full p-0.5 transition-colors ${
-                      settings.soundEnabled ? 'bg-[#A8E8BC]' : 'bg-[#32353A]'
+                      settings.soundEnabled ? 'bg-[color:var(--accent)]' : 'bg-[#32353A]'
                     }`}
                   >
                     <div
                       className={`w-5 h-5 rounded-full shadow-md transition-transform ${
-                        settings.soundEnabled ? 'translate-x-6 bg-[#003822]' : 'translate-x-0 bg-white/70'
+                        settings.soundEnabled ? 'translate-x-6 bg-[color:var(--accent-on)]' : 'translate-x-0 bg-white/70'
                       }`}
                     />
                   </button>
@@ -538,12 +538,12 @@ export default function PomodoroTimer() {
                   <button
                     onClick={() => setSettings({ ...settings, autoStartBreaks: !settings.autoStartBreaks })}
                     className={`w-12 h-6 rounded-full p-0.5 transition-colors ${
-                      settings.autoStartBreaks ? 'bg-[#A8E8BC]' : 'bg-[#32353A]'
+                      settings.autoStartBreaks ? 'bg-[color:var(--accent)]' : 'bg-[#32353A]'
                     }`}
                   >
                     <div
                       className={`w-5 h-5 rounded-full shadow-md transition-transform ${
-                        settings.autoStartBreaks ? 'translate-x-6 bg-[#003822]' : 'translate-x-0 bg-white/70'
+                        settings.autoStartBreaks ? 'translate-x-6 bg-[color:var(--accent-on)]' : 'translate-x-0 bg-white/70'
                       }`}
                     />
                   </button>
@@ -552,7 +552,7 @@ export default function PomodoroTimer() {
                 {/* Done Button */}
                 <button
                   onClick={() => setIsSettingsOpen(false)}
-                  className="mt-2 w-full py-2.5 rounded-full bg-[#A8E8BC] text-[#003822] font-bold text-xs transition hover:bg-[#B9F2CB]"
+                  className="mt-2 w-full py-2.5 rounded-full bg-[color:var(--accent)] text-[color:var(--accent-on)] font-bold text-xs transition hover:bg-[color:var(--accent-hover)]"
                 >
                   Save Settings
                 </button>

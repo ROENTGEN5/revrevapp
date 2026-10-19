@@ -101,7 +101,7 @@ export default function Dashboard() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC]"
+          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[color:var(--accent)]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
@@ -122,14 +122,14 @@ export default function Dashboard() {
           className="flex items-center justify-between gap-4 mb-4 px-2"
         >
           <div className="flex items-center gap-2 text-sm text-[#C4C7C5] font-medium">
-            <Calendar className="w-4 h-4 text-[#A8E8BC]" />
+            <Calendar className="w-4 h-4 text-[color:var(--accent)]" />
             <span>{formattedToday}</span>
             <span className="text-white/20">•</span>
             <span className="text-xs text-[#A8C7FA]">Study Hub</span>
           </div>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1E2228] border border-white/10 text-xs font-medium text-[#C4C7C5]">
-              <span className="w-2 h-2 rounded-full bg-[#A8E8BC] animate-pulse" />
+              <span className="w-2 h-2 rounded-full bg-[color:var(--accent)] animate-pulse" />
               Pixel Dark UI
             </span>
           </div>
@@ -144,7 +144,7 @@ export default function Dashboard() {
         >
           <div className="relative z-10">
             <div className="flex items-center gap-3.5 mb-2">
-              <div className="p-3 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/20 shadow-md">
+              <div className="p-3 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/20 shadow-md">
                 <Sparkles className="w-7 h-7" />
               </div>
               <div>
@@ -152,7 +152,7 @@ export default function Dashboard() {
                   <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E2E2E6] tracking-tight">
                     QuizForge
                   </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#A8E8BC]/15 text-[#A8E8BC] border border-[#A8E8BC]/30 text-[11px] font-bold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent)]/15 text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-[11px] font-bold uppercase tracking-wider">
                     Pixel UI
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export default function Dashboard() {
               playSubmitSound();
               navigate('/create');
             }}
-            className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-lg shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] hover:shadow-[#A8E8BC]/30 transition-all cursor-pointer border-0 shrink-0"
+            className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-lg shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] hover:shadow-[color:var(--accent)]/30 transition-all cursor-pointer border-0 shrink-0"
           >
             <Plus className="w-5 h-5 stroke-[2.5]" />
             <span>Create New Module</span>
@@ -222,15 +222,15 @@ export default function Dashboard() {
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 25 }}
-            className="p-6 sm:p-7 mb-10 rounded-[28px] bg-[#16251E] border border-[#A8E8BC]/25 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-xl"
+            className="p-6 sm:p-7 mb-10 rounded-[28px] bg-[color:var(--accent-surface)] border border-[color:var(--accent)]/25 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-xl"
           >
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-14 h-14 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 flex items-center justify-center shrink-0 shadow-md">
                 <Brain className="w-7 h-7" />
               </div>
               <div>
                 <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 text-[10px] font-extrabold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-[10px] font-extrabold uppercase tracking-wider">
                     Spaced Repetition Active
                   </span>
                   <span className="text-[#8E9196] text-xs font-mono">SM-2 Algorithm</span>
@@ -254,7 +254,7 @@ export default function Dashboard() {
                   navigate(`/module/${firstDue.moduleId}/review`);
                 }
               }}
-              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-xs bg-[#A8E8BC] text-[#003822] shadow-lg shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0 shrink-0"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-full font-bold text-xs bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-lg shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0 shrink-0"
             >
               <Zap className="w-4 h-4 fill-current" />
               <span>Start Smart Review ({dueQuestions.length})</span>
@@ -272,7 +272,7 @@ export default function Dashboard() {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
             <h2 className="text-2xl font-extrabold text-[#E2E2E6] tracking-tight flex items-center gap-2.5">
               <span>Your Modules</span>
-              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#272A2F] text-[#A8E8BC] border border-white/10">
+              <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#272A2F] text-[color:var(--accent)] border border-white/10">
                 {modules.length}
               </span>
             </h2>
@@ -281,7 +281,7 @@ export default function Dashboard() {
             {modules.length > 0 && (
               <div className="relative w-full sm:w-80">
                 <div className="pixel-search-bar px-4 py-2.5 flex items-center gap-3">
-                  <Search className="w-4 h-4 text-[#A8E8BC] shrink-0" />
+                  <Search className="w-4 h-4 text-[color:var(--accent)] shrink-0" />
                   <input
                     type="text"
                     placeholder="Search study modules..."
@@ -406,7 +406,7 @@ export default function Dashboard() {
                     <div
                       className={`w-10 h-10 rounded-2xl flex items-center justify-center shrink-0 shadow-sm border ${
                         isGreat
-                          ? 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/30'
+                          ? 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/30'
                           : isOkay
                           ? 'bg-[#443600] text-[#FDE293] border-[#FDE293]/30'
                           : 'bg-[#5C2822] text-[#FFB4AB] border-[#FFB4AB]/30'
@@ -425,7 +425,7 @@ export default function Dashboard() {
                     <span
                       className={`text-xs font-extrabold font-mono px-3.5 py-1 rounded-full border ${
                         isGreat
-                          ? 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/30'
+                          ? 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/30'
                           : isOkay
                           ? 'bg-[#443600] text-[#FDE293] border-[#FDE293]/30'
                           : 'bg-[#5C2822] text-[#FFB4AB] border-[#FFB4AB]/30'
@@ -448,21 +448,21 @@ export default function Dashboard() {
 
 function StatCard({ icon, label, value, color }) {
   const colorStyles = {
-    mint: 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/25',
+    mint: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/25',
     sky: 'bg-[#1E4378] text-[#A8C7FA] border-[#A8C7FA]/25',
     gold: 'bg-[#443600] text-[#FDE293] border-[#FDE293]/25',
     lavender: 'bg-[#4A4458] text-[#D0BCFF] border-[#D0BCFF]/25',
     // Compat
-    red: 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/25',
+    red: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/25',
     navy: 'bg-[#1E4378] text-[#A8C7FA] border-[#A8C7FA]/25',
     amber: 'bg-[#443600] text-[#FDE293] border-[#FDE293]/25',
-    emerald: 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/25',
+    emerald: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/25',
   };
 
   return (
     <motion.div
       whileHover={{ y: -3, scale: 1.015 }}
-      className="p-5 sm:p-6 rounded-[28px] bg-[#1D2024] border border-white/[0.06] flex flex-col justify-between shadow-lg hover:border-[#A8E8BC]/25 transition-all"
+      className="p-5 sm:p-6 rounded-[28px] bg-[#1D2024] border border-white/[0.06] flex flex-col justify-between shadow-lg hover:border-[color:var(--accent)]/25 transition-all"
     >
       <div className={`inline-flex items-center justify-center w-11 h-11 rounded-2xl border mb-3 shadow-sm ${colorStyles[color] || colorStyles.mint}`}>
         {icon}
@@ -496,7 +496,7 @@ function ModuleCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 24 }}
       onClick={onClick}
-      className={`p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] cursor-pointer group relative flex flex-col justify-between hover:bg-[#22262C] hover:border-[#A8E8BC]/30 shadow-lg hover:shadow-2xl transition-all ${
+      className={`p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] cursor-pointer group relative flex flex-col justify-between hover:bg-[#22262C] hover:border-[color:var(--accent)]/30 shadow-lg hover:shadow-2xl transition-all ${
         isDraft ? 'border-[#FDE293]/40' : ''
       }`}
     >
@@ -567,7 +567,7 @@ function ModuleCard({
             className={`w-12 h-12 rounded-2xl flex items-center justify-center border shadow-sm ${
               isDraft
                 ? 'bg-[#443600] text-[#FDE293] border-[#FDE293]/30'
-                : 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/30'
+                : 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/30'
             }`}
           >
             {isDraft ? <PenLine className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
@@ -606,7 +606,7 @@ function ModuleCard({
               <span
                 className={`font-bold font-mono px-2.5 py-0.5 rounded-full border text-[11px] ${
                   bestScore.percentage >= 80
-                    ? 'bg-[#1B5238] text-[#A8E8BC] border-[#A8E8BC]/30'
+                    ? 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/30'
                     : bestScore.percentage >= 50
                     ? 'bg-[#443600] text-[#FDE293] border-[#FDE293]/30'
                     : 'bg-[#5C2822] text-[#FFB4AB] border-[#FFB4AB]/30'
@@ -617,7 +617,7 @@ function ModuleCard({
             ) : (
               <span className="text-[#8E9196] font-medium">Unattempted</span>
             )}
-            <ChevronRight className="w-4 h-4 text-[#A8E8BC] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
+            <ChevronRight className="w-4 h-4 text-[color:var(--accent)] opacity-0 group-hover:opacity-100 group-hover:translate-x-1 transition-all" />
           </div>
         )}
       </div>
@@ -632,7 +632,7 @@ function EmptyState({ onCreateClick }) {
       animate={{ opacity: 1, scale: 1 }}
       className="p-10 sm:p-14 text-center rounded-[32px] bg-[#1D2024] border-2 border-dashed border-white/10"
     >
-      <div className="w-16 h-16 rounded-3xl bg-[#1B5238] border border-[#A8E8BC]/30 text-[#A8E8BC] flex items-center justify-center mx-auto mb-5 shadow-lg">
+      <div className="w-16 h-16 rounded-3xl bg-[color:var(--accent-container)] border border-[color:var(--accent)]/30 text-[color:var(--accent)] flex items-center justify-center mx-auto mb-5 shadow-lg">
         <BookOpen className="w-8 h-8" />
       </div>
       <h3 className="text-2xl font-bold text-[#E2E2E6] mb-2 tracking-tight">No Modules Yet</h3>
@@ -643,7 +643,7 @@ function EmptyState({ onCreateClick }) {
         whileHover={{ scale: 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
         onClick={onCreateClick}
-        className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[#A8E8BC] text-[#003822] shadow-xl shadow-[#A8E8BC]/20 hover:bg-[#B9F2CB] transition-all cursor-pointer border-0"
+        className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
       >
         <Plus className="w-5 h-5 stroke-[2.5]" />
         Create First Module

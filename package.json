@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.4",
     "firebase": "^12.16.0",
     "framer-motion": "^12.12.2",
     "lucide-react": "^0.511.0",

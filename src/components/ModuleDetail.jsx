@@ -45,7 +45,7 @@ export default function ModuleDetail() {
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
-          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[#A8E8BC]"
+          className="p-4 rounded-3xl bg-[#1D2024] border border-white/10 shadow-2xl text-[color:var(--accent)]"
         >
           <Loader2 className="w-8 h-8" />
         </motion.div>
@@ -103,7 +103,7 @@ export default function ModuleDetail() {
             }}
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-[#272A2F] hover:bg-[#32353A] border border-white/10 text-xs font-semibold text-[#E2E2E6] transition cursor-pointer"
           >
-            <ArrowLeft className="w-4 h-4 text-[#A8E8BC]" />
+            <ArrowLeft className="w-4 h-4 text-[color:var(--accent)]" />
             <span>Dashboard</span>
           </button>
         </motion.div>
@@ -116,12 +116,12 @@ export default function ModuleDetail() {
           className="rounded-[32px] bg-[#1D2024] border border-white/[0.06] p-7 sm:p-9 mb-6 relative overflow-hidden shadow-xl"
         >
           <div className="flex items-start gap-5">
-            <div className="w-16 h-16 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 flex items-center justify-center shrink-0 shadow-md">
+            <div className="w-16 h-16 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 flex items-center justify-center shrink-0 shadow-md">
               <BookOpen className="w-8 h-8" />
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1.5">
-                <span className="px-3 py-0.5 rounded-full bg-[#1B5238]/60 text-[#A8E8BC] border border-[#A8E8BC]/20 text-[10px] font-extrabold uppercase tracking-wider">
+                <span className="px-3 py-0.5 rounded-full bg-[color:var(--accent-container)]/60 text-[color:var(--accent)] border border-[color:var(--accent)]/20 text-[10px] font-extrabold uppercase tracking-wider">
                   Module
                 </span>
               </div>
@@ -158,7 +158,7 @@ export default function ModuleDetail() {
                   </span>
                 )}
                 {tfCount > 0 && (
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#16251E] text-[#A8E8BC] border border-[#A8E8BC]/30 text-xs font-bold">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[color:var(--accent-surface)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-xs font-bold">
                     <ToggleLeft className="w-3.5 h-3.5" />
                     {tfCount} True/False
                   </span>
@@ -191,7 +191,7 @@ export default function ModuleDetail() {
               <p
                 className={`text-3xl font-extrabold font-mono ${
                   bestAttempt.percentage >= 80
-                    ? 'text-[#A8E8BC]'
+                    ? 'text-[color:var(--accent)]'
                     : bestAttempt.percentage >= 50
                     ? 'text-[#FDE293]'
                     : 'text-[#FFB4AB]'
@@ -202,13 +202,13 @@ export default function ModuleDetail() {
             </div>
             <div className="p-5 rounded-[28px] bg-[#1D2024] border border-white/[0.06] shadow-lg col-span-2 sm:col-span-1">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp className="w-4 h-4 text-[#A8E8BC]" />
+                <TrendingUp className="w-4 h-4 text-[color:var(--accent)]" />
                 <span className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider">Last Score</span>
               </div>
               <p
                 className={`text-3xl font-extrabold font-mono ${
                   lastAttempt.percentage >= 80
-                    ? 'text-[#A8E8BC]'
+                    ? 'text-[color:var(--accent)]'
                     : lastAttempt.percentage >= 50
                     ? 'text-[#FDE293]'
                     : 'text-[#FFB4AB]'
@@ -256,9 +256,9 @@ export default function ModuleDetail() {
               playSubmitSound();
               navigate(`/module/${moduleId}/exam`);
             }}
-            className="p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] hover:border-[#A8E8BC]/40 hover:bg-[#23272D] flex items-center gap-5 cursor-pointer text-left group shadow-lg transition-all"
+            className="p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] hover:border-[color:var(--accent)]/40 hover:bg-[#23272D] flex items-center gap-5 cursor-pointer text-left group shadow-lg transition-all"
           >
-            <div className="w-14 h-14 rounded-2xl bg-[#1B5238] text-[#A8E8BC] border border-[#A8E8BC]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
+            <div className="w-14 h-14 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform shadow-sm">
               <Rocket className="w-7 h-7" />
             </div>
             <div>
@@ -284,7 +284,7 @@ export default function ModuleDetail() {
               className="w-full p-5 rounded-[28px] bg-[#1D2024] border border-white/[0.06] flex items-center justify-between cursor-pointer hover:bg-[#23272D] transition shadow-lg"
             >
               <div className="flex items-center gap-3">
-                <Clock className="w-5 h-5 text-[#A8E8BC]" />
+                <Clock className="w-5 h-5 text-[color:var(--accent)]" />
                 <span className="text-[#E2E2E6] font-bold text-sm">
                   Score History ({history.length} {history.length === 1 ? 'attempt' : 'attempts'})
                 </span>
@@ -327,7 +327,7 @@ export default function ModuleDetail() {
                         <span
                           className={`text-sm font-extrabold font-mono text-right ${
                             attempt.percentage >= 80
-                              ? 'text-[#A8E8BC]'
+                              ? 'text-[color:var(--accent)]'
                               : attempt.percentage >= 50
                               ? 'text-[#FDE293]'
                               : 'text-[#FFB4AB]'
