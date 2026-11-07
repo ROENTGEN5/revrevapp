@@ -88,7 +88,6 @@ export default function Dashboard() {
     attemptCountByModule[a.moduleId] = (attemptCountByModule[a.moduleId] || 0) + 1;
   });
 
-  // Current date for Google Pixel "At a Glance"
   const formattedToday = new Date().toLocaleDateString('en-US', {
     weekday: 'short',
     month: 'short',
@@ -97,7 +96,7 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center gap-4 bg-[#111318]">
+      <div className="study-page min-h-screen flex flex-col items-center justify-center gap-4">
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 1.2, repeat: Infinity, ease: 'linear' }}
@@ -113,57 +112,38 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen px-4 py-8 sm:py-12 bg-[#111318] text-[#E2E2E6]">
+    <main className="study-page min-h-screen px-4 pt-5 pb-24 sm:px-8 sm:pt-8">
       <div className="w-full max-w-6xl mx-auto">
-        {/* Pixel "At a Glance" Bar */}
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex items-center justify-between gap-4 mb-4 px-2"
+          className="flex items-center gap-4 mb-5 pb-4 border-b border-white/10"
         >
-          <div className="flex items-center gap-2 text-sm text-[#C4C7C5] font-medium">
-            <Calendar className="w-4 h-4 text-[color:var(--accent)]" />
-            <span>{formattedToday}</span>
-            <span className="text-white/20">•</span>
-            <span className="text-xs text-[#A8C7FA]">Study Hub</span>
+          <div className="flex items-center gap-2.5 text-sm font-extrabold tracking-tight">
+            <span className="study-icon"><Sparkles className="size-4" aria-hidden="true" /></span>
+            QuizForge
           </div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#1E2228] border border-white/10 text-xs font-medium text-[#C4C7C5]">
-              <span className="w-2 h-2 rounded-full bg-[color:var(--accent)] animate-pulse" />
-              Pixel Dark UI
-            </span>
+          <div className="study-kicker hidden sm:flex items-center gap-2 border-l border-white/15 pl-4">
+            <Calendar className="size-3.5" aria-hidden="true" />
+            <span>{formattedToday}</span>
           </div>
         </motion.div>
 
-        {/* Google Pixel Header Card */}
+        {/* Study Hub introduction */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ type: 'spring', stiffness: 280, damping: 25 }}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10 p-7 sm:p-9 rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-xl relative overflow-hidden"
+          className="study-panel study-hero mb-5 px-5 py-11 sm:px-10 sm:py-13 text-center"
         >
-          <div className="relative z-10">
-            <div className="flex items-center gap-3.5 mb-2">
-              <div className="p-3 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/20 shadow-md">
-                <Sparkles className="w-7 h-7" />
-              </div>
-              <div>
-                <div className="flex items-center gap-2.5">
-                  <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E2E2E6] tracking-tight">
-                    QuizForge
-                  </h1>
-                  <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent)]/15 text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-[11px] font-bold uppercase tracking-wider">
-                    Pixel UI
-                  </span>
-                </div>
-              </div>
-            </div>
-            <p className="text-[#8E9196] text-sm sm:text-base ml-1 max-w-xl">
-              Material You interactive flashcard & exam studio with SM-2 spaced repetition.
-            </p>
-          </div>
+          <span className="study-kicker inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/40 px-3 py-1.5">
+            <span className="size-1.5 rounded-full bg-[color:var(--accent)]" /> Study Hub
+          </span>
+          <h1 className="study-display mx-auto mt-5 max-w-3xl text-balance">Make what you learn stick.</h1>
+          <p className="mx-auto mt-4 max-w-md text-pretty text-sm leading-relaxed text-[#c4c6d0] sm:text-base">
+            Build flashcards, review what’s due, and see how much you’ve learned with practice exams.
+          </p>
 
-          {/* Quick Create CTA (Pixel Primary Pill) */}
           <motion.button
             id="create-module-button"
             whileHover={{ scale: 1.02, y: -1 }}
@@ -172,7 +152,7 @@ export default function Dashboard() {
               playSubmitSound();
               navigate('/create');
             }}
-            className="inline-flex items-center justify-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-lg shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] hover:shadow-[color:var(--accent)]/30 transition-all cursor-pointer border-0 shrink-0"
+            className="study-primary mt-7"
           >
             <Plus className="w-5 h-5 stroke-[2.5]" />
             <span>Create New Module</span>
@@ -184,7 +164,7 @@ export default function Dashboard() {
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1, type: 'spring', stiffness: 280, damping: 25 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-10"
+          className="study-panel grid grid-cols-2 sm:grid-cols-4 gap-px overflow-hidden mb-8 bg-white/10"
         >
           <StatCard
             icon={<Layers className="w-5 h-5" />}
@@ -216,31 +196,23 @@ export default function Dashboard() {
           />
         </motion.div>
 
-        {/* Spaced Repetition Queue Banner (Pixel Mint / Sage) */}
+        {/* Spaced repetition queue */}
         {dueQuestions.length > 0 && (
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15, type: 'spring', stiffness: 280, damping: 25 }}
-            className="p-6 sm:p-7 mb-10 rounded-[28px] bg-[color:var(--accent-surface)] border border-[color:var(--accent)]/25 flex flex-col md:flex-row md:items-center justify-between gap-5 relative overflow-hidden shadow-xl"
+            className="study-panel study-highlight p-5 sm:p-6 mb-10 flex flex-col md:flex-row md:items-center justify-between gap-5"
           >
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 flex items-center justify-center shrink-0 shadow-md">
                 <Brain className="w-7 h-7" />
               </div>
               <div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 text-[10px] font-extrabold uppercase tracking-wider">
-                    Spaced Repetition Active
-                  </span>
-                  <span className="text-[#8E9196] text-xs font-mono">SM-2 Algorithm</span>
-                </div>
-                <h3 className="text-lg font-extrabold text-[#E2E2E6] tracking-tight">
-                  🧠 {dueQuestions.length} {dueQuestions.length === 1 ? 'Card' : 'Cards'} Due For Review Today
-                </h3>
-                <p className="text-[#8E9196] text-xs mt-0.5">
-                  Reviewing these target cards today builds maximum long-term memory retention.
-                </p>
+                <p className="study-kicker mb-1">Spaced repetition</p>
+                <h2 className="text-lg font-bold tracking-tight">
+                  {dueQuestions.length} {dueQuestions.length === 1 ? 'card' : 'cards'} due for review today
+                </h2>
               </div>
             </div>
 
@@ -262,7 +234,7 @@ export default function Dashboard() {
           </motion.div>
         )}
 
-        {/* Modules Section Header & Pixel Search */}
+        {/* Module library */}
         <motion.div
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
@@ -270,20 +242,20 @@ export default function Dashboard() {
           className="mb-8"
         >
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h2 className="text-2xl font-extrabold text-[#E2E2E6] tracking-tight flex items-center gap-2.5">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight flex items-center gap-2.5">
               <span>Your Modules</span>
               <span className="text-xs font-bold px-3 py-1 rounded-full bg-[#272A2F] text-[color:var(--accent)] border border-white/10">
                 {modules.length}
               </span>
             </h2>
 
-            {/* Pixel Search Bar */}
             {modules.length > 0 && (
               <div className="relative w-full sm:w-80">
-                <div className="pixel-search-bar px-4 py-2.5 flex items-center gap-3">
+                <div className="study-panel px-4 py-2.5 flex items-center gap-3 focus-within:border-[color:var(--accent)]/60">
                   <Search className="w-4 h-4 text-[color:var(--accent)] shrink-0" />
                   <input
                     type="text"
+                    aria-label="Search study modules"
                     placeholder="Search study modules..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
@@ -291,6 +263,7 @@ export default function Dashboard() {
                   />
                   {searchQuery && (
                     <button
+                      aria-label="Clear search"
                       onClick={() => {
                         playChoiceSound();
                         setSearchQuery('');
@@ -384,7 +357,7 @@ export default function Dashboard() {
             className="mt-12"
           >
             <h2 className="text-xl font-bold text-[#E2E2E6] mb-4 tracking-tight">Recent Activity</h2>
-            <div className="rounded-[28px] bg-[#1D2024] border border-white/[0.06] overflow-hidden divide-y divide-white/5">
+            <div className="study-panel overflow-hidden divide-y divide-white/10">
               {recentAttempts.map((attempt, i) => {
                 const mod = modules.find((m) => m.id === attempt.moduleId);
                 const isGreat = attempt.percentage >= 80;
@@ -440,7 +413,7 @@ export default function Dashboard() {
           </motion.div>
         )}
       </div>
-    </div>
+    </main>
   );
 }
 
@@ -452,26 +425,16 @@ function StatCard({ icon, label, value, color }) {
     sky: 'bg-[#1E4378] text-[#A8C7FA] border-[#A8C7FA]/25',
     gold: 'bg-[#443600] text-[#FDE293] border-[#FDE293]/25',
     lavender: 'bg-[#4A4458] text-[#D0BCFF] border-[#D0BCFF]/25',
-    // Compat
-    red: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/25',
-    navy: 'bg-[#1E4378] text-[#A8C7FA] border-[#A8C7FA]/25',
-    amber: 'bg-[#443600] text-[#FDE293] border-[#FDE293]/25',
-    emerald: 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border-[color:var(--accent)]/25',
   };
 
   return (
-    <motion.div
-      whileHover={{ y: -3, scale: 1.015 }}
-      className="p-5 sm:p-6 rounded-[28px] bg-[#1D2024] border border-white/[0.06] flex flex-col justify-between shadow-lg hover:border-[color:var(--accent)]/25 transition-all"
-    >
-      <div className={`inline-flex items-center justify-center w-11 h-11 rounded-2xl border mb-3 shadow-sm ${colorStyles[color] || colorStyles.mint}`}>
-        {icon}
+    <div className="bg-[#101116] p-4 sm:p-6 min-w-0">
+      <div className="flex items-center gap-2.5 mb-3">
+        <span className={`study-icon ${colorStyles[color]}`}>{icon}</span>
+        <span className="study-kicker">{label}</span>
       </div>
-      <div>
-        <p className="text-3xl font-extrabold text-[#E2E2E6] tracking-tight tabular-nums font-mono">{value}</p>
-        <p className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider mt-1">{label}</p>
-      </div>
-    </motion.div>
+      <p className="text-3xl sm:text-4xl font-semibold tracking-[-0.06em] tabular-nums">{value}</p>
+    </div>
   );
 }
 
@@ -496,13 +459,14 @@ function ModuleCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 24 }}
       onClick={onClick}
-      className={`p-6 sm:p-7 rounded-[28px] bg-[#1D2024] border border-white/[0.06] cursor-pointer group relative flex flex-col justify-between hover:bg-[#22262C] hover:border-[color:var(--accent)]/30 shadow-lg hover:shadow-2xl transition-all ${
+      className={`study-panel p-5 sm:p-6 cursor-pointer group relative flex flex-col justify-between hover:bg-[#181a22] hover:border-[color:var(--accent)]/40 transition-colors ${
         isDraft ? 'border-[#FDE293]/40' : ''
       }`}
     >
       {/* Menu Options Button */}
       <div className="absolute top-4 right-4 z-20">
         <button
+          aria-label={`Options for ${module.title}`}
           id={`module-menu-${module.id}`}
           onClick={onMenuToggle}
           className="w-8 h-8 rounded-full flex items-center justify-center text-[#8E9196] hover:text-[#E2E2E6] hover:bg-white/10 transition cursor-pointer"
@@ -555,9 +519,9 @@ function ModuleCard({
       <div>
         {/* Module Cover Image Banner */}
         {module.coverImage && (
-          <div className="h-32 -mx-6 -mt-6 sm:-mx-7 sm:-mt-7 mb-4 overflow-hidden rounded-t-[28px] relative">
+          <div className="h-32 -mx-5 -mt-5 sm:-mx-6 sm:-mt-6 mb-4 overflow-hidden rounded-t-[15px] relative">
             <img src={module.coverImage} alt={module.title} className="w-full h-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#1D2024] via-transparent to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#121319] via-transparent to-transparent" />
           </div>
         )}
 
@@ -573,7 +537,7 @@ function ModuleCard({
             {isDraft ? <PenLine className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
           </div>
           {isDraft && (
-            <span className="px-3 py-0.5 rounded-full bg-[#443600] border border-[#FDE293]/30 text-[#FDE293] text-[10px] font-extrabold uppercase tracking-wider">
+            <span className="mr-9 px-3 py-0.5 rounded-full bg-[#443600] border border-[#FDE293]/30 text-[#FDE293] text-[10px] font-extrabold uppercase tracking-wider">
               Draft
             </span>
           )}
@@ -630,7 +594,7 @@ function EmptyState({ onCreateClick }) {
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
-      className="p-10 sm:p-14 text-center rounded-[32px] bg-[#1D2024] border-2 border-dashed border-white/10"
+      className="study-panel p-8 sm:p-14 text-center border-dashed"
     >
       <div className="w-16 h-16 rounded-3xl bg-[color:var(--accent-container)] border border-[color:var(--accent)]/30 text-[color:var(--accent)] flex items-center justify-center mx-auto mb-5 shadow-lg">
         <BookOpen className="w-8 h-8" />
@@ -643,7 +607,7 @@ function EmptyState({ onCreateClick }) {
         whileHover={{ scale: 1.02, y: -1 }}
         whileTap={{ scale: 0.98 }}
         onClick={onCreateClick}
-        className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
+        className="study-primary"
       >
         <Plus className="w-5 h-5 stroke-[2.5]" />
         Create First Module

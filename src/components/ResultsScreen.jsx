@@ -10,44 +10,23 @@ function ScoreRing({ score, total }) {
   const circumference = 2 * Math.PI * radius;
   const percentage = total > 0 ? score / total : 0;
   const offset = circumference * (1 - percentage);
-  const [animatedScore, setAnimatedScore] = useState(0);
-
-  useEffect(() => {
-    const duration = 1500;
-    const startTime = performance.now();
-
-    const animate = (now) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setAnimatedScore(Math.round(eased * score));
-      if (progress < 1) requestAnimationFrame(animate);
-    };
-
-    requestAnimationFrame(animate);
-  }, [score]);
-
-  let ringColor = 'var(--accent)'; // Pixel Mint default
-  if (percentage >= 0.8) ringColor = 'var(--accent)'; // Pixel Mint
-  else if (percentage >= 0.5) ringColor = '#FDE293'; // Pixel Gold
-  else ringColor = '#FFB4AB'; // Pixel Coral
+  const ringColor = percentage >= 0.8 ? 'var(--accent)' : percentage >= 0.5 ? '#FDE293' : '#FFB4AB';
 
   return (
-    <div className="relative inline-flex items-center justify-center my-4">
-      <svg width="160" height="160" className="score-ring">
-        <circle cx="80" cy="80" r={radius} fill="none" stroke="rgba(255, 255, 255, 0.08)" strokeWidth="10" />
+    <div className="relative grid size-44 place-items-center shrink-0">
+      <svg aria-hidden="true" viewBox="0 0 160 160" className="size-full -rotate-90">
+        <circle cx="80" cy="80" r={radius} fill="none" stroke="rgba(255, 255, 255, 0.1)" strokeWidth="6" />
         <motion.circle
-          cx="80" cy="80" r={radius} fill="none" stroke={ringColor} strokeWidth="10" strokeLinecap="round"
+          cx="80" cy="80" r={radius} fill="none" stroke={ringColor} strokeWidth="6" strokeLinecap="round"
           strokeDasharray={circumference}
           initial={{ strokeDashoffset: circumference }}
           animate={{ strokeDashoffset: offset }}
-          transition={{ duration: 1.5, ease: [0.2, 0, 0, 1], delay: 0.3 }}
-          style={{ filter: `drop-shadow(0 0 12px ${ringColor}60)` }}
+          transition={{ duration: 0.8, ease: 'easeOut' }}
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-4xl font-extrabold text-[#E2E2E6] tracking-tight font-mono">{animatedScore}/{total}</span>
-        <span className="text-xs font-bold text-[#8E9196] uppercase tracking-widest mt-0.5">{Math.round(percentage * 100)}%</span>
+        <span className="text-4xl font-semibold tracking-[-0.06em] tabular-nums">{Math.round(percentage * 100)}%</span>
+        <span className="study-kicker mt-1">Score</span>
       </div>
     </div>
   );
@@ -96,13 +75,13 @@ function MCReview({ result }) {
         }
 
         return (
-          <div key={opt.label} className={`flex items-center gap-3 p-3 rounded-2xl border transition-all ${optionClass}`}>
+          <div key={opt.label} className={`grid grid-cols-[auto_minmax(0,1fr)] sm:grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-x-3 gap-y-1 p-3 rounded-xl border ${optionClass}`}>
             <span className={`inline-flex items-center justify-center w-7 h-7 rounded-xl text-xs font-bold font-mono shrink-0 ${labelClass}`}>
               {opt.label}
             </span>
-            <span className="text-[#E2E2E6] text-xs font-medium flex-1">{opt.text}</span>
+            <span className="text-[#E2E2E6] text-sm break-words">{opt.text}</span>
             {suffix && (
-              <span className={`text-xs font-bold shrink-0 ${isCorrectOption ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
+              <span className={`col-start-2 sm:col-start-auto text-xs font-bold ${isCorrectOption ? 'text-[color:var(--accent)]' : 'text-[#FFB4AB]'}`}>
                 {suffix}
               </span>
             )}
@@ -234,17 +213,17 @@ function ReviewItem({ result, index }) {
   let statusIcon, statusBg, statusText, statusBadge;
   if (isSkipped) {
     statusIcon = <MinusCircle className="w-5 h-5 text-[#FDE293]" />;
-    statusBg = 'border-[#FDE293]/20 bg-[#1D2024]';
+    statusBg = 'border-[#FDE293]/20';
     statusText = 'Skipped';
     statusBadge = 'bg-[#443600] text-[#FDE293] border border-[#FDE293]/30';
   } else if (isCorrect) {
     statusIcon = <CheckCircle2 className="w-5 h-5 text-[color:var(--accent)]" />;
-    statusBg = 'border-[color:var(--accent)]/20 bg-[#1D2024]';
+    statusBg = 'border-[color:var(--accent)]/20';
     statusText = 'Correct';
     statusBadge = 'bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30';
   } else {
     statusIcon = <XCircle className="w-5 h-5 text-[#FFB4AB]" />;
-    statusBg = 'border-[#FFB4AB]/20 bg-[#1D2024]';
+    statusBg = 'border-[#FFB4AB]/20';
     statusText = 'Incorrect';
     statusBadge = 'bg-[#5C2822] text-[#FFB4AB] border border-[#FFB4AB]/30';
   }
@@ -254,11 +233,12 @@ function ReviewItem({ result, index }) {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.04, type: 'spring', stiffness: 280, damping: 25 }}
-      className={`rounded-[24px] border overflow-hidden shadow-lg ${statusBg}`}
+      className={`study-panel overflow-hidden ${statusBg}`}
     >
       <button
         id={`review-item-${index + 1}`}
-        className="w-full flex items-center gap-3.5 p-4 sm:p-5 text-left cursor-pointer hover:bg-white/5 transition"
+        aria-expanded={expanded}
+        className="w-full flex items-center gap-2 sm:gap-3.5 p-3.5 sm:p-5 text-left cursor-pointer hover:bg-white/5 focus-visible:outline-offset-[-3px] transition"
         onClick={() => setExpanded(!expanded)}
       >
         {statusIcon}
@@ -267,9 +247,9 @@ function ReviewItem({ result, index }) {
             <span className="text-[#8E9196] text-xs font-extrabold font-mono">Q{index + 1}</span>
             <TypeTag type={type} />
           </div>
-          <span className="text-[#E2E2E6] text-sm font-bold block">{question}</span>
+          <span className="text-sm font-semibold break-words block">{question}</span>
         </div>
-        <span className={`text-xs font-extrabold px-3 py-1 rounded-full shrink-0 ${statusBadge}`}>
+        <span className={`text-[11px] font-bold px-2 sm:px-3 py-1 rounded-full shrink-0 ${statusBadge}`}>
           {statusText}
         </span>
         <motion.div animate={{ rotate: expanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
@@ -279,11 +259,12 @@ function ReviewItem({ result, index }) {
 
       <motion.div
         initial={false}
+        aria-hidden={!expanded}
         animate={{ height: expanded ? 'auto' : 0, opacity: expanded ? 1 : 0 }}
         transition={{ duration: 0.25 }}
         className="overflow-hidden"
       >
-        <div className="px-5 pb-5 pt-1 border-t border-white/5">
+        <div className="px-3.5 sm:px-5 pb-4 pt-1 border-t border-white/10">
           {type === 'multiple_choice' && <MCReview result={result} />}
           {type === 'identification' && <IdentificationReview result={result} />}
           {type === 'enumeration' && <EnumerationReview result={result} />}
@@ -298,6 +279,11 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
   const percentage = totalQuestions > 0 ? score / totalQuestions : 0;
   const skipped = results.filter(r => r.isSkipped).length;
   const incorrect = totalQuestions - score - skipped;
+  const breakdown = [
+    { label: 'Correct', count: score, color: 'var(--accent)' },
+    { label: 'Incorrect', count: incorrect, color: '#FFB4AB' },
+    { label: 'Skipped', count: skipped, color: '#FDE293' },
+  ];
 
   useEffect(() => {
     playResultSound();
@@ -328,61 +314,50 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
   }, []);
 
   let verdict, verdictColor;
-  if (percentage >= 0.9) { verdict = 'Outstanding Mastery! 🎉'; verdictColor = 'text-[color:var(--accent)]'; }
-  else if (percentage >= 0.7) { verdict = 'Great Performance! 👏'; verdictColor = 'text-[color:var(--accent)]'; }
-  else if (percentage >= 0.5) { verdict = 'Solid Practice! 💪'; verdictColor = 'text-[#FDE293]'; }
-  else { verdict = 'Needs Additional Study 📚'; verdictColor = 'text-[#FFB4AB]'; }
+  if (percentage >= 0.9) { verdict = 'Outstanding mastery'; verdictColor = 'text-[color:var(--accent)]'; }
+  else if (percentage >= 0.7) { verdict = 'Great performance'; verdictColor = 'text-[color:var(--accent)]'; }
+  else if (percentage >= 0.5) { verdict = 'Solid practice'; verdictColor = 'text-[#FDE293]'; }
+  else { verdict = 'More practice needed'; verdictColor = 'text-[#FFB4AB]'; }
 
   return (
-    <div className="min-h-screen flex flex-col items-center px-4 py-8 sm:py-14 bg-[#111318] text-[#E2E2E6]">
+    <main className="study-page min-h-screen flex flex-col items-center px-4 pt-18 pb-24 sm:px-8 lg:pt-10">
       <motion.div
         initial={{ opacity: 0, y: 25 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ type: 'spring', stiffness: 280, damping: 25 }}
-        className="w-full max-w-3xl"
+        className="w-full max-w-5xl"
       >
-        {/* Score Header Card */}
-        <div className="p-8 sm:p-10 rounded-[32px] bg-[#1D2024] border border-white/[0.06] text-center mb-8 shadow-2xl">
-          <motion.div
-            initial={{ scale: 0.5, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2, type: 'spring', stiffness: 220, damping: 15 }}
-            className="w-16 h-16 rounded-3xl bg-[#443600] text-[#FDE293] border border-[#FDE293]/30 flex items-center justify-center mx-auto mb-4 shadow-xl"
-          >
-            <Trophy className="w-8 h-8 text-[#FDE293]" />
-          </motion.div>
-
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-[#E2E2E6] tracking-tight mb-2">Exam Completed</h1>
-          <p className={`text-base font-extrabold ${verdictColor} mb-6`}>{verdict}</p>
-
-          <ScoreRing score={score} total={totalQuestions} />
-
-          {/* Stats Bar */}
-          <div className="flex items-center justify-center gap-6 mt-6">
-            <div className="text-center">
-              <p className="text-2xl font-extrabold text-[color:var(--accent)] font-mono">{score}</p>
-              <p className="text-xs text-[#8E9196] font-bold uppercase tracking-wider">Correct</p>
-            </div>
-            <div className="w-px h-8 bg-white/10" />
-            <div className="text-center">
-              <p className="text-2xl font-extrabold text-[#FFB4AB] font-mono">{incorrect}</p>
-              <p className="text-xs text-[#8E9196] font-bold uppercase tracking-wider">Incorrect</p>
-            </div>
-            {skipped > 0 && (
-              <>
-                <div className="w-px h-8 bg-white/10" />
-                <div className="text-center">
-                  <p className="text-2xl font-extrabold text-[#FDE293] font-mono">{skipped}</p>
-                  <p className="text-xs text-[#8E9196] font-bold uppercase tracking-wider">Skipped</p>
-                </div>
-              </>
-            )}
-          </div>
+        <div className="flex items-center gap-2.5 pb-4 mb-5 border-b border-white/10">
+          <span className="study-icon text-[color:var(--accent)]"><Trophy aria-hidden="true" /></span>
+          <span className="study-kicker">QuizForge / Exam report</span>
         </div>
+        <section className="study-panel study-highlight mb-8 p-5 sm:p-8" aria-labelledby="exam-results-heading">
+          <div className="flex flex-col sm:flex-row sm:justify-between items-center gap-3 sm:gap-8 text-center sm:text-left">
+            <div>
+              <p className={`text-sm font-semibold ${verdictColor} mb-2`}>{verdict}</p>
+              <h1 id="exam-results-heading" className="text-3xl sm:text-5xl font-bold tracking-[-0.055em]">Exam completed</h1>
+              <p className="mt-3 text-sm text-[#b8bac7]">{score} of {totalQuestions} questions answered correctly</p>
+            </div>
+            <ScoreRing score={score} total={totalQuestions} />
+          </div>
+          <div aria-hidden="true" className="flex h-1.5 mt-4 rounded-full bg-white/10 overflow-hidden">
+            {breakdown.map(({ label, count, color }) => (
+              <div key={label} style={{ flexGrow: count, backgroundColor: color }} />
+            ))}
+          </div>
+          <dl className="grid grid-cols-3 divide-x divide-white/10 mt-5">
+            {breakdown.map(({ label, count, color }) => (
+              <div key={label} className="flex flex-col-reverse items-center gap-1 py-1">
+                <dt className="study-kicker">{label}</dt>
+                <dd className="text-2xl font-semibold tabular-nums" style={{ color }}>{count}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
         {/* Question Review Breakdown */}
         <div className="mb-8">
-          <h2 className="text-xl font-extrabold text-[#E2E2E6] mb-4 tracking-tight">Question Breakdown</h2>
+          <h2 className="text-2xl font-bold mb-4 tracking-tight">Question breakdown</h2>
           <div className="space-y-3.5">
             {results.map((result, idx) => (
               <ReviewItem key={result.id} result={result} index={idx} />
@@ -415,7 +390,7 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
                 playSubmitSound();
                 onRetake();
               }}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full font-bold text-xs bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
+              className="study-primary w-full sm:w-auto"
             >
               <RotateCcw className="w-4 h-4 stroke-[2.5]" />
               <span>Retake Exam</span>
@@ -437,6 +412,6 @@ export default function ResultsScreen({ results, score, totalQuestions, onReview
           </motion.button>
         </div>
       </motion.div>
-    </div>
+    </main>
   );
 }

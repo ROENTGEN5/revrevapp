@@ -34,10 +34,11 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             id={`option-${option.label}`}
             whileHover={{ scale: 1.01, y: -1 }}
             whileTap={{ scale: 0.99 }}
-            className={`w-full flex items-center gap-4 p-4 sm:p-5 rounded-[20px] text-left border transition-all cursor-pointer ${
+            aria-pressed={isSelected}
+            className={`w-full flex items-center gap-3 p-3.5 sm:p-4 rounded-xl text-left border transition-colors cursor-pointer ${
               isSelected
                 ? 'border-[color:var(--accent)] bg-[color:var(--accent-container)]/40 shadow-lg shadow-[color:var(--accent)]/10'
-                : 'border-white/[0.08] bg-[#191C20] hover:bg-[#272A2F] hover:border-white/20'
+                : 'border-white/10 bg-[#0e0f14] hover:bg-[#191b24] hover:border-white/20'
             }`}
             onClick={() => {
               playChoiceSound();
@@ -53,7 +54,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
             >
               {option.label}
             </span>
-            <span className={`text-sm sm:text-base font-semibold leading-snug transition-colors ${
+            <span className={`min-w-0 break-words text-sm sm:text-base font-medium leading-snug transition-colors ${
               isSelected ? 'text-[#E2E2E6]' : 'text-[#C4C7C5]'
             }`}>
               {option.text}
@@ -68,7 +69,7 @@ function MultipleChoiceOptions({ question, selectedAnswer, onSelect }) {
 function IdentificationInput({ question, currentValue, onChange }) {
   return (
     <div className="space-y-3">
-      <label className="block text-[#8E9196] text-xs font-bold uppercase tracking-wider mb-2">
+      <label htmlFor={`identification-input-${question.id}`} className="study-kicker block mb-2">
         Type your answer:
       </label>
       <input
@@ -78,7 +79,7 @@ function IdentificationInput({ question, currentValue, onChange }) {
         onChange={(e) => onChange(e.target.value)}
         placeholder="Type answer here..."
         autoComplete="off"
-        className="w-full px-5 py-4 rounded-2xl bg-[#191C20] border border-white/10 text-base font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
+        className="w-full px-4 py-3.5 rounded-xl bg-[#0e0f14] border border-white/10 text-base text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
       />
       <p className="text-[#8E9196] text-xs font-medium">
         Case-insensitive evaluation.
@@ -100,9 +101,9 @@ function EnumerationInput({ question, currentValues, onChange }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-[#8E9196] text-xs font-bold uppercase tracking-wider mb-2">
+      <p className="study-kicker mb-2">
         List <span className="text-[color:var(--accent)] font-extrabold">{count}</span> items (any order):
-      </label>
+      </p>
       {Array.from({ length: count }, (_, i) => (
         <div key={i} className="flex items-center gap-3">
           <span className="inline-flex items-center justify-center w-8 h-8 rounded-xl bg-[#272A2F] text-[#8E9196] text-xs font-extrabold font-mono shrink-0">
@@ -110,12 +111,13 @@ function EnumerationInput({ question, currentValues, onChange }) {
           </span>
           <input
             id={`enum-input-${question.id}-${i}`}
+            aria-label={`Item ${i + 1}`}
             type="text"
             value={values[i] || ''}
             onChange={(e) => handleItemChange(i, e.target.value)}
             placeholder={`Item ${i + 1}...`}
             autoComplete="off"
-            className="flex-1 px-4 py-3.5 rounded-xl bg-[#191C20] border border-white/10 text-sm font-semibold text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
+            className="min-w-0 flex-1 px-4 py-3.5 rounded-xl bg-[#0e0f14] border border-white/10 text-base text-[#E2E2E6] placeholder:text-[#8E9196] focus:border-[color:var(--accent)] focus:ring-2 focus:ring-[color:var(--accent)]/20 focus:outline-none transition-all"
           />
         </div>
       ))}
@@ -123,7 +125,7 @@ function EnumerationInput({ question, currentValues, onChange }) {
   );
 }
 
-function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
+function TrueFalseOptions({ selectedAnswer, onSelect }) {
   return (
     <div className="grid grid-cols-2 gap-4">
       {['True', 'False'].map((val) => {
@@ -135,19 +137,18 @@ function TrueFalseOptions({ question, selectedAnswer, onSelect }) {
             id={`tf-option-${val.toLowerCase()}`}
             whileHover={{ scale: 1.02, y: -2 }}
             whileTap={{ scale: 0.98 }}
-            className={`flex flex-col items-center justify-center gap-2 py-8 rounded-[24px] text-base font-extrabold border transition-all cursor-pointer ${
+            aria-pressed={isSelected}
+            className={`flex flex-col items-center justify-center gap-2 py-6 rounded-xl text-base font-bold border transition-colors cursor-pointer ${
               isSelected
-                ? isTrue
-                  ? 'border-[color:var(--accent)] bg-[color:var(--accent-container)] text-[color:var(--accent)] shadow-lg shadow-[color:var(--accent)]/20'
-                  : 'border-[#FFB4AB] bg-[#5C2822] text-[#FFB4AB] shadow-lg shadow-[#FFB4AB]/20'
-                : 'border-white/10 bg-[#191C20] text-[#C4C7C5] hover:border-white/20 hover:text-[#E2E2E6]'
+                ? 'border-[color:var(--accent)] bg-[color:var(--accent-container)]/40 text-[color:var(--accent)]'
+                : 'border-white/10 bg-[#0e0f14] text-[#C4C7C5] hover:border-white/20 hover:text-[#E2E2E6]'
             }`}
             onClick={() => {
               playChoiceSound();
               onSelect(val);
             }}
           >
-            <span className="text-3xl font-mono">{isTrue ? '✓' : '✗'}</span>
+            <span aria-hidden="true" className="text-2xl font-mono">{isTrue ? '✓' : '✗'}</span>
             <span className="text-lg tracking-wide">{val}</span>
           </motion.button>
         );
@@ -175,7 +176,6 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
       playNavSound();
       quiz.goPrev();
     } else if (['1', '2', '3', '4'].includes(e.key) && quiz.currentQuestion?.type === 'multiple_choice') {
-      const labels = ['A', 'B', 'C', 'D'];
       const idx = parseInt(e.key) - 1;
       const option = quiz.currentQuestion?.options[idx];
       if (option) {
@@ -209,20 +209,21 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
   const isLast = quiz.currentIndex === quiz.totalQuestions - 1;
 
   return (
-    <div className="min-h-screen flex flex-col px-4 py-6 sm:py-10 bg-[#111318] text-[#E2E2E6]">
+    <main className="study-page min-h-screen flex flex-col px-4 pt-18 pb-24 sm:px-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-4xl mx-auto mb-4"
+        className="w-full max-w-5xl mx-auto mb-5"
       >
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between gap-2 mb-5 pb-4 border-b border-white/10">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 shadow-md">
+            <div className="study-icon text-[color:var(--accent)]">
               <BookOpen className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#E2E2E6] tracking-tight">
+              <p className="study-kicker">QuizForge</p>
+              <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
                 Exam Mode
               </h1>
             </div>
@@ -237,17 +238,19 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
         </div>
 
         {/* Progress Bar */}
-        <ProgressBar
-          progress={quiz.progress}
-          totalAnswered={quiz.totalAnswered}
-          totalQuestions={quiz.totalQuestions}
-        />
+        <div className="study-panel px-4 py-3 sm:px-5">
+          <ProgressBar
+            progress={quiz.progress}
+            totalAnswered={quiz.totalAnswered}
+            totalQuestions={quiz.totalQuestions}
+          />
+        </div>
       </motion.div>
 
       {/* Main Content Layout */}
-      <div className="flex-1 flex flex-col lg:flex-row gap-6 w-full max-w-4xl mx-auto mt-4">
+      <div className="flex flex-col lg:flex-row gap-5 w-full max-w-5xl mx-auto">
         {/* Question Card */}
-        <div className="flex-1 flex flex-col">
+        <div className="min-w-0 flex-1 flex flex-col">
           <AnimatePresence mode="wait">
             <motion.div
               key={quiz.currentIndex}
@@ -255,24 +258,17 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: -25 }}
               transition={{ type: 'spring', stiffness: 300, damping: 26 }}
-              className="p-7 sm:p-9 rounded-[32px] bg-[#1D2024] border border-white/[0.06] shadow-xl flex-1 flex flex-col justify-between"
+              className="study-panel p-4 sm:p-8 flex-1 flex flex-col justify-between"
             >
               <div>
                 {/* Question Info Header */}
-                <div className="flex items-center justify-between gap-3 mb-6">
-                  <div className="flex items-center gap-3">
-                    <span className="inline-flex items-center justify-center w-10 h-10 rounded-2xl bg-[color:var(--accent-container)] text-[color:var(--accent)] border border-[color:var(--accent)]/30 font-extrabold text-sm font-mono shadow-sm">
-                      {quiz.currentIndex + 1}
-                    </span>
-                    <span className="text-[#8E9196] text-xs font-semibold uppercase tracking-wider">
-                      Question {quiz.currentIndex + 1} of {quiz.totalQuestions}
-                    </span>
-                  </div>
+                <div className="flex flex-wrap items-center justify-between gap-2 mb-5 pb-4 border-b border-white/10">
+                  <span className="study-kicker">Question {quiz.currentIndex + 1} of {quiz.totalQuestions}</span>
                   <TypeBadge type={currentQ?.type} />
                 </div>
 
                 {/* Question Prompt */}
-                <h2 className="text-lg sm:text-xl font-bold text-[#E2E2E6] leading-relaxed mb-6 tracking-tight">
+                <h2 className="text-xl sm:text-2xl font-semibold leading-snug break-words mb-6 tracking-tight">
                   {currentQ?.question}
                 </h2>
 
@@ -315,7 +311,6 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
 
                 {currentQ?.type === 'true_false' && (
                   <TrueFalseOptions
-                    question={currentQ}
                     selectedAnswer={quiz.answers[currentQ.id]}
                     onSelect={(val) => quiz.selectAnswer(currentQ.id, val)}
                   />
@@ -336,7 +331,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           </AnimatePresence>
 
           {/* Action Control Buttons */}
-          <div className="flex items-center justify-between mt-5 gap-4">
+          <div className="flex flex-wrap items-center justify-between mt-4 gap-2">
             <button
               id="prev-question-button"
               onClick={() => {
@@ -360,7 +355,7 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
                 whileHover={{ scale: 1.02, y: -1 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleSubmit}
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-bold text-sm bg-[color:var(--accent)] text-[color:var(--accent-on)] shadow-xl shadow-[color:var(--accent)]/20 hover:bg-[color:var(--accent-hover)] transition-all cursor-pointer border-0"
+                className="study-primary"
               >
                 <Send className="w-4 h-4 stroke-[2.5]" />
                 <span>Submit Exam</span>
@@ -388,9 +383,9 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           transition={{ delay: 0.15 }}
           className="lg:w-64 shrink-0"
         >
-          <div className="p-6 rounded-[28px] bg-[#1D2024] border border-white/[0.06] lg:sticky lg:top-6 shadow-xl">
-            <h3 className="text-[#8E9196] text-xs font-bold uppercase tracking-wider mb-4">
-              Questions Map
+          <div className="study-panel p-5 lg:sticky lg:top-6">
+            <h3 className="study-kicker mb-4">
+              Question map
             </h3>
             <QuestionNav
               questions={questions}
@@ -434,6 +429,6 @@ export default function QuizScreen({ questions, onSubmit, onReset }) {
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </main>
   );
 }
